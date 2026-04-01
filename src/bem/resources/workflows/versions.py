@@ -7,7 +7,7 @@ from typing_extensions import Literal
 import httpx
 
 from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
-from ..._utils import path_template, maybe_transform, async_maybe_transform
+from ..._utils import path_template, maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -16,9 +16,10 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
+from ...pagination import SyncWorkflowVersionsPage, AsyncWorkflowVersionsPage
+from ..._base_client import AsyncPaginator, make_request_options
+from ...types.workflow import Workflow
 from ...types.workflows import version_list_params
-from ...types.workflows.version_list_response import VersionListResponse
 from ...types.workflows.version_retrieve_response import VersionRetrieveResponse
 
 __all__ = ["VersionsResource", "AsyncVersionsResource"]
@@ -98,7 +99,7 @@ class VersionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> VersionListResponse:
+    ) -> SyncWorkflowVersionsPage[Workflow]:
         """
         List Workflow Versions
 
@@ -113,8 +114,9 @@ class VersionsResource(SyncAPIResource):
         """
         if not workflow_name:
             raise ValueError(f"Expected a non-empty value for `workflow_name` but received {workflow_name!r}")
-        return self._get(
+        return self._get_api_list(
             path_template("/v3/workflows/{workflow_name}/versions", workflow_name=workflow_name),
+            page=SyncWorkflowVersionsPage[Workflow],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -130,7 +132,7 @@ class VersionsResource(SyncAPIResource):
                     version_list_params.VersionListParams,
                 ),
             ),
-            cast_to=VersionListResponse,
+            model=Workflow,
         )
 
 
@@ -194,7 +196,7 @@ class AsyncVersionsResource(AsyncAPIResource):
             cast_to=VersionRetrieveResponse,
         )
 
-    async def list(
+    def list(
         self,
         workflow_name: str,
         *,
@@ -208,7 +210,7 @@ class AsyncVersionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> VersionListResponse:
+    ) -> AsyncPaginator[Workflow, AsyncWorkflowVersionsPage[Workflow]]:
         """
         List Workflow Versions
 
@@ -223,14 +225,15 @@ class AsyncVersionsResource(AsyncAPIResource):
         """
         if not workflow_name:
             raise ValueError(f"Expected a non-empty value for `workflow_name` but received {workflow_name!r}")
-        return await self._get(
+        return self._get_api_list(
             path_template("/v3/workflows/{workflow_name}/versions", workflow_name=workflow_name),
+            page=AsyncWorkflowVersionsPage[Workflow],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "ending_before": ending_before,
                         "limit": limit,
@@ -240,7 +243,7 @@ class AsyncVersionsResource(AsyncAPIResource):
                     version_list_params.VersionListParams,
                 ),
             ),
-            cast_to=VersionListResponse,
+            model=Workflow,
         )
 
 

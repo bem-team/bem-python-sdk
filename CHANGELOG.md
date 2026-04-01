@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 (2026-04-01)
+
+Full Changelog: [v0.1.1...v0.2.0](https://github.com/bem-team/bem-python-sdk/compare/v0.1.1...v0.2.0)
+
+### Features
+
+* **api:** add pagination to list endpoints ([d29869b](https://github.com/bem-team/bem-python-sdk/commit/d29869b1b5c1886a18a519f825cc09594caa064b))
+
 ## 0.1.1 (2026-04-01)
 
 Full Changelog: [v0.1.0...v0.1.1](https://github.com/bem-team/bem-python-sdk/compare/v0.1.0...v0.1.1)

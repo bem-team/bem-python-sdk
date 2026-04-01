@@ -115,6 +115,69 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
 
+## Pagination
+
+List methods in the Bem API are paginated.
+
+This library provides auto-paginating iterators with each list response, so you do not have to request successive pages manually:
+
+```python
+from bem import Bem
+
+client = Bem()
+
+all_functions = []
+# Automatically fetches more pages as needed.
+for function in client.functions.list():
+    # Do something with function here
+    all_functions.append(function)
+print(all_functions)
+```
+
+Or, asynchronously:
+
+```python
+import asyncio
+from bem import AsyncBem
+
+client = AsyncBem()
+
+
+async def main() -> None:
+    all_functions = []
+    # Iterate through items across all pages, issuing requests as needed.
+    async for function in client.functions.list():
+        all_functions.append(function)
+    print(all_functions)
+
+
+asyncio.run(main())
+```
+
+Alternatively, you can use the `.has_next_page()`, `.next_page_info()`, or `.get_next_page()` methods for more granular control working with pages:
+
+```python
+first_page = await client.functions.list()
+if first_page.has_next_page():
+    print(f"will fetch next page using these details: {first_page.next_page_info()}")
+    next_page = await first_page.get_next_page()
+    print(f"number of items we just fetched: {len(next_page.functions)}")
+
+# Remove `await` for non-async usage.
+```
+
+Or just work directly with the returned data:
+
+```python
+first_page = await client.functions.list()
+
+print(f"next page cursor: {first_page.starting_after}")  # => "next page cursor: ..."
+for function in first_page.functions:
+    print(function)
+
+# Remove `await` for non-async usage.
+```
+
 ## Nested params
 
 Nested parameters are dictionaries, typed using `TypedDict`, for example:
