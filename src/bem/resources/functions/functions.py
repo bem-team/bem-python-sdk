@@ -539,7 +539,7 @@ class FunctionsResource(SyncAPIResource):
         *,
         type: Literal["transform"],
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
@@ -558,7 +558,7 @@ class FunctionsResource(SyncAPIResource):
 
         Human-readable name to help you identify the function.
 
-          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
@@ -586,7 +586,7 @@ class FunctionsResource(SyncAPIResource):
         *,
         type: Literal["analyze"],
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -604,7 +604,7 @@ class FunctionsResource(SyncAPIResource):
 
         Human-readable name to help you identify the function.
 
-          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
@@ -630,7 +630,7 @@ class FunctionsResource(SyncAPIResource):
         type: Literal["route"],
         description: str | Omit = omit,
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -650,7 +650,7 @@ class FunctionsResource(SyncAPIResource):
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           routes: List of routes.
 
@@ -673,7 +673,7 @@ class FunctionsResource(SyncAPIResource):
         *,
         type: Literal["split"],
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         print_page_split_config: function_update_params.UpsertSplitFunctionPrintPageSplitConfig | Omit = omit,
         semantic_page_split_config: function_update_params.UpsertSplitFunctionSemanticPageSplitConfig | Omit = omit,
         split_type: Literal["print_page", "semantic_page"] | Omit = omit,
@@ -692,7 +692,7 @@ class FunctionsResource(SyncAPIResource):
 
         Human-readable name to help you identify the function.
 
-          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -714,7 +714,7 @@ class FunctionsResource(SyncAPIResource):
         type: Literal["join"],
         description: str | Omit = omit,
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         join_type: Literal["standard"] | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
@@ -734,7 +734,7 @@ class FunctionsResource(SyncAPIResource):
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           join_type: The type of join to perform.
 
@@ -761,7 +761,7 @@ class FunctionsResource(SyncAPIResource):
         *,
         type: Literal["payload_shaping"],
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         shaping_schema: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -778,7 +778,7 @@ class FunctionsResource(SyncAPIResource):
 
         Human-readable name to help you identify the function.
 
-          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           shaping_schema: JMESPath expression that defines how to transform and customize the input
               payload structure. Payload shaping allows you to extract, reshape, and
@@ -865,7 +865,7 @@ class FunctionsResource(SyncAPIResource):
         | Literal["payload_shaping"]
         | Literal["enrich"],
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
@@ -893,7 +893,7 @@ class FunctionsResource(SyncAPIResource):
                 {
                     "type": type,
                     "display_name": display_name,
-                    "body_function_name": body_function_name,
+                    "function_name": function_name,
                     "output_schema": output_schema,
                     "output_schema_name": output_schema_name,
                     "tabular_chunking_enabled": tabular_chunking_enabled,
@@ -1505,7 +1505,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         type: Literal["transform"],
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
@@ -1524,7 +1524,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
         Human-readable name to help you identify the function.
 
-          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
@@ -1552,7 +1552,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         type: Literal["analyze"],
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -1570,7 +1570,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
         Human-readable name to help you identify the function.
 
-          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
@@ -1596,7 +1596,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         type: Literal["route"],
         description: str | Omit = omit,
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1616,7 +1616,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           routes: List of routes.
 
@@ -1639,7 +1639,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         type: Literal["split"],
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         print_page_split_config: function_update_params.UpsertSplitFunctionPrintPageSplitConfig | Omit = omit,
         semantic_page_split_config: function_update_params.UpsertSplitFunctionSemanticPageSplitConfig | Omit = omit,
         split_type: Literal["print_page", "semantic_page"] | Omit = omit,
@@ -1658,7 +1658,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
         Human-readable name to help you identify the function.
 
-          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -1680,7 +1680,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         type: Literal["join"],
         description: str | Omit = omit,
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         join_type: Literal["standard"] | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
@@ -1700,7 +1700,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           join_type: The type of join to perform.
 
@@ -1727,7 +1727,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         type: Literal["payload_shaping"],
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         shaping_schema: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1744,7 +1744,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
         Human-readable name to help you identify the function.
 
-          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           shaping_schema: JMESPath expression that defines how to transform and customize the input
               payload structure. Payload shaping allows you to extract, reshape, and
@@ -1831,7 +1831,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         | Literal["payload_shaping"]
         | Literal["enrich"],
         display_name: str | Omit = omit,
-        body_function_name: str | Omit = omit,
+        function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
@@ -1859,7 +1859,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                 {
                     "type": type,
                     "display_name": display_name,
-                    "body_function_name": body_function_name,
+                    "function_name": function_name,
                     "output_schema": output_schema,
                     "output_schema_name": output_schema_name,
                     "tabular_chunking_enabled": tabular_chunking_enabled,

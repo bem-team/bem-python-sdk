@@ -34,7 +34,7 @@ class UpsertTransformFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     output_schema: Annotated[object, PropertyInfo(alias="outputSchema")]
@@ -62,7 +62,7 @@ class UpsertAnalyzeFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     output_schema: Annotated[object, PropertyInfo(alias="outputSchema")]
@@ -91,7 +91,7 @@ class UpsertRouteFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     routes: Iterable[RouteListItemParam]
@@ -110,7 +110,7 @@ class UpsertSplitFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     print_page_split_config: Annotated[
@@ -149,7 +149,7 @@ class UpsertJoinFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     join_type: Annotated[Literal["standard"], PropertyInfo(alias="joinType")]
@@ -174,7 +174,7 @@ class UpsertPayloadShapingFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     shaping_schema: Annotated[str, PropertyInfo(alias="shapingSchema")]
