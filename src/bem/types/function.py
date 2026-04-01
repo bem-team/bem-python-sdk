@@ -1,10 +1,11 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import List, Union, Optional
-from typing_extensions import Literal, TypeAlias
+from typing_extensions import Literal, Annotated, TypeAlias
 
 from pydantic import Field as FieldInfo
 
+from .._utils import PropertyInfo
 from .._models import BaseModel
 from .enrich_config import EnrichConfig
 from .function_audit import FunctionAudit
@@ -84,6 +85,8 @@ class AnalyzeFunction(BaseModel):
 
     output_schema_name: str = FieldInfo(alias="outputSchemaName")
     """Name of output schema object."""
+
+    type: Literal["analyze"]
 
     version_num: int = FieldInfo(alias="versionNum")
     """Version number of function."""
@@ -341,12 +344,15 @@ class EnrichFunction(BaseModel):
     """List of workflows that use this function."""
 
 
-Function: TypeAlias = Union[
-    TransformFunction,
-    AnalyzeFunction,
-    RouteFunction,
-    SplitFunction,
-    JoinFunction,
-    PayloadShapingFunction,
-    EnrichFunction,
+Function: TypeAlias = Annotated[
+    Union[
+        TransformFunction,
+        AnalyzeFunction,
+        RouteFunction,
+        SplitFunction,
+        JoinFunction,
+        PayloadShapingFunction,
+        EnrichFunction,
+    ],
+    PropertyInfo(discriminator="type"),
 ]

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Union, Iterable
-from typing_extensions import Literal, Annotated, TypeAlias, TypedDict
+from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict
 
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
@@ -26,6 +26,8 @@ __all__ = [
 
 
 class TransformFunction(TypedDict, total=False):
+    type: Required[Literal["transform"]]
+
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
     """Display name of function.
 
@@ -52,6 +54,8 @@ class TransformFunction(TypedDict, total=False):
 
 
 class AnalyzeFunction(TypedDict, total=False):
+    type: Required[Literal["analyze"]]
+
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
     """Display name of function.
 
@@ -72,6 +76,8 @@ class AnalyzeFunction(TypedDict, total=False):
 
 
 class RouteFunction(TypedDict, total=False):
+    type: Required[Literal["route"]]
+
     description: str
     """Description of router.
 
@@ -106,6 +112,8 @@ class SplitFunctionSemanticPageSplitConfig(TypedDict, total=False):
 
 
 class SplitFunction(TypedDict, total=False):
+    type: Required[Literal["split"]]
+
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
     """Display name of function.
 
@@ -128,6 +136,8 @@ class SplitFunction(TypedDict, total=False):
 
 
 class JoinFunction(TypedDict, total=False):
+    type: Required[Literal["join"]]
+
     description: str
     """Description of join function."""
 
@@ -161,6 +171,8 @@ class PayloadShapingFunction(TypedDict, total=False):
     downstream systems or business requirements.
     """
 
+    type: Required[Literal["payload_shaping"]]
+
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
     """Display name of function.
 
@@ -184,6 +196,8 @@ class PayloadShapingFunction(TypedDict, total=False):
 
 
 class UpsertEnrichFunction(TypedDict, total=False):
+    type: Required[Literal["enrich"]]
+
     config: EnrichConfigParam
     """Configuration for enrich function with semantic search steps.
 

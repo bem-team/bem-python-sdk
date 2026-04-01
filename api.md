@@ -6,9 +6,10 @@ Types:
 from bem.types import (
     CreateFunction,
     EnrichConfig,
+    EnrichStep,
     Function,
     FunctionAudit,
-    FunctionResponseV3,
+    FunctionResponse,
     FunctionType,
     ListFunctionsResponse,
     RouteListItem,
@@ -21,9 +22,9 @@ from bem.types import (
 
 Methods:
 
-- <code title="post /v3/functions">client.functions.<a href="./src/bem/resources/functions/functions.py">create</a>(\*\*<a href="src/bem/types/function_create_params.py">params</a>) -> <a href="./src/bem/types/function_response_v3.py">FunctionResponseV3</a></code>
-- <code title="get /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">retrieve</a>(function_name) -> <a href="./src/bem/types/function_response_v3.py">FunctionResponseV3</a></code>
-- <code title="patch /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">update</a>(path_function_name, \*\*<a href="src/bem/types/function_update_params.py">params</a>) -> <a href="./src/bem/types/function_response_v3.py">FunctionResponseV3</a></code>
+- <code title="post /v3/functions">client.functions.<a href="./src/bem/resources/functions/functions.py">create</a>(\*\*<a href="src/bem/types/function_create_params.py">params</a>) -> <a href="./src/bem/types/function_response.py">FunctionResponse</a></code>
+- <code title="get /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">retrieve</a>(function_name) -> <a href="./src/bem/types/function_response.py">FunctionResponse</a></code>
+- <code title="patch /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">update</a>(path_function_name, \*\*<a href="src/bem/types/function_update_params.py">params</a>) -> <a href="./src/bem/types/function_response.py">FunctionResponse</a></code>
 - <code title="get /v3/functions">client.functions.<a href="./src/bem/resources/functions/functions.py">list</a>(\*\*<a href="src/bem/types/function_list_params.py">params</a>) -> <a href="./src/bem/types/list_functions_response.py">ListFunctionsResponse</a></code>
 - <code title="delete /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">delete</a>(function_name) -> None</code>
 
@@ -37,7 +38,7 @@ from bem.types.functions import FunctionCopyRequest
 
 Methods:
 
-- <code title="post /v3/functions/copy">client.functions.copy.<a href="./src/bem/resources/functions/copy.py">create</a>(\*\*<a href="src/bem/types/functions/copy_create_params.py">params</a>) -> <a href="./src/bem/types/function_response_v3.py">FunctionResponseV3</a></code>
+- <code title="post /v3/functions/copy">client.functions.copy.<a href="./src/bem/resources/functions/copy.py">create</a>(\*\*<a href="src/bem/types/functions/copy_create_params.py">params</a>) -> <a href="./src/bem/types/function_response.py">FunctionResponse</a></code>
 
 ## Versions
 
@@ -61,12 +62,12 @@ Methods:
 Types:
 
 ```python
-from bem.types import CallGetResponseV3, CallV3, CallListResponse
+from bem.types import Call, CallGetResponse, CallListResponse
 ```
 
 Methods:
 
-- <code title="get /v3/calls/{callID}">client.calls.<a href="./src/bem/resources/calls.py">retrieve</a>(call_id) -> <a href="./src/bem/types/call_get_response_v3.py">CallGetResponseV3</a></code>
+- <code title="get /v3/calls/{callID}">client.calls.<a href="./src/bem/resources/calls.py">retrieve</a>(call_id) -> <a href="./src/bem/types/call_get_response.py">CallGetResponse</a></code>
 - <code title="get /v3/calls">client.calls.<a href="./src/bem/resources/calls.py">list</a>(\*\*<a href="src/bem/types/call_list_params.py">params</a>) -> <a href="./src/bem/types/call_list_response.py">CallListResponse</a></code>
 
 # Errors
@@ -119,7 +120,7 @@ Methods:
 - <code title="patch /v3/workflows/{workflowName}">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">update</a>(workflow_name, \*\*<a href="src/bem/types/workflow_update_params.py">params</a>) -> <a href="./src/bem/types/workflow_update_response.py">WorkflowUpdateResponse</a></code>
 - <code title="get /v3/workflows">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">list</a>(\*\*<a href="src/bem/types/workflow_list_params.py">params</a>) -> <a href="./src/bem/types/workflow_list_response.py">WorkflowListResponse</a></code>
 - <code title="delete /v3/workflows/{workflowName}">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">delete</a>(workflow_name) -> None</code>
-- <code title="post /v3/workflows/{workflowName}/call">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">call</a>(workflow_name, \*\*<a href="src/bem/types/workflow_call_params.py">params</a>) -> <a href="./src/bem/types/call_get_response_v3.py">CallGetResponseV3</a></code>
+- <code title="post /v3/workflows/{workflowName}/call">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">call</a>(workflow_name, \*\*<a href="src/bem/types/workflow_call_params.py">params</a>) -> <a href="./src/bem/types/call_get_response.py">CallGetResponse</a></code>
 - <code title="post /v3/workflows/copy">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">copy</a>(\*\*<a href="src/bem/types/workflow_copy_params.py">params</a>) -> <a href="./src/bem/types/workflow_copy_response.py">WorkflowCopyResponse</a></code>
 
 ## Versions

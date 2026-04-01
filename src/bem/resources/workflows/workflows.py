@@ -33,7 +33,7 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
-from ...types.call_get_response_v3 import CallGetResponseV3
+from ...types.call_get_response import CallGetResponse
 from ...types.workflow_copy_response import WorkflowCopyResponse
 from ...types.workflow_list_response import WorkflowListResponse
 from ...types.workflow_create_response import WorkflowCreateResponse
@@ -360,7 +360,7 @@ class WorkflowsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CallGetResponseV3:
+    ) -> CallGetResponse:
         """
         **Invoke a workflow by submitting a multipart form request.**
 
@@ -421,7 +421,7 @@ class WorkflowsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=CallGetResponseV3,
+            cast_to=CallGetResponse,
         )
 
     def copy(
@@ -804,7 +804,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CallGetResponseV3:
+    ) -> CallGetResponse:
         """
         **Invoke a workflow by submitting a multipart form request.**
 
@@ -865,7 +865,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=CallGetResponseV3,
+            cast_to=CallGetResponse,
         )
 
     async def copy(

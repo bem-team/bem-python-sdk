@@ -3,10 +3,10 @@
 from .._models import BaseModel
 from .function import Function
 
-__all__ = ["FunctionResponseV3"]
+__all__ = ["FunctionResponse"]
 
 
-class FunctionResponseV3(BaseModel):
+class FunctionResponse(BaseModel):
     """
     Single-function response wrapper used by V3 function endpoints.
     V3 wraps individual function responses in a `{"function": ...}` envelope

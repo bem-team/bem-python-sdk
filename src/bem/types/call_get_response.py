@@ -2,14 +2,14 @@
 
 from typing import Optional
 
-from .call_v3 import CallV3
+from .call import Call
 from .._models import BaseModel
 
-__all__ = ["CallGetResponseV3"]
+__all__ = ["CallGetResponse"]
 
 
-class CallGetResponseV3(BaseModel):
-    call: Optional[CallV3] = None
+class CallGetResponse(BaseModel):
+    call: Optional[Call] = None
     """A workflow call returned by the V3 API.
 
     Compared to the V2 `Call` model:

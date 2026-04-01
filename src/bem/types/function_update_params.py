@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from typing import Union, Iterable
-from typing_extensions import Literal, Annotated, TypeAlias, TypedDict
+from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict
 
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
@@ -26,6 +26,8 @@ __all__ = [
 
 
 class UpsertTransformFunction(TypedDict, total=False):
+    type: Required[Literal["transform"]]
+
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
     """Display name of function.
 
@@ -52,6 +54,8 @@ class UpsertTransformFunction(TypedDict, total=False):
 
 
 class UpsertAnalyzeFunction(TypedDict, total=False):
+    type: Required[Literal["analyze"]]
+
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
     """Display name of function.
 
@@ -72,6 +76,8 @@ class UpsertAnalyzeFunction(TypedDict, total=False):
 
 
 class UpsertRouteFunction(TypedDict, total=False):
+    type: Required[Literal["route"]]
+
     description: str
     """Description of router.
 
@@ -96,6 +102,8 @@ class UpsertRouteFunction(TypedDict, total=False):
 
 
 class UpsertSplitFunction(TypedDict, total=False):
+    type: Required[Literal["split"]]
+
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
     """Display name of function.
 
@@ -130,6 +138,8 @@ class UpsertSplitFunctionSemanticPageSplitConfig(TypedDict, total=False):
 
 
 class UpsertJoinFunction(TypedDict, total=False):
+    type: Required[Literal["join"]]
+
     description: str
     """Description of join function."""
 
@@ -156,6 +166,8 @@ class UpsertJoinFunction(TypedDict, total=False):
 
 
 class UpsertPayloadShapingFunction(TypedDict, total=False):
+    type: Required[Literal["payload_shaping"]]
+
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
     """Display name of function.
 
@@ -179,6 +191,8 @@ class UpsertPayloadShapingFunction(TypedDict, total=False):
 
 
 class UpsertEnrichFunction(TypedDict, total=False):
+    type: Required[Literal["enrich"]]
+
     config: EnrichConfigParam
     """Configuration for enrich function with semantic search steps.
 

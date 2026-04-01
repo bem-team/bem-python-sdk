@@ -2,18 +2,22 @@
 
 from __future__ import annotations
 
+from .call import Call as Call
 from .event import Event as Event
-from .call_v3 import CallV3 as CallV3
 from .any_type import AnyType as AnyType
 from .function import Function as Function
 from .workflow import Workflow as Workflow
+from .enrich_step import EnrichStep as EnrichStep
 from .error_event import ErrorEvent as ErrorEvent
 from .enrich_config import EnrichConfig as EnrichConfig
 from .function_type import FunctionType as FunctionType
 from .function_audit import FunctionAudit as FunctionAudit
 from .route_list_item import RouteListItem as RouteListItem
 from .call_list_params import CallListParams as CallListParams
+from .call_get_response import CallGetResponse as CallGetResponse
+from .enrich_step_param import EnrichStepParam as EnrichStepParam
 from .error_list_params import ErrorListParams as ErrorListParams
+from .function_response import FunctionResponse as FunctionResponse
 from .call_list_response import CallListResponse as CallListResponse
 from .output_list_params import OutputListParams as OutputListParams
 from .enrich_config_param import EnrichConfigParam as EnrichConfigParam
@@ -21,9 +25,7 @@ from .error_list_response import ErrorListResponse as ErrorListResponse
 from .inbound_email_event import InboundEmailEvent as InboundEmailEvent
 from .user_action_summary import UserActionSummary as UserActionSummary
 from .workflow_usage_info import WorkflowUsageInfo as WorkflowUsageInfo
-from .call_get_response_v3 import CallGetResponseV3 as CallGetResponseV3
 from .function_list_params import FunctionListParams as FunctionListParams
-from .function_response_v3 import FunctionResponseV3 as FunctionResponseV3
 from .output_list_response import OutputListResponse as OutputListResponse
 from .workflow_call_params import WorkflowCallParams as WorkflowCallParams
 from .workflow_copy_params import WorkflowCopyParams as WorkflowCopyParams
