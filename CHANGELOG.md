@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 (2026-04-01)
+
+Full Changelog: [v0.1.0...v0.1.1](https://github.com/bem-team/bem-python-sdk/compare/v0.1.0...v0.1.1)
+
+### Chores
+
+* remove custom code ([0adf736](https://github.com/bem-team/bem-python-sdk/commit/0adf736f9df6ce7e21465f3d6efe62086f853400))
+* update SDK settings ([7fbb1f0](https://github.com/bem-team/bem-python-sdk/commit/7fbb1f0471f271252e6eeea7277fd28911ba9663))
+* update SDK settings ([e7e40e2](https://github.com/bem-team/bem-python-sdk/commit/e7e40e21aff11c69030f732f9d776612ded23aa4))
+
 ## 0.1.0 (2026-04-01)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/bem-team/bem-python-sdk/compare/v0.0.1...v0.1.0)
