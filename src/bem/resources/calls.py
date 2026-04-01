@@ -9,7 +9,7 @@ import httpx
 
 from ..types import call_list_params
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
-from .._utils import path_template, maybe_transform, async_maybe_transform
+from .._utils import path_template, maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -18,9 +18,10 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
+from ..pagination import SyncCallsPage, AsyncCallsPage
+from ..types.call import Call
+from .._base_client import AsyncPaginator, make_request_options
 from ..types.call_get_response import CallGetResponse
-from ..types.call_list_response import CallListResponse
 
 __all__ = ["CallsResource", "AsyncCallsResource"]
 
@@ -127,7 +128,7 @@ class CallsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CallListResponse:
+    ) -> SyncCallsPage[Call]:
         """
         **List workflow calls with filtering and pagination.**
 
@@ -156,8 +157,9 @@ class CallsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/v3/calls",
+            page=SyncCallsPage[Call],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -179,7 +181,7 @@ class CallsResource(SyncAPIResource):
                     call_list_params.CallListParams,
                 ),
             ),
-            cast_to=CallListResponse,
+            model=Call,
         )
 
 
@@ -266,7 +268,7 @@ class AsyncCallsResource(AsyncAPIResource):
             cast_to=CallGetResponse,
         )
 
-    async def list(
+    def list(
         self,
         *,
         call_ids: SequenceNotStr[str] | Omit = omit,
@@ -285,7 +287,7 @@ class AsyncCallsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CallListResponse:
+    ) -> AsyncPaginator[Call, AsyncCallsPage[Call]]:
         """
         **List workflow calls with filtering and pagination.**
 
@@ -314,14 +316,15 @@ class AsyncCallsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/v3/calls",
+            page=AsyncCallsPage[Call],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "call_ids": call_ids,
                         "ending_before": ending_before,
@@ -337,7 +340,7 @@ class AsyncCallsResource(AsyncAPIResource):
                     call_list_params.CallListParams,
                 ),
             ),
-            cast_to=CallListResponse,
+            model=Call,
         )
 
 

@@ -8,7 +8,7 @@ import httpx
 
 from ..types import error_list_params
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
-from .._utils import path_template, maybe_transform, async_maybe_transform
+from .._utils import path_template, maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -17,8 +17,9 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
-from ..types.error_list_response import ErrorListResponse
+from ..pagination import SyncErrorsPage, AsyncErrorsPage
+from .._base_client import AsyncPaginator, make_request_options
+from ..types.error_event import ErrorEvent
 from ..types.error_retrieve_response import ErrorRetrieveResponse
 
 __all__ = ["ErrorsResource", "AsyncErrorsResource"]
@@ -112,7 +113,7 @@ class ErrorsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ErrorListResponse:
+    ) -> SyncErrorsPage[ErrorEvent]:
         """
         **List terminal error events.**
 
@@ -138,8 +139,9 @@ class ErrorsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/v3/errors",
+            page=SyncErrorsPage[ErrorEvent],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -162,7 +164,7 @@ class ErrorsResource(SyncAPIResource):
                     error_list_params.ErrorListParams,
                 ),
             ),
-            cast_to=ErrorListResponse,
+            model=ErrorEvent,
         )
 
 
@@ -234,7 +236,7 @@ class AsyncErrorsResource(AsyncAPIResource):
             cast_to=ErrorRetrieveResponse,
         )
 
-    async def list(
+    def list(
         self,
         *,
         call_ids: SequenceNotStr[str] | Omit = omit,
@@ -254,7 +256,7 @@ class AsyncErrorsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ErrorListResponse:
+    ) -> AsyncPaginator[ErrorEvent, AsyncErrorsPage[ErrorEvent]]:
         """
         **List terminal error events.**
 
@@ -280,14 +282,15 @@ class AsyncErrorsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/v3/errors",
+            page=AsyncErrorsPage[ErrorEvent],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "call_ids": call_ids,
                         "ending_before": ending_before,
@@ -304,7 +307,7 @@ class AsyncErrorsResource(AsyncAPIResource):
                     error_list_params.ErrorListParams,
                 ),
             ),
-            cast_to=ErrorListResponse,
+            model=ErrorEvent,
         )
 
 
