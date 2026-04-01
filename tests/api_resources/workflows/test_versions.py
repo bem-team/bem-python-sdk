@@ -8,8 +8,10 @@ from typing import Any, cast
 import pytest
 
 from bem import Bem, AsyncBem
+from bem.types import Workflow
 from tests.utils import assert_matches_type
-from bem.types.workflows import VersionListResponse, VersionRetrieveResponse
+from bem.pagination import SyncWorkflowVersionsPage, AsyncWorkflowVersionsPage
+from bem.types.workflows import VersionRetrieveResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -69,7 +71,7 @@ class TestVersions:
         version = client.workflows.versions.list(
             workflow_name="workflowName",
         )
-        assert_matches_type(VersionListResponse, version, path=["response"])
+        assert_matches_type(SyncWorkflowVersionsPage[Workflow], version, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -81,7 +83,7 @@ class TestVersions:
             sort_order="asc",
             starting_after=0,
         )
-        assert_matches_type(VersionListResponse, version, path=["response"])
+        assert_matches_type(SyncWorkflowVersionsPage[Workflow], version, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -93,7 +95,7 @@ class TestVersions:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         version = response.parse()
-        assert_matches_type(VersionListResponse, version, path=["response"])
+        assert_matches_type(SyncWorkflowVersionsPage[Workflow], version, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -105,7 +107,7 @@ class TestVersions:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             version = response.parse()
-            assert_matches_type(VersionListResponse, version, path=["response"])
+            assert_matches_type(SyncWorkflowVersionsPage[Workflow], version, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -175,7 +177,7 @@ class TestAsyncVersions:
         version = await async_client.workflows.versions.list(
             workflow_name="workflowName",
         )
-        assert_matches_type(VersionListResponse, version, path=["response"])
+        assert_matches_type(AsyncWorkflowVersionsPage[Workflow], version, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -187,7 +189,7 @@ class TestAsyncVersions:
             sort_order="asc",
             starting_after=0,
         )
-        assert_matches_type(VersionListResponse, version, path=["response"])
+        assert_matches_type(AsyncWorkflowVersionsPage[Workflow], version, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -199,7 +201,7 @@ class TestAsyncVersions:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         version = await response.parse()
-        assert_matches_type(VersionListResponse, version, path=["response"])
+        assert_matches_type(AsyncWorkflowVersionsPage[Workflow], version, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -211,7 +213,7 @@ class TestAsyncVersions:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             version = await response.parse()
-            assert_matches_type(VersionListResponse, version, path=["response"])
+            assert_matches_type(AsyncWorkflowVersionsPage[Workflow], version, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

@@ -8,8 +8,9 @@ from typing import Any, cast
 import pytest
 
 from bem import Bem, AsyncBem
-from bem.types import CallGetResponse, CallListResponse
+from bem.types import Call, CallGetResponse
 from tests.utils import assert_matches_type
+from bem.pagination import SyncCallsPage, AsyncCallsPage
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -63,7 +64,7 @@ class TestCalls:
     @parametrize
     def test_method_list(self, client: Bem) -> None:
         call = client.calls.list()
-        assert_matches_type(CallListResponse, call, path=["response"])
+        assert_matches_type(SyncCallsPage[Call], call, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -80,7 +81,7 @@ class TestCalls:
             workflow_ids=["string"],
             workflow_names=["string"],
         )
-        assert_matches_type(CallListResponse, call, path=["response"])
+        assert_matches_type(SyncCallsPage[Call], call, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -90,7 +91,7 @@ class TestCalls:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         call = response.parse()
-        assert_matches_type(CallListResponse, call, path=["response"])
+        assert_matches_type(SyncCallsPage[Call], call, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -100,7 +101,7 @@ class TestCalls:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             call = response.parse()
-            assert_matches_type(CallListResponse, call, path=["response"])
+            assert_matches_type(SyncCallsPage[Call], call, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -156,7 +157,7 @@ class TestAsyncCalls:
     @parametrize
     async def test_method_list(self, async_client: AsyncBem) -> None:
         call = await async_client.calls.list()
-        assert_matches_type(CallListResponse, call, path=["response"])
+        assert_matches_type(AsyncCallsPage[Call], call, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -173,7 +174,7 @@ class TestAsyncCalls:
             workflow_ids=["string"],
             workflow_names=["string"],
         )
-        assert_matches_type(CallListResponse, call, path=["response"])
+        assert_matches_type(AsyncCallsPage[Call], call, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -183,7 +184,7 @@ class TestAsyncCalls:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         call = await response.parse()
-        assert_matches_type(CallListResponse, call, path=["response"])
+        assert_matches_type(AsyncCallsPage[Call], call, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -193,6 +194,6 @@ class TestAsyncCalls:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             call = await response.parse()
-            assert_matches_type(CallListResponse, call, path=["response"])
+            assert_matches_type(AsyncCallsPage[Call], call, path=["response"])
 
         assert cast(Any, response.is_closed) is True

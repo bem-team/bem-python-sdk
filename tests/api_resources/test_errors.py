@@ -8,8 +8,9 @@ from typing import Any, cast
 import pytest
 
 from bem import Bem, AsyncBem
-from bem.types import ErrorListResponse, ErrorRetrieveResponse
+from bem.types import ErrorEvent, ErrorRetrieveResponse
 from tests.utils import assert_matches_type
+from bem.pagination import SyncErrorsPage, AsyncErrorsPage
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -63,7 +64,7 @@ class TestErrors:
     @parametrize
     def test_method_list(self, client: Bem) -> None:
         error = client.errors.list()
-        assert_matches_type(ErrorListResponse, error, path=["response"])
+        assert_matches_type(SyncErrorsPage[ErrorEvent], error, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -81,7 +82,7 @@ class TestErrors:
             workflow_ids=["string"],
             workflow_names=["string"],
         )
-        assert_matches_type(ErrorListResponse, error, path=["response"])
+        assert_matches_type(SyncErrorsPage[ErrorEvent], error, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -91,7 +92,7 @@ class TestErrors:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         error = response.parse()
-        assert_matches_type(ErrorListResponse, error, path=["response"])
+        assert_matches_type(SyncErrorsPage[ErrorEvent], error, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -101,7 +102,7 @@ class TestErrors:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             error = response.parse()
-            assert_matches_type(ErrorListResponse, error, path=["response"])
+            assert_matches_type(SyncErrorsPage[ErrorEvent], error, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -157,7 +158,7 @@ class TestAsyncErrors:
     @parametrize
     async def test_method_list(self, async_client: AsyncBem) -> None:
         error = await async_client.errors.list()
-        assert_matches_type(ErrorListResponse, error, path=["response"])
+        assert_matches_type(AsyncErrorsPage[ErrorEvent], error, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -175,7 +176,7 @@ class TestAsyncErrors:
             workflow_ids=["string"],
             workflow_names=["string"],
         )
-        assert_matches_type(ErrorListResponse, error, path=["response"])
+        assert_matches_type(AsyncErrorsPage[ErrorEvent], error, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -185,7 +186,7 @@ class TestAsyncErrors:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         error = await response.parse()
-        assert_matches_type(ErrorListResponse, error, path=["response"])
+        assert_matches_type(AsyncErrorsPage[ErrorEvent], error, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -195,6 +196,6 @@ class TestAsyncErrors:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             error = await response.parse()
-            assert_matches_type(ErrorListResponse, error, path=["response"])
+            assert_matches_type(AsyncErrorsPage[ErrorEvent], error, path=["response"])
 
         assert cast(Any, response.is_closed) is True

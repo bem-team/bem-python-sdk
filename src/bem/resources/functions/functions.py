@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import List, Iterable
+from typing import Any, List, Iterable, cast
 from typing_extensions import Literal, overload
 
 import httpx
@@ -34,12 +34,13 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
+from ...pagination import SyncFunctionsPage, AsyncFunctionsPage
+from ..._base_client import AsyncPaginator, make_request_options
+from ...types.function import Function
 from ...types.function_type import FunctionType
 from ...types.function_response import FunctionResponse
 from ...types.enrich_config_param import EnrichConfigParam
 from ...types.route_list_item_param import RouteListItemParam
-from ...types.list_functions_response import ListFunctionsResponse
 
 __all__ = ["FunctionsResource", "AsyncFunctionsResource"]
 
@@ -935,7 +936,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ListFunctionsResponse:
+    ) -> SyncFunctionsPage[Function]:
         """
         List Functions
 
@@ -948,8 +949,9 @@ class FunctionsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/v3/functions",
+            page=SyncFunctionsPage[Function],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -972,7 +974,7 @@ class FunctionsResource(SyncAPIResource):
                     function_list_params.FunctionListParams,
                 ),
             ),
-            cast_to=ListFunctionsResponse,
+            model=cast(Any, Function),  # Union types cannot be passed in as arguments in the type system
         )
 
     def delete(
@@ -1881,7 +1883,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
             cast_to=FunctionResponse,
         )
 
-    async def list(
+    def list(
         self,
         *,
         display_name: str | Omit = omit,
@@ -1901,7 +1903,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ListFunctionsResponse:
+    ) -> AsyncPaginator[Function, AsyncFunctionsPage[Function]]:
         """
         List Functions
 
@@ -1914,14 +1916,15 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/v3/functions",
+            page=AsyncFunctionsPage[Function],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "display_name": display_name,
                         "ending_before": ending_before,
@@ -1938,7 +1941,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     function_list_params.FunctionListParams,
                 ),
             ),
-            cast_to=ListFunctionsResponse,
+            model=cast(Any, Function),  # Union types cannot be passed in as arguments in the type system
         )
 
     async def delete(
