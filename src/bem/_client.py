@@ -129,8 +129,8 @@ class Bem(SyncAPIClient):
         - Track execution status using call reference IDs
 
         **Key Difference**: Calls vs Function Calls
-        - **Calls API** (`/v2/calls`): High-level API for invoking workflows or functions by name/ID. Supports batch processing and workflow orchestration.
-        - **Function Calls API** (`/v2/functions/{functionName}/call`): Direct function invocation with function-type-specific arguments. Better for granular control over individual function calls.
+        - **Calls API** (`/v3/calls`): High-level API for invoking workflows or functions by name/ID. Supports batch processing and workflow orchestration.
+        - **Function Calls API** (`/v3/functions/{functionName}/call`): Direct function invocation with function-type-specific arguments. Better for granular control over individual function calls.
         """
         from .resources.calls import CallsResource
 
@@ -383,8 +383,8 @@ class AsyncBem(AsyncAPIClient):
         - Track execution status using call reference IDs
 
         **Key Difference**: Calls vs Function Calls
-        - **Calls API** (`/v2/calls`): High-level API for invoking workflows or functions by name/ID. Supports batch processing and workflow orchestration.
-        - **Function Calls API** (`/v2/functions/{functionName}/call`): Direct function invocation with function-type-specific arguments. Better for granular control over individual function calls.
+        - **Calls API** (`/v3/calls`): High-level API for invoking workflows or functions by name/ID. Supports batch processing and workflow orchestration.
+        - **Function Calls API** (`/v3/functions/{functionName}/call`): Direct function invocation with function-type-specific arguments. Better for granular control over individual function calls.
         """
         from .resources.calls import AsyncCallsResource
 
@@ -588,8 +588,8 @@ class BemWithRawResponse:
         - Track execution status using call reference IDs
 
         **Key Difference**: Calls vs Function Calls
-        - **Calls API** (`/v2/calls`): High-level API for invoking workflows or functions by name/ID. Supports batch processing and workflow orchestration.
-        - **Function Calls API** (`/v2/functions/{functionName}/call`): Direct function invocation with function-type-specific arguments. Better for granular control over individual function calls.
+        - **Calls API** (`/v3/calls`): High-level API for invoking workflows or functions by name/ID. Supports batch processing and workflow orchestration.
+        - **Function Calls API** (`/v3/functions/{functionName}/call`): Direct function invocation with function-type-specific arguments. Better for granular control over individual function calls.
         """
         from .resources.calls import CallsResourceWithRawResponse
 
@@ -676,8 +676,8 @@ class AsyncBemWithRawResponse:
         - Track execution status using call reference IDs
 
         **Key Difference**: Calls vs Function Calls
-        - **Calls API** (`/v2/calls`): High-level API for invoking workflows or functions by name/ID. Supports batch processing and workflow orchestration.
-        - **Function Calls API** (`/v2/functions/{functionName}/call`): Direct function invocation with function-type-specific arguments. Better for granular control over individual function calls.
+        - **Calls API** (`/v3/calls`): High-level API for invoking workflows or functions by name/ID. Supports batch processing and workflow orchestration.
+        - **Function Calls API** (`/v3/functions/{functionName}/call`): Direct function invocation with function-type-specific arguments. Better for granular control over individual function calls.
         """
         from .resources.calls import AsyncCallsResourceWithRawResponse
 
@@ -764,8 +764,8 @@ class BemWithStreamedResponse:
         - Track execution status using call reference IDs
 
         **Key Difference**: Calls vs Function Calls
-        - **Calls API** (`/v2/calls`): High-level API for invoking workflows or functions by name/ID. Supports batch processing and workflow orchestration.
-        - **Function Calls API** (`/v2/functions/{functionName}/call`): Direct function invocation with function-type-specific arguments. Better for granular control over individual function calls.
+        - **Calls API** (`/v3/calls`): High-level API for invoking workflows or functions by name/ID. Supports batch processing and workflow orchestration.
+        - **Function Calls API** (`/v3/functions/{functionName}/call`): Direct function invocation with function-type-specific arguments. Better for granular control over individual function calls.
         """
         from .resources.calls import CallsResourceWithStreamingResponse
 
@@ -852,8 +852,8 @@ class AsyncBemWithStreamedResponse:
         - Track execution status using call reference IDs
 
         **Key Difference**: Calls vs Function Calls
-        - **Calls API** (`/v2/calls`): High-level API for invoking workflows or functions by name/ID. Supports batch processing and workflow orchestration.
-        - **Function Calls API** (`/v2/functions/{functionName}/call`): Direct function invocation with function-type-specific arguments. Better for granular control over individual function calls.
+        - **Calls API** (`/v3/calls`): High-level API for invoking workflows or functions by name/ID. Supports batch processing and workflow orchestration.
+        - **Function Calls API** (`/v3/functions/{functionName}/call`): Direct function invocation with function-type-specific arguments. Better for granular control over individual function calls.
         """
         from .resources.calls import AsyncCallsResourceWithStreamingResponse
 

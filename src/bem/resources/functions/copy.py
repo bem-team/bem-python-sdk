@@ -16,7 +16,7 @@ from ..._response import (
 )
 from ..._base_client import make_request_options
 from ...types.functions import copy_create_params
-from ...types.function_response_v3 import FunctionResponseV3
+from ...types.function_response import FunctionResponse
 
 __all__ = ["CopyResource", "AsyncCopyResource"]
 
@@ -70,7 +70,7 @@ class CopyResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Copy a Function
 
         Args:
@@ -112,7 +112,7 @@ class CopyResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=FunctionResponseV3,
+            cast_to=FunctionResponse,
         )
 
 
@@ -165,7 +165,7 @@ class AsyncCopyResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Copy a Function
 
         Args:
@@ -207,7 +207,7 @@ class AsyncCopyResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=FunctionResponseV3,
+            cast_to=FunctionResponse,
         )
 
 

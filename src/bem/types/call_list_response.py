@@ -4,14 +4,14 @@ from typing import List, Optional
 
 from pydantic import Field as FieldInfo
 
-from .call_v3 import CallV3
+from .call import Call
 from .._models import BaseModel
 
 __all__ = ["CallListResponse"]
 
 
 class CallListResponse(BaseModel):
-    calls: Optional[List[CallV3]] = None
+    calls: Optional[List[Call]] = None
 
     error: Optional[str] = None
     """Error message if the calls listing failed."""

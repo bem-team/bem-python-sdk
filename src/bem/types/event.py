@@ -2,10 +2,11 @@
 
 from typing import List, Union, Optional
 from datetime import datetime
-from typing_extensions import Literal, TypeAlias
+from typing_extensions import Literal, Annotated, TypeAlias
 
 from pydantic import Field as FieldInfo
 
+from .._utils import PropertyInfo
 from .._models import BaseModel
 from .any_type import AnyType
 from .error_event import ErrorEvent
@@ -466,6 +467,8 @@ class SplitItemEvent(BaseModel):
     created_at: Optional[datetime] = FieldInfo(alias="createdAt", default=None)
     """Timestamp indicating when the event was created."""
 
+    event_type: Optional[Literal["split_item"]] = FieldInfo(alias="eventType", default=None)
+
     function_call_id: Optional[str] = FieldInfo(alias="functionCallID", default=None)
     """Unique identifier of function call that this event is associated with."""
 
@@ -712,13 +715,16 @@ class CollectionProcessingEvent(BaseModel):
     metadata: Optional[CollectionProcessingEventMetadata] = None
 
 
-Event: TypeAlias = Union[
-    TransformEvent,
-    RouteEvent,
-    SplitCollectionEvent,
-    SplitItemEvent,
-    ErrorEvent,
-    JoinEvent,
-    EnrichEvent,
-    CollectionProcessingEvent,
+Event: TypeAlias = Annotated[
+    Union[
+        TransformEvent,
+        RouteEvent,
+        SplitCollectionEvent,
+        SplitItemEvent,
+        ErrorEvent,
+        JoinEvent,
+        EnrichEvent,
+        CollectionProcessingEvent,
+    ],
+    PropertyInfo(discriminator="event_type"),
 ]

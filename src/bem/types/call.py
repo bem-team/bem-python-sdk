@@ -10,7 +10,7 @@ from .event import Event
 from .._models import BaseModel
 from .error_event import ErrorEvent
 
-__all__ = ["CallV3", "Input", "InputBatchFiles", "InputBatchFilesInput", "InputSingleFile"]
+__all__ = ["Call", "Input", "InputBatchFiles", "InputBatchFilesInput", "InputSingleFile"]
 
 
 class InputBatchFilesInput(BaseModel):
@@ -44,7 +44,7 @@ class Input(BaseModel):
     single_file: Optional[InputSingleFile] = FieldInfo(alias="singleFile", default=None)
 
 
-class CallV3(BaseModel):
+class Call(BaseModel):
     """A workflow call returned by the V3 API.
 
     Compared to the V2 `Call` model:

@@ -36,8 +36,8 @@ from ..._response import (
 )
 from ..._base_client import make_request_options
 from ...types.function_type import FunctionType
+from ...types.function_response import FunctionResponse
 from ...types.enrich_config_param import EnrichConfigParam
-from ...types.function_response_v3 import FunctionResponseV3
 from ...types.route_list_item_param import RouteListItemParam
 from ...types.list_functions_response import ListFunctionsResponse
 
@@ -132,7 +132,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -177,7 +177,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -219,7 +219,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -263,7 +263,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -303,7 +303,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -348,7 +348,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -391,7 +391,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -470,7 +470,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         return self._post(
             "/v3/functions",
             body=maybe_transform(
@@ -496,7 +496,7 @@ class FunctionsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=FunctionResponseV3,
+            cast_to=FunctionResponse,
         )
 
     def retrieve(
@@ -509,7 +509,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """
         Get a Function
 
@@ -529,7 +529,7 @@ class FunctionsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=FunctionResponseV3,
+            cast_to=FunctionResponse,
         )
 
     @overload
@@ -537,6 +537,7 @@ class FunctionsResource(SyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["transform"],
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
@@ -549,7 +550,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Update a Function
 
         Args:
@@ -583,6 +584,7 @@ class FunctionsResource(SyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["analyze"],
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
@@ -594,7 +596,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Update a Function
 
         Args:
@@ -625,6 +627,7 @@ class FunctionsResource(SyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["route"],
         description: str | Omit = omit,
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
@@ -636,7 +639,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Update a Function
 
         Args:
@@ -668,6 +671,7 @@ class FunctionsResource(SyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["split"],
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
         print_page_split_config: function_update_params.UpsertSplitFunctionPrintPageSplitConfig | Omit = omit,
@@ -680,7 +684,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Update a Function
 
         Args:
@@ -707,6 +711,7 @@ class FunctionsResource(SyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["join"],
         description: str | Omit = omit,
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
@@ -720,7 +725,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """
         Update a Function
 
@@ -754,6 +759,7 @@ class FunctionsResource(SyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["payload_shaping"],
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
         shaping_schema: str | Omit = omit,
@@ -764,7 +770,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Update a Function
 
         Args:
@@ -797,6 +803,7 @@ class FunctionsResource(SyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["enrich"],
         config: EnrichConfigParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -804,7 +811,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """
         Update a Function
 
@@ -845,10 +852,18 @@ class FunctionsResource(SyncAPIResource):
         """
         ...
 
+    @required_args(["type"])
     def update(
         self,
         path_function_name: str,
         *,
+        type: Literal["transform"]
+        | Literal["analyze"]
+        | Literal["route"]
+        | Literal["split"]
+        | Literal["join"]
+        | Literal["payload_shaping"]
+        | Literal["enrich"],
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
@@ -869,13 +884,14 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         if not path_function_name:
             raise ValueError(f"Expected a non-empty value for `path_function_name` but received {path_function_name!r}")
         return self._patch(
             path_template("/v3/functions/{path_function_name}", path_function_name=path_function_name),
             body=maybe_transform(
                 {
+                    "type": type,
                     "display_name": display_name,
                     "body_function_name": body_function_name,
                     "output_schema": output_schema,
@@ -896,7 +912,7 @@ class FunctionsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=FunctionResponseV3,
+            cast_to=FunctionResponse,
         )
 
     def list(
@@ -1082,7 +1098,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -1127,7 +1143,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -1169,7 +1185,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -1213,7 +1229,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -1253,7 +1269,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -1298,7 +1314,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -1341,7 +1357,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Create a Function
 
         Args:
@@ -1420,7 +1436,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         return await self._post(
             "/v3/functions",
             body=await async_maybe_transform(
@@ -1446,7 +1462,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=FunctionResponseV3,
+            cast_to=FunctionResponse,
         )
 
     async def retrieve(
@@ -1459,7 +1475,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """
         Get a Function
 
@@ -1479,7 +1495,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=FunctionResponseV3,
+            cast_to=FunctionResponse,
         )
 
     @overload
@@ -1487,6 +1503,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["transform"],
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
@@ -1499,7 +1516,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Update a Function
 
         Args:
@@ -1533,6 +1550,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["analyze"],
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
@@ -1544,7 +1562,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Update a Function
 
         Args:
@@ -1575,6 +1593,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["route"],
         description: str | Omit = omit,
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
@@ -1586,7 +1605,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Update a Function
 
         Args:
@@ -1618,6 +1637,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["split"],
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
         print_page_split_config: function_update_params.UpsertSplitFunctionPrintPageSplitConfig | Omit = omit,
@@ -1630,7 +1650,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Update a Function
 
         Args:
@@ -1657,6 +1677,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["join"],
         description: str | Omit = omit,
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
@@ -1670,7 +1691,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """
         Update a Function
 
@@ -1704,6 +1725,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["payload_shaping"],
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
         shaping_schema: str | Omit = omit,
@@ -1714,7 +1736,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """Update a Function
 
         Args:
@@ -1747,6 +1769,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         path_function_name: str,
         *,
+        type: Literal["enrich"],
         config: EnrichConfigParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1754,7 +1777,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         """
         Update a Function
 
@@ -1795,10 +1818,18 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         ...
 
+    @required_args(["type"])
     async def update(
         self,
         path_function_name: str,
         *,
+        type: Literal["transform"]
+        | Literal["analyze"]
+        | Literal["route"]
+        | Literal["split"]
+        | Literal["join"]
+        | Literal["payload_shaping"]
+        | Literal["enrich"],
         display_name: str | Omit = omit,
         body_function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
@@ -1819,13 +1850,14 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponseV3:
+    ) -> FunctionResponse:
         if not path_function_name:
             raise ValueError(f"Expected a non-empty value for `path_function_name` but received {path_function_name!r}")
         return await self._patch(
             path_template("/v3/functions/{path_function_name}", path_function_name=path_function_name),
             body=await async_maybe_transform(
                 {
+                    "type": type,
                     "display_name": display_name,
                     "body_function_name": body_function_name,
                     "output_schema": output_schema,
@@ -1846,7 +1878,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=FunctionResponseV3,
+            cast_to=FunctionResponse,
         )
 
     async def list(

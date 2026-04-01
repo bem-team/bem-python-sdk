@@ -35,11 +35,11 @@ client = Bem(
     api_key=os.environ.get("BEM_API_KEY"),  # This is the default and can be omitted
 )
 
-function_response_v3 = client.functions.create(
+function_response = client.functions.create(
     function_name="functionName",
     type="transform",
 )
-print(function_response_v3.function)
+print(function_response.function)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -62,11 +62,11 @@ client = AsyncBem(
 
 
 async def main() -> None:
-    function_response_v3 = await client.functions.create(
+    function_response = await client.functions.create(
         function_name="functionName",
         type="transform",
     )
-    print(function_response_v3.function)
+    print(function_response.function)
 
 
 asyncio.run(main())
@@ -99,11 +99,11 @@ async def main() -> None:
         api_key=os.environ.get("BEM_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        function_response_v3 = await client.functions.create(
+        function_response = await client.functions.create(
             function_name="functionName",
             type="transform",
         )
-        print(function_response_v3.function)
+        print(function_response.function)
 
 
 asyncio.run(main())
@@ -127,12 +127,12 @@ from bem import Bem
 
 client = Bem()
 
-function_response_v3 = client.functions.create(
+function_response = client.functions.create(
     function_name="functionName",
     type="split",
     print_page_split_config={},
 )
-print(function_response_v3.print_page_split_config)
+print(function_response.print_page_split_config)
 ```
 
 ## Handling errors
