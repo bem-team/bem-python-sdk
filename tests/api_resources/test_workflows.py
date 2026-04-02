@@ -300,7 +300,7 @@ class TestWorkflows:
             workflow_name="workflowName",
             call_reference_id="callReferenceID",
             file={},
-            files=["string"],
+            files=[{}],
             wait="wait",
         )
         assert_matches_type(CallGetResponse, workflow, path=["response"])
@@ -670,7 +670,7 @@ class TestAsyncWorkflows:
             workflow_name="workflowName",
             call_reference_id="callReferenceID",
             file={},
-            files=["string"],
+            files=[{}],
             wait="wait",
         )
         assert_matches_type(CallGetResponse, workflow, path=["response"])
