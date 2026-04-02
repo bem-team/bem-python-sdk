@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+from typing import Iterable
 from typing_extensions import Annotated, TypedDict
 
-from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 
 __all__ = ["WorkflowCallParams"]
@@ -17,7 +17,7 @@ class WorkflowCallParams(TypedDict, total=False):
     file: object
     """Single input file (for transform, analyze, route, and split functions)."""
 
-    files: SequenceNotStr[str]
+    files: Iterable[object]
     """Multiple input files (for join functions)."""
 
     wait: str
