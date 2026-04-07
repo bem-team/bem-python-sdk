@@ -136,3 +136,15 @@ Methods:
 
 - <code title="get /v3/workflows/{workflowName}/versions/{versionNum}">client.workflows.versions.<a href="./src/bem/resources/workflows/versions.py">retrieve</a>(version_num, \*, workflow_name) -> <a href="./src/bem/types/workflows/version_retrieve_response.py">VersionRetrieveResponse</a></code>
 - <code title="get /v3/workflows/{workflowName}/versions">client.workflows.versions.<a href="./src/bem/resources/workflows/versions.py">list</a>(workflow_name, \*\*<a href="src/bem/types/workflows/version_list_params.py">params</a>) -> <a href="./src/bem/types/workflow.py">SyncWorkflowVersionsPage[Workflow]</a></code>
+
+# InferSchema
+
+Types:
+
+```python
+from bem.types import InferSchemaCreateResponse
+```
+
+Methods:
+
+- <code title="post /v3/infer-schema">client.infer_schema.<a href="./src/bem/resources/infer_schema.py">create</a>(\*\*<a href="src/bem/types/infer_schema_create_params.py">params</a>) -> <a href="./src/bem/types/infer_schema_create_response.py">InferSchemaCreateResponse</a></code>
