@@ -40,6 +40,14 @@ from .workflows import (
     WorkflowsResourceWithStreamingResponse,
     AsyncWorkflowsResourceWithStreamingResponse,
 )
+from .infer_schema import (
+    InferSchemaResource,
+    AsyncInferSchemaResource,
+    InferSchemaResourceWithRawResponse,
+    AsyncInferSchemaResourceWithRawResponse,
+    InferSchemaResourceWithStreamingResponse,
+    AsyncInferSchemaResourceWithStreamingResponse,
+)
 
 __all__ = [
     "FunctionsResource",
@@ -72,4 +80,10 @@ __all__ = [
     "AsyncWorkflowsResourceWithRawResponse",
     "WorkflowsResourceWithStreamingResponse",
     "AsyncWorkflowsResourceWithStreamingResponse",
+    "InferSchemaResource",
+    "AsyncInferSchemaResource",
+    "InferSchemaResourceWithRawResponse",
+    "AsyncInferSchemaResourceWithRawResponse",
+    "InferSchemaResourceWithStreamingResponse",
+    "AsyncInferSchemaResourceWithStreamingResponse",
 ]

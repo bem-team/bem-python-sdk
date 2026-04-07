@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0 (2026-04-07)
+
+Full Changelog: [v0.4.0...v0.5.0](https://github.com/bem-team/bem-python-sdk/compare/v0.4.0...v0.5.0)
+
+### Features
+
+* **api:** add new infer-schema endpoint ([68169ac](https://github.com/bem-team/bem-python-sdk/commit/68169acb1be6cff133e3ed675b4a8b3df8483924))
+
 ## 0.4.0 (2026-04-07)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/bem-team/bem-python-sdk/compare/v0.3.0...v0.4.0)
