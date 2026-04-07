@@ -103,10 +103,13 @@ Types:
 ```python
 from bem.types import (
     FunctionVersionIdentifier,
+    Workflow,
+    WorkflowAudit,
+    WorkflowEdgeResponse,
+    WorkflowNodeResponse,
     WorkflowCreateResponse,
     WorkflowRetrieveResponse,
     WorkflowUpdateResponse,
-    WorkflowListResponse,
     WorkflowCopyResponse,
 )
 ```
@@ -116,7 +119,7 @@ Methods:
 - <code title="post /v3/workflows">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">create</a>(\*\*<a href="src/bem/types/workflow_create_params.py">params</a>) -> <a href="./src/bem/types/workflow_create_response.py">WorkflowCreateResponse</a></code>
 - <code title="get /v3/workflows/{workflowName}">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">retrieve</a>(workflow_name) -> <a href="./src/bem/types/workflow_retrieve_response.py">WorkflowRetrieveResponse</a></code>
 - <code title="patch /v3/workflows/{workflowName}">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">update</a>(workflow_name, \*\*<a href="src/bem/types/workflow_update_params.py">params</a>) -> <a href="./src/bem/types/workflow_update_response.py">WorkflowUpdateResponse</a></code>
-- <code title="get /v3/workflows">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">list</a>(\*\*<a href="src/bem/types/workflow_list_params.py">params</a>) -> <a href="./src/bem/types/workflow_list_response.py">SyncWorkflowsPage[WorkflowListResponse]</a></code>
+- <code title="get /v3/workflows">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">list</a>(\*\*<a href="src/bem/types/workflow_list_params.py">params</a>) -> <a href="./src/bem/types/workflow.py">SyncWorkflowsPage[Workflow]</a></code>
 - <code title="delete /v3/workflows/{workflowName}">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">delete</a>(workflow_name) -> None</code>
 - <code title="post /v3/workflows/{workflowName}/call">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">call</a>(workflow_name, \*\*<a href="src/bem/types/workflow_call_params.py">params</a>) -> <a href="./src/bem/types/call_get_response.py">CallGetResponse</a></code>
 - <code title="post /v3/workflows/copy">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">copy</a>(\*\*<a href="src/bem/types/workflow_copy_params.py">params</a>) -> <a href="./src/bem/types/workflow_copy_response.py">WorkflowCopyResponse</a></code>
@@ -126,10 +129,10 @@ Methods:
 Types:
 
 ```python
-from bem.types.workflows import VersionRetrieveResponse, VersionListResponse
+from bem.types.workflows import VersionRetrieveResponse
 ```
 
 Methods:
 
 - <code title="get /v3/workflows/{workflowName}/versions/{versionNum}">client.workflows.versions.<a href="./src/bem/resources/workflows/versions.py">retrieve</a>(version_num, \*, workflow_name) -> <a href="./src/bem/types/workflows/version_retrieve_response.py">VersionRetrieveResponse</a></code>
-- <code title="get /v3/workflows/{workflowName}/versions">client.workflows.versions.<a href="./src/bem/resources/workflows/versions.py">list</a>(workflow_name, \*\*<a href="src/bem/types/workflows/version_list_params.py">params</a>) -> <a href="./src/bem/types/workflows/version_list_response.py">SyncWorkflowVersionsPage[VersionListResponse]</a></code>
+- <code title="get /v3/workflows/{workflowName}/versions">client.workflows.versions.<a href="./src/bem/resources/workflows/versions.py">list</a>(workflow_name, \*\*<a href="src/bem/types/workflows/version_list_params.py">params</a>) -> <a href="./src/bem/types/workflow.py">SyncWorkflowVersionsPage[Workflow]</a></code>
