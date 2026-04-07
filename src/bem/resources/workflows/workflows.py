@@ -34,9 +34,9 @@ from ..._response import (
 )
 from ...pagination import SyncWorkflowsPage, AsyncWorkflowsPage
 from ..._base_client import AsyncPaginator, make_request_options
+from ...types.workflow import Workflow
 from ...types.call_get_response import CallGetResponse
 from ...types.workflow_copy_response import WorkflowCopyResponse
-from ...types.workflow_list_response import WorkflowListResponse
 from ...types.workflow_create_response import WorkflowCreateResponse
 from ...types.workflow_update_response import WorkflowUpdateResponse
 from ...types.workflow_retrieve_response import WorkflowRetrieveResponse
@@ -243,7 +243,7 @@ class WorkflowsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncWorkflowsPage[WorkflowListResponse]:
+    ) -> SyncWorkflowsPage[Workflow]:
         """
         List Workflows
 
@@ -258,7 +258,7 @@ class WorkflowsResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/v3/workflows",
-            page=SyncWorkflowsPage[WorkflowListResponse],
+            page=SyncWorkflowsPage[Workflow],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -280,7 +280,7 @@ class WorkflowsResource(SyncAPIResource):
                     workflow_list_params.WorkflowListParams,
                 ),
             ),
-            model=WorkflowListResponse,
+            model=Workflow,
         )
 
     def delete(
@@ -659,7 +659,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[WorkflowListResponse, AsyncWorkflowsPage[WorkflowListResponse]]:
+    ) -> AsyncPaginator[Workflow, AsyncWorkflowsPage[Workflow]]:
         """
         List Workflows
 
@@ -674,7 +674,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/v3/workflows",
-            page=AsyncWorkflowsPage[WorkflowListResponse],
+            page=AsyncWorkflowsPage[Workflow],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -696,7 +696,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
                     workflow_list_params.WorkflowListParams,
                 ),
             ),
-            model=WorkflowListResponse,
+            model=Workflow,
         )
 
     async def delete(

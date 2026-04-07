@@ -6,11 +6,13 @@ from .call import Call as Call
 from .event import Event as Event
 from .any_type import AnyType as AnyType
 from .function import Function as Function
+from .workflow import Workflow as Workflow
 from .enrich_step import EnrichStep as EnrichStep
 from .error_event import ErrorEvent as ErrorEvent
 from .enrich_config import EnrichConfig as EnrichConfig
 from .function_type import FunctionType as FunctionType
 from .function_audit import FunctionAudit as FunctionAudit
+from .workflow_audit import WorkflowAudit as WorkflowAudit
 from .route_list_item import RouteListItem as RouteListItem
 from .call_list_params import CallListParams as CallListParams
 from .call_get_response import CallGetResponse as CallGetResponse
@@ -33,7 +35,8 @@ from .function_create_params import FunctionCreateParams as FunctionCreateParams
 from .function_update_params import FunctionUpdateParams as FunctionUpdateParams
 from .workflow_copy_response import WorkflowCopyResponse as WorkflowCopyResponse
 from .workflow_create_params import WorkflowCreateParams as WorkflowCreateParams
-from .workflow_list_response import WorkflowListResponse as WorkflowListResponse
+from .workflow_edge_response import WorkflowEdgeResponse as WorkflowEdgeResponse
+from .workflow_node_response import WorkflowNodeResponse as WorkflowNodeResponse
 from .workflow_update_params import WorkflowUpdateParams as WorkflowUpdateParams
 from .error_retrieve_response import ErrorRetrieveResponse as ErrorRetrieveResponse
 from .list_functions_response import ListFunctionsResponse as ListFunctionsResponse
