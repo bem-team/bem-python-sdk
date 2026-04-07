@@ -6,7 +6,6 @@ from .call import Call as Call
 from .event import Event as Event
 from .any_type import AnyType as AnyType
 from .function import Function as Function
-from .workflow import Workflow as Workflow
 from .enrich_step import EnrichStep as EnrichStep
 from .error_event import ErrorEvent as ErrorEvent
 from .enrich_config import EnrichConfig as EnrichConfig
@@ -34,6 +33,7 @@ from .function_create_params import FunctionCreateParams as FunctionCreateParams
 from .function_update_params import FunctionUpdateParams as FunctionUpdateParams
 from .workflow_copy_response import WorkflowCopyResponse as WorkflowCopyResponse
 from .workflow_create_params import WorkflowCreateParams as WorkflowCreateParams
+from .workflow_list_response import WorkflowListResponse as WorkflowListResponse
 from .workflow_update_params import WorkflowUpdateParams as WorkflowUpdateParams
 from .error_retrieve_response import ErrorRetrieveResponse as ErrorRetrieveResponse
 from .list_functions_response import ListFunctionsResponse as ListFunctionsResponse
@@ -43,7 +43,6 @@ from .workflow_update_response import WorkflowUpdateResponse as WorkflowUpdateRe
 from .workflow_retrieve_response import WorkflowRetrieveResponse as WorkflowRetrieveResponse
 from .function_version_identifier import FunctionVersionIdentifier as FunctionVersionIdentifier
 from .function_version_identifier_param import FunctionVersionIdentifierParam as FunctionVersionIdentifierParam
-from .workflow_request_relationship_param import WorkflowRequestRelationshipParam as WorkflowRequestRelationshipParam
 from .split_function_semantic_page_item_class import (
     SplitFunctionSemanticPageItemClass as SplitFunctionSemanticPageItemClass,
 )

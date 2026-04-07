@@ -5,34 +5,14 @@ from datetime import datetime
 
 from pydantic import Field as FieldInfo
 
-from .._models import BaseModel
-from .user_action_summary import UserActionSummary
-from .function_version_identifier import FunctionVersionIdentifier
+from ..._models import BaseModel
+from ..user_action_summary import UserActionSummary
+from ..function_version_identifier import FunctionVersionIdentifier
 
-__all__ = ["WorkflowCopyResponse", "CopiedFunction", "Workflow", "WorkflowEdge", "WorkflowNode", "WorkflowAudit"]
-
-
-class CopiedFunction(BaseModel):
-    source_function_id: str = FieldInfo(alias="sourceFunctionID")
-    """ID of the source function that was copied."""
-
-    source_function_name: str = FieldInfo(alias="sourceFunctionName")
-    """Name of the source function that was copied."""
-
-    source_version_num: int = FieldInfo(alias="sourceVersionNum")
-    """Version number of the source function that was copied."""
-
-    target_function_id: str = FieldInfo(alias="targetFunctionID")
-    """ID of the newly created function in the target environment."""
-
-    target_function_name: str = FieldInfo(alias="targetFunctionName")
-    """Name of the newly created function in the target environment."""
-
-    target_version_num: int = FieldInfo(alias="targetVersionNum")
-    """Version number of the newly created function in the target environment."""
+__all__ = ["VersionListResponse", "Edge", "Node", "Audit"]
 
 
-class WorkflowEdge(BaseModel):
+class Edge(BaseModel):
     """Read representation of a directed edge between call-site nodes."""
 
     destination_node_name: str = FieldInfo(alias="destinationNodeName")
@@ -45,7 +25,7 @@ class WorkflowEdge(BaseModel):
     """Labelled outlet on the source node, if any."""
 
 
-class WorkflowNode(BaseModel):
+class Node(BaseModel):
     """Read representation of a call-site node."""
 
     function: FunctionVersionIdentifier
@@ -55,7 +35,7 @@ class WorkflowNode(BaseModel):
     """Name of this call site, unique within the workflow version."""
 
 
-class WorkflowAudit(BaseModel):
+class Audit(BaseModel):
     """Audit trail information."""
 
     version_created_by: Optional[UserActionSummary] = FieldInfo(alias="versionCreatedBy", default=None)
@@ -68,7 +48,7 @@ class WorkflowAudit(BaseModel):
     """Information about who last updated the workflow."""
 
 
-class Workflow(BaseModel):
+class VersionListResponse(BaseModel):
     """V3 read representation of a workflow version."""
 
     id: str
@@ -77,7 +57,7 @@ class Workflow(BaseModel):
     created_at: datetime = FieldInfo(alias="createdAt")
     """The date and time the workflow was created."""
 
-    edges: List[WorkflowEdge]
+    edges: List[Edge]
     """All directed edges in this workflow version's DAG."""
 
     main_node_name: str = FieldInfo(alias="mainNodeName")
@@ -86,7 +66,7 @@ class Workflow(BaseModel):
     name: str
     """Unique name of the workflow within the environment."""
 
-    nodes: List[WorkflowNode]
+    nodes: List[Node]
     """All call-site nodes in this workflow version's DAG."""
 
     updated_at: datetime = FieldInfo(alias="updatedAt")
@@ -95,7 +75,7 @@ class Workflow(BaseModel):
     version_num: int = FieldInfo(alias="versionNum")
     """Version number of this workflow version."""
 
-    audit: Optional[WorkflowAudit] = None
+    audit: Optional[Audit] = None
     """Audit trail information."""
 
     display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
@@ -106,20 +86,3 @@ class Workflow(BaseModel):
 
     tags: Optional[List[str]] = None
     """Tags associated with the workflow."""
-
-
-class WorkflowCopyResponse(BaseModel):
-    copied_functions: Optional[List[CopiedFunction]] = FieldInfo(alias="copiedFunctions", default=None)
-    """
-    Functions that were copied when copying to a different environment. Empty when
-    copying within the same environment.
-    """
-
-    environment: Optional[str] = None
-    """The environment the workflow was copied to."""
-
-    error: Optional[str] = None
-    """Error message if the workflow copy failed."""
-
-    workflow: Optional[Workflow] = None
-    """V3 read representation of a workflow version."""
