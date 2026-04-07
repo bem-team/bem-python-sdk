@@ -9,9 +9,9 @@ import pytest
 
 from bem import Bem, AsyncBem
 from bem.types import (
-    Workflow,
     CallGetResponse,
     WorkflowCopyResponse,
+    WorkflowListResponse,
     WorkflowCreateResponse,
     WorkflowUpdateResponse,
     WorkflowRetrieveResponse,
@@ -28,32 +28,34 @@ class TestWorkflows:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_create(self, client: Bem) -> None:
-        workflow = client.workflows.create()
+        workflow = client.workflows.create(
+            main_node_name="mainNodeName",
+            name="name",
+            nodes=[{"function": {}}],
+        )
         assert_matches_type(WorkflowCreateResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_method_create_with_all_params(self, client: Bem) -> None:
         workflow = client.workflows.create(
-            display_name="displayName",
-            main_function={
-                "id": "id",
-                "name": "name",
-                "version_num": 0,
-            },
+            main_node_name="mainNodeName",
             name="name",
-            relationships=[
+            nodes=[
                 {
-                    "destination_function": {
+                    "function": {
                         "id": "id",
                         "name": "name",
                         "version_num": 0,
                     },
-                    "source_function": {
-                        "id": "id",
-                        "name": "name",
-                        "version_num": 0,
-                    },
+                    "name": "name",
+                }
+            ],
+            display_name="displayName",
+            edges=[
+                {
+                    "destination_node_name": "destinationNodeName",
+                    "source_node_name": "sourceNodeName",
                     "destination_name": "destinationName",
                 }
             ],
@@ -64,7 +66,11 @@ class TestWorkflows:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_raw_response_create(self, client: Bem) -> None:
-        response = client.workflows.with_raw_response.create()
+        response = client.workflows.with_raw_response.create(
+            main_node_name="mainNodeName",
+            name="name",
+            nodes=[{"function": {}}],
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -74,7 +80,11 @@ class TestWorkflows:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     def test_streaming_response_create(self, client: Bem) -> None:
-        with client.workflows.with_streaming_response.create() as response:
+        with client.workflows.with_streaming_response.create(
+            main_node_name="mainNodeName",
+            name="name",
+            nodes=[{"function": {}}],
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -139,25 +149,23 @@ class TestWorkflows:
         workflow = client.workflows.update(
             workflow_name="workflowName",
             display_name="displayName",
-            main_function={
-                "id": "id",
-                "name": "name",
-                "version_num": 0,
-            },
-            name="name",
-            relationships=[
+            edges=[
                 {
-                    "destination_function": {
-                        "id": "id",
-                        "name": "name",
-                        "version_num": 0,
-                    },
-                    "source_function": {
-                        "id": "id",
-                        "name": "name",
-                        "version_num": 0,
-                    },
+                    "destination_node_name": "destinationNodeName",
+                    "source_node_name": "sourceNodeName",
                     "destination_name": "destinationName",
+                }
+            ],
+            main_node_name="mainNodeName",
+            name="name",
+            nodes=[
+                {
+                    "function": {
+                        "id": "id",
+                        "name": "name",
+                        "version_num": 0,
+                    },
+                    "name": "name",
                 }
             ],
             tags=["string"],
@@ -202,7 +210,7 @@ class TestWorkflows:
     @parametrize
     def test_method_list(self, client: Bem) -> None:
         workflow = client.workflows.list()
-        assert_matches_type(SyncWorkflowsPage[Workflow], workflow, path=["response"])
+        assert_matches_type(SyncWorkflowsPage[WorkflowListResponse], workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -219,7 +227,7 @@ class TestWorkflows:
             workflow_ids=["string"],
             workflow_names=["string"],
         )
-        assert_matches_type(SyncWorkflowsPage[Workflow], workflow, path=["response"])
+        assert_matches_type(SyncWorkflowsPage[WorkflowListResponse], workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -229,7 +237,7 @@ class TestWorkflows:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         workflow = response.parse()
-        assert_matches_type(SyncWorkflowsPage[Workflow], workflow, path=["response"])
+        assert_matches_type(SyncWorkflowsPage[WorkflowListResponse], workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -239,7 +247,7 @@ class TestWorkflows:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             workflow = response.parse()
-            assert_matches_type(SyncWorkflowsPage[Workflow], workflow, path=["response"])
+            assert_matches_type(SyncWorkflowsPage[WorkflowListResponse], workflow, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -398,32 +406,34 @@ class TestAsyncWorkflows:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_create(self, async_client: AsyncBem) -> None:
-        workflow = await async_client.workflows.create()
+        workflow = await async_client.workflows.create(
+            main_node_name="mainNodeName",
+            name="name",
+            nodes=[{"function": {}}],
+        )
         assert_matches_type(WorkflowCreateResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncBem) -> None:
         workflow = await async_client.workflows.create(
-            display_name="displayName",
-            main_function={
-                "id": "id",
-                "name": "name",
-                "version_num": 0,
-            },
+            main_node_name="mainNodeName",
             name="name",
-            relationships=[
+            nodes=[
                 {
-                    "destination_function": {
+                    "function": {
                         "id": "id",
                         "name": "name",
                         "version_num": 0,
                     },
-                    "source_function": {
-                        "id": "id",
-                        "name": "name",
-                        "version_num": 0,
-                    },
+                    "name": "name",
+                }
+            ],
+            display_name="displayName",
+            edges=[
+                {
+                    "destination_node_name": "destinationNodeName",
+                    "source_node_name": "sourceNodeName",
                     "destination_name": "destinationName",
                 }
             ],
@@ -434,7 +444,11 @@ class TestAsyncWorkflows:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncBem) -> None:
-        response = await async_client.workflows.with_raw_response.create()
+        response = await async_client.workflows.with_raw_response.create(
+            main_node_name="mainNodeName",
+            name="name",
+            nodes=[{"function": {}}],
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -444,7 +458,11 @@ class TestAsyncWorkflows:
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncBem) -> None:
-        async with async_client.workflows.with_streaming_response.create() as response:
+        async with async_client.workflows.with_streaming_response.create(
+            main_node_name="mainNodeName",
+            name="name",
+            nodes=[{"function": {}}],
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -509,25 +527,23 @@ class TestAsyncWorkflows:
         workflow = await async_client.workflows.update(
             workflow_name="workflowName",
             display_name="displayName",
-            main_function={
-                "id": "id",
-                "name": "name",
-                "version_num": 0,
-            },
-            name="name",
-            relationships=[
+            edges=[
                 {
-                    "destination_function": {
-                        "id": "id",
-                        "name": "name",
-                        "version_num": 0,
-                    },
-                    "source_function": {
-                        "id": "id",
-                        "name": "name",
-                        "version_num": 0,
-                    },
+                    "destination_node_name": "destinationNodeName",
+                    "source_node_name": "sourceNodeName",
                     "destination_name": "destinationName",
+                }
+            ],
+            main_node_name="mainNodeName",
+            name="name",
+            nodes=[
+                {
+                    "function": {
+                        "id": "id",
+                        "name": "name",
+                        "version_num": 0,
+                    },
+                    "name": "name",
                 }
             ],
             tags=["string"],
@@ -572,7 +588,7 @@ class TestAsyncWorkflows:
     @parametrize
     async def test_method_list(self, async_client: AsyncBem) -> None:
         workflow = await async_client.workflows.list()
-        assert_matches_type(AsyncWorkflowsPage[Workflow], workflow, path=["response"])
+        assert_matches_type(AsyncWorkflowsPage[WorkflowListResponse], workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -589,7 +605,7 @@ class TestAsyncWorkflows:
             workflow_ids=["string"],
             workflow_names=["string"],
         )
-        assert_matches_type(AsyncWorkflowsPage[Workflow], workflow, path=["response"])
+        assert_matches_type(AsyncWorkflowsPage[WorkflowListResponse], workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -599,7 +615,7 @@ class TestAsyncWorkflows:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         workflow = await response.parse()
-        assert_matches_type(AsyncWorkflowsPage[Workflow], workflow, path=["response"])
+        assert_matches_type(AsyncWorkflowsPage[WorkflowListResponse], workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -609,7 +625,7 @@ class TestAsyncWorkflows:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             workflow = await response.parse()
-            assert_matches_type(AsyncWorkflowsPage[Workflow], workflow, path=["response"])
+            assert_matches_type(AsyncWorkflowsPage[WorkflowListResponse], workflow, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
