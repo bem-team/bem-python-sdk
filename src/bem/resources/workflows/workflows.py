@@ -40,8 +40,6 @@ from ...types.workflow_copy_response import WorkflowCopyResponse
 from ...types.workflow_create_response import WorkflowCreateResponse
 from ...types.workflow_update_response import WorkflowUpdateResponse
 from ...types.workflow_retrieve_response import WorkflowRetrieveResponse
-from ...types.function_version_identifier_param import FunctionVersionIdentifierParam
-from ...types.workflow_request_relationship_param import WorkflowRequestRelationshipParam
 
 __all__ = ["WorkflowsResource", "AsyncWorkflowsResource"]
 
@@ -76,10 +74,11 @@ class WorkflowsResource(SyncAPIResource):
     def create(
         self,
         *,
+        main_node_name: str,
+        name: str,
+        nodes: Iterable[workflow_create_params.Node],
         display_name: str | Omit = omit,
-        main_function: FunctionVersionIdentifierParam | Omit = omit,
-        name: str | Omit = omit,
-        relationships: Iterable[WorkflowRequestRelationshipParam] | Omit = omit,
+        edges: Iterable[workflow_create_params.Edge] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -88,37 +87,22 @@ class WorkflowsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> WorkflowCreateResponse:
-        """
-        Create a Workflow
+        """Create a Workflow
 
         Args:
-          display_name: Display name of workflow.
+          main_node_name: Name of the entry-point node.
 
-          main_function: Main function for the workflow. The `mainFunction` and `relationships` fields
-              act as a unit and must be provided together, or neither provided.
+        Must not be a destination of any edge.
 
-              - If `mainFunction` is provided without `relationships`, relationships will
-                default to an empty array.
-              - If `relationships` is provided, `mainFunction` must also be provided
-                (validation error if missing).
-              - If neither is provided, both mainFunction and relationships remain unchanged
-                from the current workflow version.
+          name: Unique name for the workflow. Must match `^[a-zA-Z0-9_-]{1,128}$`.
 
-          name: Name of workflow. Can be updated to rename the workflow. Must be unique within
-              the environment and match the pattern ^[a-zA-Z0-9_-]{1,128}$.
+          nodes: Call-site nodes in the DAG. At least one is required.
 
-          relationships: Relationships between functions in the workflow. The `mainFunction` and
-              `relationships` fields act as a unit and must be provided together, or neither
-              provided.
+          display_name: Human-readable display name.
 
-              - If `relationships` is provided, `mainFunction` must also be provided
-                (validation error if missing).
-              - If `mainFunction` is provided without `relationships`, relationships will
-                default to an empty array.
-              - If neither is provided, both mainFunction and relationships remain unchanged
-                from the current workflow version.
+          edges: Directed edges between nodes. Omit or leave empty for single-node workflows.
 
-          tags: Array of tags to categorize and organize workflows.
+          tags: Tags to categorize and organize the workflow.
 
           extra_headers: Send extra headers
 
@@ -132,10 +116,11 @@ class WorkflowsResource(SyncAPIResource):
             "/v3/workflows",
             body=maybe_transform(
                 {
-                    "display_name": display_name,
-                    "main_function": main_function,
+                    "main_node_name": main_node_name,
                     "name": name,
-                    "relationships": relationships,
+                    "nodes": nodes,
+                    "display_name": display_name,
+                    "edges": edges,
                     "tags": tags,
                 },
                 workflow_create_params.WorkflowCreateParams,
@@ -184,9 +169,10 @@ class WorkflowsResource(SyncAPIResource):
         workflow_name: str,
         *,
         display_name: str | Omit = omit,
-        main_function: FunctionVersionIdentifierParam | Omit = omit,
+        edges: Iterable[workflow_update_params.Edge] | Omit = omit,
+        main_node_name: str | Omit = omit,
         name: str | Omit = omit,
-        relationships: Iterable[WorkflowRequestRelationshipParam] | Omit = omit,
+        nodes: Iterable[workflow_update_params.Node] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -199,33 +185,15 @@ class WorkflowsResource(SyncAPIResource):
         Update a Workflow
 
         Args:
-          display_name: Display name of workflow.
+          display_name: Human-readable display name.
 
-          main_function: Main function for the workflow. The `mainFunction` and `relationships` fields
-              act as a unit and must be provided together, or neither provided.
+          main_node_name: `mainNodeName`, `nodes`, and `edges` must be provided together to update the DAG
+              topology. If none are provided the topology is copied unchanged from the current
+              version.
 
-              - If `mainFunction` is provided without `relationships`, relationships will
-                default to an empty array.
-              - If `relationships` is provided, `mainFunction` must also be provided
-                (validation error if missing).
-              - If neither is provided, both mainFunction and relationships remain unchanged
-                from the current workflow version.
+          name: New name for the workflow (renames it). Must match `^[a-zA-Z0-9_-]{1,128}$`.
 
-          name: Name of workflow. Can be updated to rename the workflow. Must be unique within
-              the environment and match the pattern ^[a-zA-Z0-9_-]{1,128}$.
-
-          relationships: Relationships between functions in the workflow. The `mainFunction` and
-              `relationships` fields act as a unit and must be provided together, or neither
-              provided.
-
-              - If `relationships` is provided, `mainFunction` must also be provided
-                (validation error if missing).
-              - If `mainFunction` is provided without `relationships`, relationships will
-                default to an empty array.
-              - If neither is provided, both mainFunction and relationships remain unchanged
-                from the current workflow version.
-
-          tags: Array of tags to categorize and organize workflows.
+          tags: Tags to categorize and organize the workflow.
 
           extra_headers: Send extra headers
 
@@ -242,9 +210,10 @@ class WorkflowsResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "display_name": display_name,
-                    "main_function": main_function,
+                    "edges": edges,
+                    "main_node_name": main_node_name,
                     "name": name,
-                    "relationships": relationships,
+                    "nodes": nodes,
                     "tags": tags,
                 },
                 workflow_update_params.WorkflowUpdateParams,
@@ -521,10 +490,11 @@ class AsyncWorkflowsResource(AsyncAPIResource):
     async def create(
         self,
         *,
+        main_node_name: str,
+        name: str,
+        nodes: Iterable[workflow_create_params.Node],
         display_name: str | Omit = omit,
-        main_function: FunctionVersionIdentifierParam | Omit = omit,
-        name: str | Omit = omit,
-        relationships: Iterable[WorkflowRequestRelationshipParam] | Omit = omit,
+        edges: Iterable[workflow_create_params.Edge] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -533,37 +503,22 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> WorkflowCreateResponse:
-        """
-        Create a Workflow
+        """Create a Workflow
 
         Args:
-          display_name: Display name of workflow.
+          main_node_name: Name of the entry-point node.
 
-          main_function: Main function for the workflow. The `mainFunction` and `relationships` fields
-              act as a unit and must be provided together, or neither provided.
+        Must not be a destination of any edge.
 
-              - If `mainFunction` is provided without `relationships`, relationships will
-                default to an empty array.
-              - If `relationships` is provided, `mainFunction` must also be provided
-                (validation error if missing).
-              - If neither is provided, both mainFunction and relationships remain unchanged
-                from the current workflow version.
+          name: Unique name for the workflow. Must match `^[a-zA-Z0-9_-]{1,128}$`.
 
-          name: Name of workflow. Can be updated to rename the workflow. Must be unique within
-              the environment and match the pattern ^[a-zA-Z0-9_-]{1,128}$.
+          nodes: Call-site nodes in the DAG. At least one is required.
 
-          relationships: Relationships between functions in the workflow. The `mainFunction` and
-              `relationships` fields act as a unit and must be provided together, or neither
-              provided.
+          display_name: Human-readable display name.
 
-              - If `relationships` is provided, `mainFunction` must also be provided
-                (validation error if missing).
-              - If `mainFunction` is provided without `relationships`, relationships will
-                default to an empty array.
-              - If neither is provided, both mainFunction and relationships remain unchanged
-                from the current workflow version.
+          edges: Directed edges between nodes. Omit or leave empty for single-node workflows.
 
-          tags: Array of tags to categorize and organize workflows.
+          tags: Tags to categorize and organize the workflow.
 
           extra_headers: Send extra headers
 
@@ -577,10 +532,11 @@ class AsyncWorkflowsResource(AsyncAPIResource):
             "/v3/workflows",
             body=await async_maybe_transform(
                 {
-                    "display_name": display_name,
-                    "main_function": main_function,
+                    "main_node_name": main_node_name,
                     "name": name,
-                    "relationships": relationships,
+                    "nodes": nodes,
+                    "display_name": display_name,
+                    "edges": edges,
                     "tags": tags,
                 },
                 workflow_create_params.WorkflowCreateParams,
@@ -629,9 +585,10 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         workflow_name: str,
         *,
         display_name: str | Omit = omit,
-        main_function: FunctionVersionIdentifierParam | Omit = omit,
+        edges: Iterable[workflow_update_params.Edge] | Omit = omit,
+        main_node_name: str | Omit = omit,
         name: str | Omit = omit,
-        relationships: Iterable[WorkflowRequestRelationshipParam] | Omit = omit,
+        nodes: Iterable[workflow_update_params.Node] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -644,33 +601,15 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         Update a Workflow
 
         Args:
-          display_name: Display name of workflow.
+          display_name: Human-readable display name.
 
-          main_function: Main function for the workflow. The `mainFunction` and `relationships` fields
-              act as a unit and must be provided together, or neither provided.
+          main_node_name: `mainNodeName`, `nodes`, and `edges` must be provided together to update the DAG
+              topology. If none are provided the topology is copied unchanged from the current
+              version.
 
-              - If `mainFunction` is provided without `relationships`, relationships will
-                default to an empty array.
-              - If `relationships` is provided, `mainFunction` must also be provided
-                (validation error if missing).
-              - If neither is provided, both mainFunction and relationships remain unchanged
-                from the current workflow version.
+          name: New name for the workflow (renames it). Must match `^[a-zA-Z0-9_-]{1,128}$`.
 
-          name: Name of workflow. Can be updated to rename the workflow. Must be unique within
-              the environment and match the pattern ^[a-zA-Z0-9_-]{1,128}$.
-
-          relationships: Relationships between functions in the workflow. The `mainFunction` and
-              `relationships` fields act as a unit and must be provided together, or neither
-              provided.
-
-              - If `relationships` is provided, `mainFunction` must also be provided
-                (validation error if missing).
-              - If `mainFunction` is provided without `relationships`, relationships will
-                default to an empty array.
-              - If neither is provided, both mainFunction and relationships remain unchanged
-                from the current workflow version.
-
-          tags: Array of tags to categorize and organize workflows.
+          tags: Tags to categorize and organize the workflow.
 
           extra_headers: Send extra headers
 
@@ -687,9 +626,10 @@ class AsyncWorkflowsResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "display_name": display_name,
-                    "main_function": main_function,
+                    "edges": edges,
+                    "main_node_name": main_node_name,
                     "name": name,
-                    "relationships": relationships,
+                    "nodes": nodes,
                     "tags": tags,
                 },
                 workflow_update_params.WorkflowUpdateParams,

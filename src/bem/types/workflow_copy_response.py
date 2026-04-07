@@ -33,15 +33,15 @@ class CopiedFunction(BaseModel):
 class WorkflowCopyResponse(BaseModel):
     copied_functions: Optional[List[CopiedFunction]] = FieldInfo(alias="copiedFunctions", default=None)
     """
-    Information about functions that were copied when copying to a different
-    environment. Empty when copying within the same environment.
+    Functions that were copied when copying to a different environment. Empty when
+    copying within the same environment.
     """
 
     environment: Optional[str] = None
-    """The environment where the workflow was copied to."""
+    """The environment the workflow was copied to."""
 
     error: Optional[str] = None
     """Error message if the workflow copy failed."""
 
     workflow: Optional[Workflow] = None
-    """The newly created workflow."""
+    """V3 read representation of a workflow version."""

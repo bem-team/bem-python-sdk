@@ -13,3 +13,4 @@ class VersionRetrieveResponse(BaseModel):
     """Error message if the workflow version retrieval failed."""
 
     workflow: Optional[Workflow] = None
+    """V3 read representation of a workflow version."""

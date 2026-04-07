@@ -104,7 +104,9 @@ Types:
 from bem.types import (
     FunctionVersionIdentifier,
     Workflow,
-    WorkflowRequestRelationship,
+    WorkflowAudit,
+    WorkflowEdgeResponse,
+    WorkflowNodeResponse,
     WorkflowCreateResponse,
     WorkflowRetrieveResponse,
     WorkflowUpdateResponse,

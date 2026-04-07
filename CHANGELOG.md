@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.0 (2026-04-07)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/bem-team/bem-python-sdk/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* **api:** api update ([e7d540d](https://github.com/bem-team/bem-python-sdk/commit/e7d540d47e8628fa840e20183def20c6251acaea))
+* **api:** fix workflow references in Stainless config ([ec4a7bd](https://github.com/bem-team/bem-python-sdk/commit/ec4a7bd8a0d2276d6bfd63ae94bb332e364d45a1))
+
+
+### Chores
+
+* configure new SDK language ([7c420ed](https://github.com/bem-team/bem-python-sdk/commit/7c420ed34cf6ba28875e68b689fd36d60d2ae48b))
+
 ## 0.3.0 (2026-04-02)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/bem-team/bem-python-sdk/compare/v0.2.0...v0.3.0)

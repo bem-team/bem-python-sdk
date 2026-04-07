@@ -13,3 +13,4 @@ class WorkflowUpdateResponse(BaseModel):
     """Error message if the workflow update failed."""
 
     workflow: Optional[Workflow] = None
+    """V3 read representation of a workflow version."""
