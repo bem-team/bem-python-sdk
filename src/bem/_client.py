@@ -32,10 +32,11 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import calls, errors, outputs, functions, workflows
+    from .resources import calls, errors, outputs, functions, workflows, infer_schema
     from .resources.calls import CallsResource, AsyncCallsResource
     from .resources.errors import ErrorsResource, AsyncErrorsResource
     from .resources.outputs import OutputsResource, AsyncOutputsResource
+    from .resources.infer_schema import InferSchemaResource, AsyncInferSchemaResource
     from .resources.functions.functions import FunctionsResource, AsyncFunctionsResource
     from .resources.workflows.workflows import WorkflowsResource, AsyncWorkflowsResource
 
@@ -177,6 +178,21 @@ class Bem(SyncAPIClient):
         from .resources.workflows import WorkflowsResource
 
         return WorkflowsResource(self)
+
+    @cached_property
+    def infer_schema(self) -> InferSchemaResource:
+        """Infer JSON Schemas from uploaded documents using AI.
+
+        Upload a file (PDF, image, spreadsheet, email, etc.) and receive a general-purpose JSON Schema
+        that captures the document's structure. The inferred schema can be used directly as the
+        `outputSchema` when creating Transform functions.
+
+        The schema is designed to be broadly applicable to documents of the same type, not just
+        the specific file uploaded.
+        """
+        from .resources.infer_schema import InferSchemaResource
+
+        return InferSchemaResource(self)
 
     @cached_property
     def with_raw_response(self) -> BemWithRawResponse:
@@ -433,6 +449,21 @@ class AsyncBem(AsyncAPIClient):
         return AsyncWorkflowsResource(self)
 
     @cached_property
+    def infer_schema(self) -> AsyncInferSchemaResource:
+        """Infer JSON Schemas from uploaded documents using AI.
+
+        Upload a file (PDF, image, spreadsheet, email, etc.) and receive a general-purpose JSON Schema
+        that captures the document's structure. The inferred schema can be used directly as the
+        `outputSchema` when creating Transform functions.
+
+        The schema is designed to be broadly applicable to documents of the same type, not just
+        the specific file uploaded.
+        """
+        from .resources.infer_schema import AsyncInferSchemaResource
+
+        return AsyncInferSchemaResource(self)
+
+    @cached_property
     def with_raw_response(self) -> AsyncBemWithRawResponse:
         return AsyncBemWithRawResponse(self)
 
@@ -637,6 +668,21 @@ class BemWithRawResponse:
 
         return WorkflowsResourceWithRawResponse(self._client.workflows)
 
+    @cached_property
+    def infer_schema(self) -> infer_schema.InferSchemaResourceWithRawResponse:
+        """Infer JSON Schemas from uploaded documents using AI.
+
+        Upload a file (PDF, image, spreadsheet, email, etc.) and receive a general-purpose JSON Schema
+        that captures the document's structure. The inferred schema can be used directly as the
+        `outputSchema` when creating Transform functions.
+
+        The schema is designed to be broadly applicable to documents of the same type, not just
+        the specific file uploaded.
+        """
+        from .resources.infer_schema import InferSchemaResourceWithRawResponse
+
+        return InferSchemaResourceWithRawResponse(self._client.infer_schema)
+
 
 class AsyncBemWithRawResponse:
     _client: AsyncBem
@@ -724,6 +770,21 @@ class AsyncBemWithRawResponse:
         from .resources.workflows import AsyncWorkflowsResourceWithRawResponse
 
         return AsyncWorkflowsResourceWithRawResponse(self._client.workflows)
+
+    @cached_property
+    def infer_schema(self) -> infer_schema.AsyncInferSchemaResourceWithRawResponse:
+        """Infer JSON Schemas from uploaded documents using AI.
+
+        Upload a file (PDF, image, spreadsheet, email, etc.) and receive a general-purpose JSON Schema
+        that captures the document's structure. The inferred schema can be used directly as the
+        `outputSchema` when creating Transform functions.
+
+        The schema is designed to be broadly applicable to documents of the same type, not just
+        the specific file uploaded.
+        """
+        from .resources.infer_schema import AsyncInferSchemaResourceWithRawResponse
+
+        return AsyncInferSchemaResourceWithRawResponse(self._client.infer_schema)
 
 
 class BemWithStreamedResponse:
@@ -813,6 +874,21 @@ class BemWithStreamedResponse:
 
         return WorkflowsResourceWithStreamingResponse(self._client.workflows)
 
+    @cached_property
+    def infer_schema(self) -> infer_schema.InferSchemaResourceWithStreamingResponse:
+        """Infer JSON Schemas from uploaded documents using AI.
+
+        Upload a file (PDF, image, spreadsheet, email, etc.) and receive a general-purpose JSON Schema
+        that captures the document's structure. The inferred schema can be used directly as the
+        `outputSchema` when creating Transform functions.
+
+        The schema is designed to be broadly applicable to documents of the same type, not just
+        the specific file uploaded.
+        """
+        from .resources.infer_schema import InferSchemaResourceWithStreamingResponse
+
+        return InferSchemaResourceWithStreamingResponse(self._client.infer_schema)
+
 
 class AsyncBemWithStreamedResponse:
     _client: AsyncBem
@@ -900,6 +976,21 @@ class AsyncBemWithStreamedResponse:
         from .resources.workflows import AsyncWorkflowsResourceWithStreamingResponse
 
         return AsyncWorkflowsResourceWithStreamingResponse(self._client.workflows)
+
+    @cached_property
+    def infer_schema(self) -> infer_schema.AsyncInferSchemaResourceWithStreamingResponse:
+        """Infer JSON Schemas from uploaded documents using AI.
+
+        Upload a file (PDF, image, spreadsheet, email, etc.) and receive a general-purpose JSON Schema
+        that captures the document's structure. The inferred schema can be used directly as the
+        `outputSchema` when creating Transform functions.
+
+        The schema is designed to be broadly applicable to documents of the same type, not just
+        the specific file uploaded.
+        """
+        from .resources.infer_schema import AsyncInferSchemaResourceWithStreamingResponse
+
+        return AsyncInferSchemaResourceWithStreamingResponse(self._client.infer_schema)
 
 
 Client = Bem
