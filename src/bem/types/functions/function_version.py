@@ -19,6 +19,7 @@ __all__ = [
     "TransformFunctionVersion",
     "AnalyzeFunctionVersion",
     "RouteFunctionVersion",
+    "SendFunctionVersion",
     "SplitFunctionVersion",
     "SplitFunctionVersionPrintPageSplitConfig",
     "SplitFunctionVersionSemanticPageSplitConfig",
@@ -159,6 +160,50 @@ class RouteFunctionVersion(BaseModel):
 
     used_in_workflows: Optional[List[WorkflowUsageInfo]] = FieldInfo(alias="usedInWorkflows", default=None)
     """List of workflows that use this function."""
+
+
+class SendFunctionVersion(BaseModel):
+    destination_type: Literal["webhook", "s3", "google_drive"] = FieldInfo(alias="destinationType")
+    """Destination type for a Send function."""
+
+    function_id: str = FieldInfo(alias="functionID")
+    """Unique identifier of function."""
+
+    function_name: str = FieldInfo(alias="functionName")
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
+    type: Literal["send"]
+
+    version_num: int = FieldInfo(alias="versionNum")
+    """Version number of function."""
+
+    audit: Optional[FunctionAudit] = None
+    """Audit trail information for the function version."""
+
+    created_at: Optional[datetime] = FieldInfo(alias="createdAt", default=None)
+    """The date and time the function version was created."""
+
+    display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
+    """Display name of function.
+
+    Human-readable name to help you identify the function.
+    """
+
+    google_drive_folder_id: Optional[str] = FieldInfo(alias="googleDriveFolderId", default=None)
+
+    s3_bucket: Optional[str] = FieldInfo(alias="s3Bucket", default=None)
+
+    s3_prefix: Optional[str] = FieldInfo(alias="s3Prefix", default=None)
+
+    tags: Optional[List[str]] = None
+    """Array of tags to categorize and organize functions."""
+
+    used_in_workflows: Optional[List[WorkflowUsageInfo]] = FieldInfo(alias="usedInWorkflows", default=None)
+    """List of workflows that use this function."""
+
+    webhook_signing_enabled: Optional[bool] = FieldInfo(alias="webhookSigningEnabled", default=None)
+
+    webhook_url: Optional[str] = FieldInfo(alias="webhookUrl", default=None)
 
 
 class SplitFunctionVersionPrintPageSplitConfig(BaseModel):
@@ -364,6 +409,7 @@ FunctionVersion: TypeAlias = Annotated[
         TransformFunctionVersion,
         AnalyzeFunctionVersion,
         RouteFunctionVersion,
+        SendFunctionVersion,
         SplitFunctionVersion,
         JoinFunctionVersion,
         EnrichFunctionVersion,

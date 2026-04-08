@@ -18,6 +18,7 @@ __all__ = [
     "TransformFunction",
     "AnalyzeFunction",
     "RouteFunction",
+    "SendFunction",
     "SplitFunction",
     "SplitFunctionPrintPageSplitConfig",
     "SplitFunctionSemanticPageSplitConfig",
@@ -149,6 +150,61 @@ class RouteFunction(BaseModel):
 
     used_in_workflows: Optional[List[WorkflowUsageInfo]] = FieldInfo(alias="usedInWorkflows", default=None)
     """List of workflows that use this function."""
+
+
+class SendFunction(BaseModel):
+    """
+    A function that delivers workflow outputs to an external destination.
+    Send functions receive the output of an upstream workflow node and forward it
+    to a webhook, S3 bucket, or Google Drive folder.
+    """
+
+    destination_type: Literal["webhook", "s3", "google_drive"] = FieldInfo(alias="destinationType")
+    """Destination type for a Send function."""
+
+    function_id: str = FieldInfo(alias="functionID")
+    """Unique identifier of function."""
+
+    function_name: str = FieldInfo(alias="functionName")
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
+    type: Literal["send"]
+
+    version_num: int = FieldInfo(alias="versionNum")
+    """Version number of function."""
+
+    audit: Optional[FunctionAudit] = None
+    """Audit trail information for the function."""
+
+    display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
+    """Display name of function.
+
+    Human-readable name to help you identify the function.
+    """
+
+    google_drive_folder_id: Optional[str] = FieldInfo(alias="googleDriveFolderId", default=None)
+    """Google Drive folder ID.
+
+    Present when destinationType is google_drive. Managed via Paragon OAuth.
+    """
+
+    s3_bucket: Optional[str] = FieldInfo(alias="s3Bucket", default=None)
+    """S3 bucket to upload the payload to. Present when destinationType is s3."""
+
+    s3_prefix: Optional[str] = FieldInfo(alias="s3Prefix", default=None)
+    """S3 key prefix (folder path). Optional, present when destinationType is s3."""
+
+    tags: Optional[List[str]] = None
+    """Array of tags to categorize and organize functions."""
+
+    used_in_workflows: Optional[List[WorkflowUsageInfo]] = FieldInfo(alias="usedInWorkflows", default=None)
+    """List of workflows that use this function."""
+
+    webhook_signing_enabled: Optional[bool] = FieldInfo(alias="webhookSigningEnabled", default=None)
+    """Whether webhook payloads are signed with an HMAC-SHA256 signature."""
+
+    webhook_url: Optional[str] = FieldInfo(alias="webhookUrl", default=None)
+    """Webhook URL to POST the payload to. Present when destinationType is webhook."""
 
 
 class SplitFunctionPrintPageSplitConfig(BaseModel):
@@ -349,6 +405,7 @@ Function: TypeAlias = Annotated[
         TransformFunction,
         AnalyzeFunction,
         RouteFunction,
+        SendFunction,
         SplitFunction,
         JoinFunction,
         PayloadShapingFunction,
