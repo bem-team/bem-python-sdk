@@ -298,6 +298,7 @@ class TestWorkflows:
     def test_method_call(self, client: Bem) -> None:
         workflow = client.workflows.call(
             workflow_name="workflowName",
+            input={},
         )
         assert_matches_type(CallGetResponse, workflow, path=["response"])
 
@@ -306,10 +307,23 @@ class TestWorkflows:
     def test_method_call_with_all_params(self, client: Bem) -> None:
         workflow = client.workflows.call(
             workflow_name="workflowName",
+            input={
+                "batch_files": {
+                    "inputs": [
+                        {
+                            "input_content": "inputContent",
+                            "input_type": "csv",
+                            "item_reference_id": "itemReferenceID",
+                        }
+                    ]
+                },
+                "single_file": {
+                    "input_content": "inputContent",
+                    "input_type": "csv",
+                },
+            },
+            wait=True,
             call_reference_id="callReferenceID",
-            file={},
-            files=[{}],
-            wait="wait",
         )
         assert_matches_type(CallGetResponse, workflow, path=["response"])
 
@@ -318,6 +332,7 @@ class TestWorkflows:
     def test_raw_response_call(self, client: Bem) -> None:
         response = client.workflows.with_raw_response.call(
             workflow_name="workflowName",
+            input={},
         )
 
         assert response.is_closed is True
@@ -330,6 +345,7 @@ class TestWorkflows:
     def test_streaming_response_call(self, client: Bem) -> None:
         with client.workflows.with_streaming_response.call(
             workflow_name="workflowName",
+            input={},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -345,6 +361,7 @@ class TestWorkflows:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `workflow_name` but received ''"):
             client.workflows.with_raw_response.call(
                 workflow_name="",
+                input={},
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -676,6 +693,7 @@ class TestAsyncWorkflows:
     async def test_method_call(self, async_client: AsyncBem) -> None:
         workflow = await async_client.workflows.call(
             workflow_name="workflowName",
+            input={},
         )
         assert_matches_type(CallGetResponse, workflow, path=["response"])
 
@@ -684,10 +702,23 @@ class TestAsyncWorkflows:
     async def test_method_call_with_all_params(self, async_client: AsyncBem) -> None:
         workflow = await async_client.workflows.call(
             workflow_name="workflowName",
+            input={
+                "batch_files": {
+                    "inputs": [
+                        {
+                            "input_content": "inputContent",
+                            "input_type": "csv",
+                            "item_reference_id": "itemReferenceID",
+                        }
+                    ]
+                },
+                "single_file": {
+                    "input_content": "inputContent",
+                    "input_type": "csv",
+                },
+            },
+            wait=True,
             call_reference_id="callReferenceID",
-            file={},
-            files=[{}],
-            wait="wait",
         )
         assert_matches_type(CallGetResponse, workflow, path=["response"])
 
@@ -696,6 +727,7 @@ class TestAsyncWorkflows:
     async def test_raw_response_call(self, async_client: AsyncBem) -> None:
         response = await async_client.workflows.with_raw_response.call(
             workflow_name="workflowName",
+            input={},
         )
 
         assert response.is_closed is True
@@ -708,6 +740,7 @@ class TestAsyncWorkflows:
     async def test_streaming_response_call(self, async_client: AsyncBem) -> None:
         async with async_client.workflows.with_streaming_response.call(
             workflow_name="workflowName",
+            input={},
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -723,6 +756,7 @@ class TestAsyncWorkflows:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `workflow_name` but received ''"):
             await async_client.workflows.with_raw_response.call(
                 workflow_name="",
+                input={},
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")

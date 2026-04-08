@@ -321,10 +321,9 @@ class WorkflowsResource(SyncAPIResource):
         self,
         workflow_name: str,
         *,
+        input: workflow_call_params.Input,
+        wait: bool | Omit = omit,
         call_reference_id: str | Omit = omit,
-        file: object | Omit = omit,
-        files: Iterable[object] | Omit = omit,
-        wait: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -333,16 +332,25 @@ class WorkflowsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CallGetResponse:
         """
-        **Invoke a workflow by submitting a multipart form request.**
+        **Invoke a workflow.**
 
-        Workflows can only be called via multipart form in V3. Submit the input file
-        along with an optional reference ID for tracking.
+        Submit the input file as either a multipart form request or a JSON request with
+        base64-encoded file content. The workflow name is derived from the URL path.
+
+        ## Input Formats
+
+        - **Multipart form** (`multipart/form-data`): attach the file directly via the
+          `file` or `files` fields. Set `wait` in the form body to control synchronous
+          behaviour.
+        - **JSON** (`application/json`): base64-encode the file content and set it in
+          `input.singleFile.inputContent` or `input.batchFiles.inputs[*].inputContent`.
+          Pass `wait=true` as a query parameter to control synchronous behaviour.
 
         ## Synchronous vs Asynchronous
 
         By default the call is created asynchronously and this endpoint returns
-        `202 Accepted` immediately with a `pending` call object. Set the `wait` field to
-        `true` to block until the call completes (up to 30 seconds):
+        `202 Accepted` immediately with a `pending` call object. Set `wait` to `true` to
+        block until the call completes (up to 30 seconds):
 
         - On success: returns `200 OK` with the completed call, `outputs` populated
         - On failure: returns `500 Internal Server Error` with the call and an `error`
@@ -355,14 +363,12 @@ class WorkflowsResource(SyncAPIResource):
         subscription to receive events when the call finishes.
 
         Args:
-          call_reference_id: Your reference ID for tracking this call.
-
-          file: Single input file (for transform, analyze, route, and split functions).
-
-          files: Multiple input files (for join functions).
+          input: Input to the workflow call. Provide exactly one of `singleFile` or `batchFiles`.
 
           wait: When `true`, the endpoint blocks until the call completes (up to 30 seconds) and
               returns the finished call object. Default: `false`.
+
+          call_reference_id: Your reference ID for tracking this call.
 
           extra_headers: Send extra headers
 
@@ -374,23 +380,21 @@ class WorkflowsResource(SyncAPIResource):
         """
         if not workflow_name:
             raise ValueError(f"Expected a non-empty value for `workflow_name` but received {workflow_name!r}")
-        # It should be noted that the actual Content-Type header that will be
-        # sent to the server will contain a `boundary` parameter, e.g.
-        # multipart/form-data; boundary=---abc--
-        extra_headers = {"Content-Type": "multipart/form-data", **(extra_headers or {})}
         return self._post(
             path_template("/v3/workflows/{workflow_name}/call", workflow_name=workflow_name),
             body=maybe_transform(
                 {
+                    "input": input,
                     "call_reference_id": call_reference_id,
-                    "file": file,
-                    "files": files,
-                    "wait": wait,
                 },
                 workflow_call_params.WorkflowCallParams,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"wait": wait}, workflow_call_params.WorkflowCallParams),
             ),
             cast_to=CallGetResponse,
         )
@@ -737,10 +741,9 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         self,
         workflow_name: str,
         *,
+        input: workflow_call_params.Input,
+        wait: bool | Omit = omit,
         call_reference_id: str | Omit = omit,
-        file: object | Omit = omit,
-        files: Iterable[object] | Omit = omit,
-        wait: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -749,16 +752,25 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> CallGetResponse:
         """
-        **Invoke a workflow by submitting a multipart form request.**
+        **Invoke a workflow.**
 
-        Workflows can only be called via multipart form in V3. Submit the input file
-        along with an optional reference ID for tracking.
+        Submit the input file as either a multipart form request or a JSON request with
+        base64-encoded file content. The workflow name is derived from the URL path.
+
+        ## Input Formats
+
+        - **Multipart form** (`multipart/form-data`): attach the file directly via the
+          `file` or `files` fields. Set `wait` in the form body to control synchronous
+          behaviour.
+        - **JSON** (`application/json`): base64-encode the file content and set it in
+          `input.singleFile.inputContent` or `input.batchFiles.inputs[*].inputContent`.
+          Pass `wait=true` as a query parameter to control synchronous behaviour.
 
         ## Synchronous vs Asynchronous
 
         By default the call is created asynchronously and this endpoint returns
-        `202 Accepted` immediately with a `pending` call object. Set the `wait` field to
-        `true` to block until the call completes (up to 30 seconds):
+        `202 Accepted` immediately with a `pending` call object. Set `wait` to `true` to
+        block until the call completes (up to 30 seconds):
 
         - On success: returns `200 OK` with the completed call, `outputs` populated
         - On failure: returns `500 Internal Server Error` with the call and an `error`
@@ -771,14 +783,12 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         subscription to receive events when the call finishes.
 
         Args:
-          call_reference_id: Your reference ID for tracking this call.
-
-          file: Single input file (for transform, analyze, route, and split functions).
-
-          files: Multiple input files (for join functions).
+          input: Input to the workflow call. Provide exactly one of `singleFile` or `batchFiles`.
 
           wait: When `true`, the endpoint blocks until the call completes (up to 30 seconds) and
               returns the finished call object. Default: `false`.
+
+          call_reference_id: Your reference ID for tracking this call.
 
           extra_headers: Send extra headers
 
@@ -790,23 +800,21 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         """
         if not workflow_name:
             raise ValueError(f"Expected a non-empty value for `workflow_name` but received {workflow_name!r}")
-        # It should be noted that the actual Content-Type header that will be
-        # sent to the server will contain a `boundary` parameter, e.g.
-        # multipart/form-data; boundary=---abc--
-        extra_headers = {"Content-Type": "multipart/form-data", **(extra_headers or {})}
         return await self._post(
             path_template("/v3/workflows/{workflow_name}/call", workflow_name=workflow_name),
             body=await async_maybe_transform(
                 {
+                    "input": input,
                     "call_reference_id": call_reference_id,
-                    "file": file,
-                    "files": files,
-                    "wait": wait,
                 },
                 workflow_call_params.WorkflowCallParams,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform({"wait": wait}, workflow_call_params.WorkflowCallParams),
             ),
             cast_to=CallGetResponse,
         )

@@ -16,6 +16,7 @@ __all__ = [
     "TransformFunction",
     "AnalyzeFunction",
     "RouteFunction",
+    "SendFunction",
     "SplitFunction",
     "SplitFunctionPrintPageSplitConfig",
     "SplitFunctionSemanticPageSplitConfig",
@@ -99,6 +100,43 @@ class RouteFunction(TypedDict, total=False):
 
     tags: SequenceNotStr[str]
     """Array of tags to categorize and organize functions."""
+
+
+class SendFunction(TypedDict, total=False):
+    function_name: Required[Annotated[str, PropertyInfo(alias="functionName")]]
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
+    type: Required[Literal["send"]]
+
+    destination_type: Annotated[Literal["webhook", "s3", "google_drive"], PropertyInfo(alias="destinationType")]
+    """Destination type for a Send function."""
+
+    display_name: Annotated[str, PropertyInfo(alias="displayName")]
+    """Display name of function.
+
+    Human-readable name to help you identify the function.
+    """
+
+    google_drive_folder_id: Annotated[str, PropertyInfo(alias="googleDriveFolderId")]
+    """Google Drive folder ID.
+
+    Required when destinationType is google_drive. Managed via Paragon OAuth.
+    """
+
+    s3_bucket: Annotated[str, PropertyInfo(alias="s3Bucket")]
+    """S3 bucket to upload the payload to. Required when destinationType is s3."""
+
+    s3_prefix: Annotated[str, PropertyInfo(alias="s3Prefix")]
+    """Optional S3 key prefix (folder path)."""
+
+    tags: SequenceNotStr[str]
+    """Array of tags to categorize and organize functions."""
+
+    webhook_signing_enabled: Annotated[bool, PropertyInfo(alias="webhookSigningEnabled")]
+    """Whether to sign webhook payloads with an HMAC-SHA256 signature."""
+
+    webhook_url: Annotated[str, PropertyInfo(alias="webhookUrl")]
+    """Webhook URL to POST the payload to. Required when destinationType is webhook."""
 
 
 class SplitFunctionPrintPageSplitConfig(TypedDict, total=False):
@@ -236,6 +274,7 @@ CreateFunctionParam: TypeAlias = Union[
     TransformFunction,
     AnalyzeFunction,
     RouteFunction,
+    SendFunction,
     SplitFunction,
     JoinFunction,
     PayloadShapingFunction,
