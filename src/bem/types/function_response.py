@@ -15,8 +15,7 @@ class FunctionResponse(BaseModel):
 
     function: Function
     """
-    A function that transforms and customizes input payloads using JMESPath
-    expressions. Payload shaping allows you to extract specific data, perform
-    calculations, and reshape complex input structures into simplified, standardized
-    output formats tailored to your downstream systems or business requirements.
+    A function that delivers workflow outputs to an external destination. Send
+    functions receive the output of an upstream workflow node and forward it to a
+    webhook, S3 bucket, or Google Drive folder.
     """

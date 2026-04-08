@@ -252,6 +252,61 @@ class FunctionsResource(SyncAPIResource):
         self,
         *,
         function_name: str,
+        type: Literal["send"],
+        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        display_name: str | Omit = omit,
+        google_drive_folder_id: str | Omit = omit,
+        s3_bucket: str | Omit = omit,
+        s3_prefix: str | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        webhook_signing_enabled: bool | Omit = omit,
+        webhook_url: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """Create a Function
+
+        Args:
+          function_name: Name of function.
+
+        Must be UNIQUE on a per-environment basis.
+
+          destination_type: Destination type for a Send function.
+
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          google_drive_folder_id: Google Drive folder ID. Required when destinationType is google_drive. Managed
+              via Paragon OAuth.
+
+          s3_bucket: S3 bucket to upload the payload to. Required when destinationType is s3.
+
+          s3_prefix: Optional S3 key prefix (folder path).
+
+          tags: Array of tags to categorize and organize functions.
+
+          webhook_signing_enabled: Whether to sign webhook payloads with an HMAC-SHA256 signature.
+
+          webhook_url: Webhook URL to POST the payload to. Required when destinationType is webhook.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @overload
+    def create(
+        self,
+        *,
+        function_name: str,
         type: Literal["split"],
         display_name: str | Omit = omit,
         print_page_split_config: function_create_params.CreateSplitFunctionPrintPageSplitConfig | Omit = omit,
@@ -448,6 +503,7 @@ class FunctionsResource(SyncAPIResource):
         type: Literal["transform"]
         | Literal["analyze"]
         | Literal["route"]
+        | Literal["send"]
         | Literal["split"]
         | Literal["join"]
         | Literal["payload_shaping"]
@@ -459,6 +515,12 @@ class FunctionsResource(SyncAPIResource):
         tags: SequenceNotStr[str] | Omit = omit,
         description: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
+        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        google_drive_folder_id: str | Omit = omit,
+        s3_bucket: str | Omit = omit,
+        s3_prefix: str | Omit = omit,
+        webhook_signing_enabled: bool | Omit = omit,
+        webhook_url: str | Omit = omit,
         print_page_split_config: function_create_params.CreateSplitFunctionPrintPageSplitConfig | Omit = omit,
         semantic_page_split_config: function_create_params.CreateSplitFunctionSemanticPageSplitConfig | Omit = omit,
         split_type: Literal["print_page", "semantic_page"] | Omit = omit,
@@ -485,6 +547,12 @@ class FunctionsResource(SyncAPIResource):
                     "tags": tags,
                     "description": description,
                     "routes": routes,
+                    "destination_type": destination_type,
+                    "google_drive_folder_id": google_drive_folder_id,
+                    "s3_bucket": s3_bucket,
+                    "s3_prefix": s3_prefix,
+                    "webhook_signing_enabled": webhook_signing_enabled,
+                    "webhook_url": webhook_url,
                     "print_page_split_config": print_page_split_config,
                     "semantic_page_split_config": semantic_page_split_config,
                     "split_type": split_type,
@@ -656,6 +724,61 @@ class FunctionsResource(SyncAPIResource):
           routes: List of routes.
 
           tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @overload
+    def update(
+        self,
+        path_function_name: str,
+        *,
+        type: Literal["send"],
+        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        display_name: str | Omit = omit,
+        function_name: str | Omit = omit,
+        google_drive_folder_id: str | Omit = omit,
+        s3_bucket: str | Omit = omit,
+        s3_prefix: str | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        webhook_signing_enabled: bool | Omit = omit,
+        webhook_url: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """
+        Update a Function
+
+        Args:
+          destination_type: Destination type for a Send function.
+
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          google_drive_folder_id: Google Drive folder ID. Required when destinationType is google_drive. Managed
+              via Paragon OAuth.
+
+          s3_bucket: S3 bucket to upload the payload to. Required when destinationType is s3.
+
+          s3_prefix: Optional S3 key prefix (folder path).
+
+          tags: Array of tags to categorize and organize functions.
+
+          webhook_signing_enabled: Whether to sign webhook payloads with an HMAC-SHA256 signature.
+
+          webhook_url: Webhook URL to POST the payload to. Required when destinationType is webhook.
 
           extra_headers: Send extra headers
 
@@ -861,6 +984,7 @@ class FunctionsResource(SyncAPIResource):
         type: Literal["transform"]
         | Literal["analyze"]
         | Literal["route"]
+        | Literal["send"]
         | Literal["split"]
         | Literal["join"]
         | Literal["payload_shaping"]
@@ -873,6 +997,12 @@ class FunctionsResource(SyncAPIResource):
         tags: SequenceNotStr[str] | Omit = omit,
         description: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
+        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        google_drive_folder_id: str | Omit = omit,
+        s3_bucket: str | Omit = omit,
+        s3_prefix: str | Omit = omit,
+        webhook_signing_enabled: bool | Omit = omit,
+        webhook_url: str | Omit = omit,
         print_page_split_config: function_update_params.UpsertSplitFunctionPrintPageSplitConfig | Omit = omit,
         semantic_page_split_config: function_update_params.UpsertSplitFunctionSemanticPageSplitConfig | Omit = omit,
         split_type: Literal["print_page", "semantic_page"] | Omit = omit,
@@ -901,6 +1031,12 @@ class FunctionsResource(SyncAPIResource):
                     "tags": tags,
                     "description": description,
                     "routes": routes,
+                    "destination_type": destination_type,
+                    "google_drive_folder_id": google_drive_folder_id,
+                    "s3_bucket": s3_bucket,
+                    "s3_prefix": s3_prefix,
+                    "webhook_signing_enabled": webhook_signing_enabled,
+                    "webhook_url": webhook_url,
                     "print_page_split_config": print_page_split_config,
                     "semantic_page_split_config": semantic_page_split_config,
                     "split_type": split_type,
@@ -1219,6 +1355,61 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         *,
         function_name: str,
+        type: Literal["send"],
+        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        display_name: str | Omit = omit,
+        google_drive_folder_id: str | Omit = omit,
+        s3_bucket: str | Omit = omit,
+        s3_prefix: str | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        webhook_signing_enabled: bool | Omit = omit,
+        webhook_url: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """Create a Function
+
+        Args:
+          function_name: Name of function.
+
+        Must be UNIQUE on a per-environment basis.
+
+          destination_type: Destination type for a Send function.
+
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          google_drive_folder_id: Google Drive folder ID. Required when destinationType is google_drive. Managed
+              via Paragon OAuth.
+
+          s3_bucket: S3 bucket to upload the payload to. Required when destinationType is s3.
+
+          s3_prefix: Optional S3 key prefix (folder path).
+
+          tags: Array of tags to categorize and organize functions.
+
+          webhook_signing_enabled: Whether to sign webhook payloads with an HMAC-SHA256 signature.
+
+          webhook_url: Webhook URL to POST the payload to. Required when destinationType is webhook.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @overload
+    async def create(
+        self,
+        *,
+        function_name: str,
         type: Literal["split"],
         display_name: str | Omit = omit,
         print_page_split_config: function_create_params.CreateSplitFunctionPrintPageSplitConfig | Omit = omit,
@@ -1415,6 +1606,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         type: Literal["transform"]
         | Literal["analyze"]
         | Literal["route"]
+        | Literal["send"]
         | Literal["split"]
         | Literal["join"]
         | Literal["payload_shaping"]
@@ -1426,6 +1618,12 @@ class AsyncFunctionsResource(AsyncAPIResource):
         tags: SequenceNotStr[str] | Omit = omit,
         description: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
+        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        google_drive_folder_id: str | Omit = omit,
+        s3_bucket: str | Omit = omit,
+        s3_prefix: str | Omit = omit,
+        webhook_signing_enabled: bool | Omit = omit,
+        webhook_url: str | Omit = omit,
         print_page_split_config: function_create_params.CreateSplitFunctionPrintPageSplitConfig | Omit = omit,
         semantic_page_split_config: function_create_params.CreateSplitFunctionSemanticPageSplitConfig | Omit = omit,
         split_type: Literal["print_page", "semantic_page"] | Omit = omit,
@@ -1452,6 +1650,12 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "tags": tags,
                     "description": description,
                     "routes": routes,
+                    "destination_type": destination_type,
+                    "google_drive_folder_id": google_drive_folder_id,
+                    "s3_bucket": s3_bucket,
+                    "s3_prefix": s3_prefix,
+                    "webhook_signing_enabled": webhook_signing_enabled,
+                    "webhook_url": webhook_url,
                     "print_page_split_config": print_page_split_config,
                     "semantic_page_split_config": semantic_page_split_config,
                     "split_type": split_type,
@@ -1623,6 +1827,61 @@ class AsyncFunctionsResource(AsyncAPIResource):
           routes: List of routes.
 
           tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @overload
+    async def update(
+        self,
+        path_function_name: str,
+        *,
+        type: Literal["send"],
+        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        display_name: str | Omit = omit,
+        function_name: str | Omit = omit,
+        google_drive_folder_id: str | Omit = omit,
+        s3_bucket: str | Omit = omit,
+        s3_prefix: str | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        webhook_signing_enabled: bool | Omit = omit,
+        webhook_url: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """
+        Update a Function
+
+        Args:
+          destination_type: Destination type for a Send function.
+
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          google_drive_folder_id: Google Drive folder ID. Required when destinationType is google_drive. Managed
+              via Paragon OAuth.
+
+          s3_bucket: S3 bucket to upload the payload to. Required when destinationType is s3.
+
+          s3_prefix: Optional S3 key prefix (folder path).
+
+          tags: Array of tags to categorize and organize functions.
+
+          webhook_signing_enabled: Whether to sign webhook payloads with an HMAC-SHA256 signature.
+
+          webhook_url: Webhook URL to POST the payload to. Required when destinationType is webhook.
 
           extra_headers: Send extra headers
 
@@ -1828,6 +2087,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         type: Literal["transform"]
         | Literal["analyze"]
         | Literal["route"]
+        | Literal["send"]
         | Literal["split"]
         | Literal["join"]
         | Literal["payload_shaping"]
@@ -1840,6 +2100,12 @@ class AsyncFunctionsResource(AsyncAPIResource):
         tags: SequenceNotStr[str] | Omit = omit,
         description: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
+        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        google_drive_folder_id: str | Omit = omit,
+        s3_bucket: str | Omit = omit,
+        s3_prefix: str | Omit = omit,
+        webhook_signing_enabled: bool | Omit = omit,
+        webhook_url: str | Omit = omit,
         print_page_split_config: function_update_params.UpsertSplitFunctionPrintPageSplitConfig | Omit = omit,
         semantic_page_split_config: function_update_params.UpsertSplitFunctionSemanticPageSplitConfig | Omit = omit,
         split_type: Literal["print_page", "semantic_page"] | Omit = omit,
@@ -1868,6 +2134,12 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "tags": tags,
                     "description": description,
                     "routes": routes,
+                    "destination_type": destination_type,
+                    "google_drive_folder_id": google_drive_folder_id,
+                    "s3_bucket": s3_bucket,
+                    "s3_prefix": s3_prefix,
+                    "webhook_signing_enabled": webhook_signing_enabled,
+                    "webhook_url": webhook_url,
                     "print_page_split_config": print_page_split_config,
                     "semantic_page_split_config": semantic_page_split_config,
                     "split_type": split_type,
