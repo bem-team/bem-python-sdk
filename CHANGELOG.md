@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.1 (2026-04-08)
+
+Full Changelog: [v0.5.0...v0.5.1](https://github.com/bem-team/bem-python-sdk/compare/v0.5.0...v0.5.1)
+
+### Bug Fixes
+
+* **client:** preserve hardcoded query params when merging with user params ([fd104cb](https://github.com/bem-team/bem-python-sdk/commit/fd104cb30a659e85b686ecb205e13ac7e69c57ea))
+
 ## 0.5.0 (2026-04-07)
 
 Full Changelog: [v0.4.0...v0.5.0](https://github.com/bem-team/bem-python-sdk/compare/v0.4.0...v0.5.0)
