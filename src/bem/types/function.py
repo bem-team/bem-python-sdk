@@ -201,7 +201,7 @@ class SendFunction(BaseModel):
     """List of workflows that use this function."""
 
     webhook_signing_enabled: Optional[bool] = FieldInfo(alias="webhookSigningEnabled", default=None)
-    """Whether webhook payloads are signed with an HMAC-SHA256 signature."""
+    """Whether webhook payloads are signed with an HMAC-SHA256 `bem-signature` header."""
 
     webhook_url: Optional[str] = FieldInfo(alias="webhookUrl", default=None)
     """Webhook URL to POST the payload to. Present when destinationType is webhook."""

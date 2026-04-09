@@ -288,7 +288,9 @@ class FunctionsResource(SyncAPIResource):
 
           tags: Array of tags to categorize and organize functions.
 
-          webhook_signing_enabled: Whether to sign webhook payloads with an HMAC-SHA256 signature.
+          webhook_signing_enabled: Whether to sign webhook deliveries with an HMAC-SHA256 `bem-signature` header.
+              Defaults to `true` when omitted — signing is on by default for new send
+              functions. Set explicitly to `false` to disable.
 
           webhook_url: Webhook URL to POST the payload to. Required when destinationType is webhook.
 
@@ -776,7 +778,9 @@ class FunctionsResource(SyncAPIResource):
 
           tags: Array of tags to categorize and organize functions.
 
-          webhook_signing_enabled: Whether to sign webhook payloads with an HMAC-SHA256 signature.
+          webhook_signing_enabled: Whether to sign webhook deliveries with an HMAC-SHA256 `bem-signature` header.
+              Defaults to `true` when omitted — signing is on by default for new send
+              functions. Set explicitly to `false` to disable.
 
           webhook_url: Webhook URL to POST the payload to. Required when destinationType is webhook.
 
@@ -1391,7 +1395,9 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
           tags: Array of tags to categorize and organize functions.
 
-          webhook_signing_enabled: Whether to sign webhook payloads with an HMAC-SHA256 signature.
+          webhook_signing_enabled: Whether to sign webhook deliveries with an HMAC-SHA256 `bem-signature` header.
+              Defaults to `true` when omitted — signing is on by default for new send
+              functions. Set explicitly to `false` to disable.
 
           webhook_url: Webhook URL to POST the payload to. Required when destinationType is webhook.
 
@@ -1879,7 +1885,9 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
           tags: Array of tags to categorize and organize functions.
 
-          webhook_signing_enabled: Whether to sign webhook payloads with an HMAC-SHA256 signature.
+          webhook_signing_enabled: Whether to sign webhook deliveries with an HMAC-SHA256 `bem-signature` header.
+              Defaults to `true` when omitted — signing is on by default for new send
+              functions. Set explicitly to `false` to disable.
 
           webhook_url: Webhook URL to POST the payload to. Required when destinationType is webhook.
 
