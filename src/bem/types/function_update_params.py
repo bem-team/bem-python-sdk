@@ -133,7 +133,11 @@ class UpsertSendFunction(TypedDict, total=False):
     """Array of tags to categorize and organize functions."""
 
     webhook_signing_enabled: Annotated[bool, PropertyInfo(alias="webhookSigningEnabled")]
-    """Whether to sign webhook payloads with an HMAC-SHA256 signature."""
+    """
+    Whether to sign webhook deliveries with an HMAC-SHA256 `bem-signature` header.
+    Defaults to `true` when omitted — signing is on by default for new send
+    functions. Set explicitly to `false` to disable.
+    """
 
     webhook_url: Annotated[str, PropertyInfo(alias="webhookUrl")]
     """Webhook URL to POST the payload to. Required when destinationType is webhook."""
