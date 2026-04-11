@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.1 (2026-04-11)
+
+Full Changelog: [v0.7.0...v0.7.1](https://github.com/bem-team/bem-python-sdk/compare/v0.7.0...v0.7.1)
+
+### Bug Fixes
+
+* ensure file data are only sent as 1 parameter ([624e222](https://github.com/bem-team/bem-python-sdk/commit/624e222be492d711f5fe6c0d2a637b3a0f7b2dcc))
+
 ## 0.7.0 (2026-04-09)
 
 Full Changelog: [v0.6.0...v0.7.0](https://github.com/bem-team/bem-python-sdk/compare/v0.6.0...v0.7.0)
