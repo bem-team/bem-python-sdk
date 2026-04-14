@@ -14,6 +14,7 @@ from .split_function_semantic_page_item_class_param import SplitFunctionSemantic
 __all__ = [
     "UpdateFunctionParam",
     "TransformFunction",
+    "ExtractFunction",
     "AnalyzeFunction",
     "RouteFunction",
     "SendFunction",
@@ -48,6 +49,35 @@ class TransformFunction(TypedDict, total=False):
     """Whether tabular chunking is enabled on the pipeline.
 
     This processes tables in CSV/Excel in row batches, rather than all rows at once.
+    """
+
+    tags: SequenceNotStr[str]
+    """Array of tags to categorize and organize functions."""
+
+
+class ExtractFunction(TypedDict, total=False):
+    type: Required[Literal["extract"]]
+
+    display_name: Annotated[str, PropertyInfo(alias="displayName")]
+    """Display name of function.
+
+    Human-readable name to help you identify the function.
+    """
+
+    function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
+    output_schema: Annotated[object, PropertyInfo(alias="outputSchema")]
+    """Desired output structure defined in standard JSON Schema convention."""
+
+    output_schema_name: Annotated[str, PropertyInfo(alias="outputSchemaName")]
+    """Name of output schema object."""
+
+    tabular_chunking_enabled: Annotated[bool, PropertyInfo(alias="tabularChunkingEnabled")]
+    """Whether tabular chunking is enabled.
+
+    When true, tables in CSV/Excel files are processed in row batches rather than
+    all at once.
     """
 
     tags: SequenceNotStr[str]
@@ -271,6 +301,7 @@ class UpsertEnrichFunction(TypedDict, total=False):
 
 UpdateFunctionParam: TypeAlias = Union[
     TransformFunction,
+    ExtractFunction,
     AnalyzeFunction,
     RouteFunction,
     SendFunction,

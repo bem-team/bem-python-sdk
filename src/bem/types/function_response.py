@@ -15,7 +15,7 @@ class FunctionResponse(BaseModel):
 
     function: Function
     """
-    A function that delivers workflow outputs to an external destination. Send
-    functions receive the output of an upstream workflow node and forward it to a
-    webhook, S3 bucket, or Google Drive folder.
+    A function that extracts structured JSON from documents and images. Accepts a
+    wide range of input types including PDFs, images, spreadsheets, emails, and
+    more.
     """
