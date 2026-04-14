@@ -174,7 +174,22 @@ class Bem(SyncAPIClient):
 
     @cached_property
     def workflows(self) -> WorkflowsResource:
-        """Workflow operations"""
+        """
+        Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+        Use these endpoints to create, update, list, and manage workflows, and to invoke them
+        with file input via `POST /v3/workflows/{workflowName}/call`.
+
+        The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+        content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+        encode files:
+
+        ```
+        bem workflows call --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+        """
         from .resources.workflows import WorkflowsResource
 
         return WorkflowsResource(self)
@@ -443,7 +458,22 @@ class AsyncBem(AsyncAPIClient):
 
     @cached_property
     def workflows(self) -> AsyncWorkflowsResource:
-        """Workflow operations"""
+        """
+        Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+        Use these endpoints to create, update, list, and manage workflows, and to invoke them
+        with file input via `POST /v3/workflows/{workflowName}/call`.
+
+        The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+        content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+        encode files:
+
+        ```
+        bem workflows call --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+        """
         from .resources.workflows import AsyncWorkflowsResource
 
         return AsyncWorkflowsResource(self)
@@ -663,7 +693,22 @@ class BemWithRawResponse:
 
     @cached_property
     def workflows(self) -> workflows.WorkflowsResourceWithRawResponse:
-        """Workflow operations"""
+        """
+        Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+        Use these endpoints to create, update, list, and manage workflows, and to invoke them
+        with file input via `POST /v3/workflows/{workflowName}/call`.
+
+        The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+        content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+        encode files:
+
+        ```
+        bem workflows call --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+        """
         from .resources.workflows import WorkflowsResourceWithRawResponse
 
         return WorkflowsResourceWithRawResponse(self._client.workflows)
@@ -766,7 +811,22 @@ class AsyncBemWithRawResponse:
 
     @cached_property
     def workflows(self) -> workflows.AsyncWorkflowsResourceWithRawResponse:
-        """Workflow operations"""
+        """
+        Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+        Use these endpoints to create, update, list, and manage workflows, and to invoke them
+        with file input via `POST /v3/workflows/{workflowName}/call`.
+
+        The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+        content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+        encode files:
+
+        ```
+        bem workflows call --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+        """
         from .resources.workflows import AsyncWorkflowsResourceWithRawResponse
 
         return AsyncWorkflowsResourceWithRawResponse(self._client.workflows)
@@ -869,7 +929,22 @@ class BemWithStreamedResponse:
 
     @cached_property
     def workflows(self) -> workflows.WorkflowsResourceWithStreamingResponse:
-        """Workflow operations"""
+        """
+        Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+        Use these endpoints to create, update, list, and manage workflows, and to invoke them
+        with file input via `POST /v3/workflows/{workflowName}/call`.
+
+        The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+        content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+        encode files:
+
+        ```
+        bem workflows call --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+        """
         from .resources.workflows import WorkflowsResourceWithStreamingResponse
 
         return WorkflowsResourceWithStreamingResponse(self._client.workflows)
@@ -972,7 +1047,22 @@ class AsyncBemWithStreamedResponse:
 
     @cached_property
     def workflows(self) -> workflows.AsyncWorkflowsResourceWithStreamingResponse:
-        """Workflow operations"""
+        """
+        Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+        Use these endpoints to create, update, list, and manage workflows, and to invoke them
+        with file input via `POST /v3/workflows/{workflowName}/call`.
+
+        The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+        content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+        encode files:
+
+        ```
+        bem workflows call --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+        """
         from .resources.workflows import AsyncWorkflowsResourceWithStreamingResponse
 
         return AsyncWorkflowsResourceWithStreamingResponse(self._client.workflows)
