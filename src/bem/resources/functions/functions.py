@@ -167,6 +167,52 @@ class FunctionsResource(SyncAPIResource):
         self,
         *,
         function_name: str,
+        type: Literal["extract"],
+        display_name: str | Omit = omit,
+        output_schema: object | Omit = omit,
+        output_schema_name: str | Omit = omit,
+        tabular_chunking_enabled: bool | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """Create a Function
+
+        Args:
+          function_name: Name of function.
+
+        Must be UNIQUE on a per-environment basis.
+
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          output_schema: Desired output structure defined in standard JSON Schema convention.
+
+          output_schema_name: Name of output schema object.
+
+          tabular_chunking_enabled: Whether tabular chunking is enabled. When true, tables in CSV/Excel files are
+              processed in row batches rather than all at once.
+
+          tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @overload
+    def create(
+        self,
+        *,
+        function_name: str,
         type: Literal["analyze"],
         display_name: str | Omit = omit,
         output_schema: object | Omit = omit,
@@ -503,6 +549,7 @@ class FunctionsResource(SyncAPIResource):
         *,
         function_name: str,
         type: Literal["transform"]
+        | Literal["extract"]
         | Literal["analyze"]
         | Literal["route"]
         | Literal["send"]
@@ -637,6 +684,53 @@ class FunctionsResource(SyncAPIResource):
 
           tabular_chunking_enabled: Whether tabular chunking is enabled on the pipeline. This processes tables in
               CSV/Excel in row batches, rather than all rows at once.
+
+          tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @overload
+    def update(
+        self,
+        path_function_name: str,
+        *,
+        type: Literal["extract"],
+        display_name: str | Omit = omit,
+        function_name: str | Omit = omit,
+        output_schema: object | Omit = omit,
+        output_schema_name: str | Omit = omit,
+        tabular_chunking_enabled: bool | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """Update a Function
+
+        Args:
+          display_name: Display name of function.
+
+        Human-readable name to help you identify the function.
+
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          output_schema: Desired output structure defined in standard JSON Schema convention.
+
+          output_schema_name: Name of output schema object.
+
+          tabular_chunking_enabled: Whether tabular chunking is enabled. When true, tables in CSV/Excel files are
+              processed in row batches rather than all at once.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -986,6 +1080,7 @@ class FunctionsResource(SyncAPIResource):
         path_function_name: str,
         *,
         type: Literal["transform"]
+        | Literal["extract"]
         | Literal["analyze"]
         | Literal["route"]
         | Literal["send"]
@@ -1274,6 +1369,52 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         *,
         function_name: str,
+        type: Literal["extract"],
+        display_name: str | Omit = omit,
+        output_schema: object | Omit = omit,
+        output_schema_name: str | Omit = omit,
+        tabular_chunking_enabled: bool | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """Create a Function
+
+        Args:
+          function_name: Name of function.
+
+        Must be UNIQUE on a per-environment basis.
+
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          output_schema: Desired output structure defined in standard JSON Schema convention.
+
+          output_schema_name: Name of output schema object.
+
+          tabular_chunking_enabled: Whether tabular chunking is enabled. When true, tables in CSV/Excel files are
+              processed in row batches rather than all at once.
+
+          tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @overload
+    async def create(
+        self,
+        *,
+        function_name: str,
         type: Literal["analyze"],
         display_name: str | Omit = omit,
         output_schema: object | Omit = omit,
@@ -1610,6 +1751,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         function_name: str,
         type: Literal["transform"]
+        | Literal["extract"]
         | Literal["analyze"]
         | Literal["route"]
         | Literal["send"]
@@ -1744,6 +1886,53 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
           tabular_chunking_enabled: Whether tabular chunking is enabled on the pipeline. This processes tables in
               CSV/Excel in row batches, rather than all rows at once.
+
+          tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @overload
+    async def update(
+        self,
+        path_function_name: str,
+        *,
+        type: Literal["extract"],
+        display_name: str | Omit = omit,
+        function_name: str | Omit = omit,
+        output_schema: object | Omit = omit,
+        output_schema_name: str | Omit = omit,
+        tabular_chunking_enabled: bool | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """Update a Function
+
+        Args:
+          display_name: Display name of function.
+
+        Human-readable name to help you identify the function.
+
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          output_schema: Desired output structure defined in standard JSON Schema convention.
+
+          output_schema_name: Name of output schema object.
+
+          tabular_chunking_enabled: Whether tabular chunking is enabled. When true, tables in CSV/Excel files are
+              processed in row batches rather than all at once.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -2093,6 +2282,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         path_function_name: str,
         *,
         type: Literal["transform"]
+        | Literal["extract"]
         | Literal["analyze"]
         | Literal["route"]
         | Literal["send"]

@@ -16,6 +16,7 @@ from .split_function_semantic_page_item_class import SplitFunctionSemanticPageIt
 __all__ = [
     "Function",
     "TransformFunction",
+    "ExtractFunction",
     "AnalyzeFunction",
     "RouteFunction",
     "SendFunction",
@@ -54,6 +55,52 @@ class TransformFunction(BaseModel):
     """
 
     type: Literal["transform"]
+
+    version_num: int = FieldInfo(alias="versionNum")
+    """Version number of function."""
+
+    audit: Optional[FunctionAudit] = None
+    """Audit trail information for the function."""
+
+    display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
+    """Display name of function.
+
+    Human-readable name to help you identify the function.
+    """
+
+    tags: Optional[List[str]] = None
+    """Array of tags to categorize and organize functions."""
+
+    used_in_workflows: Optional[List[WorkflowUsageInfo]] = FieldInfo(alias="usedInWorkflows", default=None)
+    """List of workflows that use this function."""
+
+
+class ExtractFunction(BaseModel):
+    """
+    A function that extracts structured JSON from documents and images.
+    Accepts a wide range of input types including PDFs, images, spreadsheets, emails, and more.
+    """
+
+    function_id: str = FieldInfo(alias="functionID")
+    """Unique identifier of function."""
+
+    function_name: str = FieldInfo(alias="functionName")
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
+    output_schema: object = FieldInfo(alias="outputSchema")
+    """Desired output structure defined in standard JSON Schema convention."""
+
+    output_schema_name: str = FieldInfo(alias="outputSchemaName")
+    """Name of output schema object."""
+
+    tabular_chunking_enabled: bool = FieldInfo(alias="tabularChunkingEnabled")
+    """Whether tabular chunking is enabled.
+
+    When true, tables in CSV/Excel files are processed in row batches rather than
+    all at once.
+    """
+
+    type: Literal["extract"]
 
     version_num: int = FieldInfo(alias="versionNum")
     """Version number of function."""
@@ -403,6 +450,7 @@ class EnrichFunction(BaseModel):
 Function: TypeAlias = Annotated[
     Union[
         TransformFunction,
+        ExtractFunction,
         AnalyzeFunction,
         RouteFunction,
         SendFunction,
