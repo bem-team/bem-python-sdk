@@ -45,11 +45,41 @@ __all__ = ["WorkflowsResource", "AsyncWorkflowsResource"]
 
 
 class WorkflowsResource(SyncAPIResource):
-    """Workflow operations"""
+    """
+    Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+    Use these endpoints to create, update, list, and manage workflows, and to invoke them
+    with file input via `POST /v3/workflows/{workflowName}/call`.
+
+    The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+    content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+    encode files:
+
+    ```
+    bem workflows call --workflow-name my-workflow \\
+      --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+      --wait
+    ```
+    """
 
     @cached_property
     def versions(self) -> VersionsResource:
-        """Workflow operations"""
+        """
+        Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+        Use these endpoints to create, update, list, and manage workflows, and to invoke them
+        with file input via `POST /v3/workflows/{workflowName}/call`.
+
+        The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+        content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+        encode files:
+
+        ```
+        bem workflows call --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+        """
         return VersionsResource(self._client)
 
     @cached_property
@@ -362,6 +392,53 @@ class WorkflowsResource(SyncAPIResource):
         Poll `GET /v3/calls/{callID}` to check status, or configure a webhook
         subscription to receive events when the call finishes.
 
+        ## CLI Usage
+
+        Use `@path/to/file` inside JSON string values to embed file contents
+        automatically. Binary files (PDF, images, audio) are base64-encoded; text files
+        are embedded as strings.
+
+        Single file (synchronous):
+
+        ```bash
+        bem workflows call \\
+          --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@invoice.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+
+        Single file (asynchronous, returns callID immediately):
+
+        ```bash
+        bem workflows call \\
+          --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@invoice.pdf", "inputType": "pdf"}'
+        ```
+
+        Batch files:
+
+        ```bash
+        bem workflows call \\
+          --workflow-name my-workflow \\
+          --input.batch-files '{"inputs": [{"inputContent": "@a.pdf", "inputType": "pdf"}, {"inputContent": "@b.png", "inputType": "png"}]}'
+        ```
+
+        Alternative: pass the full `--input` flag as JSON:
+
+        ```bash
+        bem workflows call \\
+          --workflow-name my-workflow \\
+          --input '{"singleFile": {"inputContent": "@invoice.pdf", "inputType": "pdf"}}' \\
+          --wait
+        ```
+
+        **Important:** `--wait` is a boolean flag. Use `--wait` or `--wait=true`. Do
+        **not** use `--wait true` (with a space) — the `true` will be parsed as an
+        unexpected positional argument.
+
+        Supported `inputType` values: csv, docx, email, heic, heif, html, jpeg, json,
+        m4a, mp3, pdf, png, text, wav, webp, xls, xlsx, xml.
+
         Args:
           input: Input to the workflow call. Provide exactly one of `singleFile` or `batchFiles`.
 
@@ -465,11 +542,41 @@ class WorkflowsResource(SyncAPIResource):
 
 
 class AsyncWorkflowsResource(AsyncAPIResource):
-    """Workflow operations"""
+    """
+    Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+    Use these endpoints to create, update, list, and manage workflows, and to invoke them
+    with file input via `POST /v3/workflows/{workflowName}/call`.
+
+    The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+    content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+    encode files:
+
+    ```
+    bem workflows call --workflow-name my-workflow \\
+      --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+      --wait
+    ```
+    """
 
     @cached_property
     def versions(self) -> AsyncVersionsResource:
-        """Workflow operations"""
+        """
+        Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+        Use these endpoints to create, update, list, and manage workflows, and to invoke them
+        with file input via `POST /v3/workflows/{workflowName}/call`.
+
+        The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+        content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+        encode files:
+
+        ```
+        bem workflows call --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+        """
         return AsyncVersionsResource(self._client)
 
     @cached_property
@@ -782,6 +889,53 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         Poll `GET /v3/calls/{callID}` to check status, or configure a webhook
         subscription to receive events when the call finishes.
 
+        ## CLI Usage
+
+        Use `@path/to/file` inside JSON string values to embed file contents
+        automatically. Binary files (PDF, images, audio) are base64-encoded; text files
+        are embedded as strings.
+
+        Single file (synchronous):
+
+        ```bash
+        bem workflows call \\
+          --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@invoice.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+
+        Single file (asynchronous, returns callID immediately):
+
+        ```bash
+        bem workflows call \\
+          --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@invoice.pdf", "inputType": "pdf"}'
+        ```
+
+        Batch files:
+
+        ```bash
+        bem workflows call \\
+          --workflow-name my-workflow \\
+          --input.batch-files '{"inputs": [{"inputContent": "@a.pdf", "inputType": "pdf"}, {"inputContent": "@b.png", "inputType": "png"}]}'
+        ```
+
+        Alternative: pass the full `--input` flag as JSON:
+
+        ```bash
+        bem workflows call \\
+          --workflow-name my-workflow \\
+          --input '{"singleFile": {"inputContent": "@invoice.pdf", "inputType": "pdf"}}' \\
+          --wait
+        ```
+
+        **Important:** `--wait` is a boolean flag. Use `--wait` or `--wait=true`. Do
+        **not** use `--wait true` (with a space) — the `true` will be parsed as an
+        unexpected positional argument.
+
+        Supported `inputType` values: csv, docx, email, heic, heif, html, jpeg, json,
+        m4a, mp3, pdf, png, text, wav, webp, xls, xlsx, xml.
+
         Args:
           input: Input to the workflow call. Provide exactly one of `singleFile` or `batchFiles`.
 
@@ -912,7 +1066,22 @@ class WorkflowsResourceWithRawResponse:
 
     @cached_property
     def versions(self) -> VersionsResourceWithRawResponse:
-        """Workflow operations"""
+        """
+        Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+        Use these endpoints to create, update, list, and manage workflows, and to invoke them
+        with file input via `POST /v3/workflows/{workflowName}/call`.
+
+        The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+        content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+        encode files:
+
+        ```
+        bem workflows call --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+        """
         return VersionsResourceWithRawResponse(self._workflows.versions)
 
 
@@ -944,7 +1113,22 @@ class AsyncWorkflowsResourceWithRawResponse:
 
     @cached_property
     def versions(self) -> AsyncVersionsResourceWithRawResponse:
-        """Workflow operations"""
+        """
+        Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+        Use these endpoints to create, update, list, and manage workflows, and to invoke them
+        with file input via `POST /v3/workflows/{workflowName}/call`.
+
+        The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+        content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+        encode files:
+
+        ```
+        bem workflows call --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+        """
         return AsyncVersionsResourceWithRawResponse(self._workflows.versions)
 
 
@@ -976,7 +1160,22 @@ class WorkflowsResourceWithStreamingResponse:
 
     @cached_property
     def versions(self) -> VersionsResourceWithStreamingResponse:
-        """Workflow operations"""
+        """
+        Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+        Use these endpoints to create, update, list, and manage workflows, and to invoke them
+        with file input via `POST /v3/workflows/{workflowName}/call`.
+
+        The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+        content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+        encode files:
+
+        ```
+        bem workflows call --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+        """
         return VersionsResourceWithStreamingResponse(self._workflows.versions)
 
 
@@ -1008,5 +1207,20 @@ class AsyncWorkflowsResourceWithStreamingResponse:
 
     @cached_property
     def versions(self) -> AsyncVersionsResourceWithStreamingResponse:
-        """Workflow operations"""
+        """
+        Workflows orchestrate one or more functions into a directed acyclic graph (DAG) for document processing.
+
+        Use these endpoints to create, update, list, and manage workflows, and to invoke them
+        with file input via `POST /v3/workflows/{workflowName}/call`.
+
+        The call endpoint accepts files as either multipart form data or JSON with base64-encoded
+        content. In the Bem CLI, use `@path/to/file` inside JSON values to automatically read and
+        encode files:
+
+        ```
+        bem workflows call --workflow-name my-workflow \\
+          --input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' \\
+          --wait
+        ```
+        """
         return AsyncVersionsResourceWithStreamingResponse(self._workflows.versions)

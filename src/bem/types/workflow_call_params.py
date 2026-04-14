@@ -29,7 +29,10 @@ class WorkflowCallParams(TypedDict, total=False):
 
 class InputBatchFilesInput(TypedDict, total=False):
     input_content: Required[Annotated[str, PropertyInfo(alias="inputContent")]]
-    """Base64-encoded file content"""
+    """Base64-encoded file content.
+
+    In the Bem CLI, use `@path/to/file` to embed file contents automatically.
+    """
 
     input_type: Required[
         Annotated[
@@ -66,8 +69,18 @@ class InputBatchFiles(TypedDict, total=False):
 
 
 class InputSingleFile(TypedDict, total=False):
+    """A single file input with base64-encoded content.
+
+    When using the Bem CLI, use `@path/to/file` in the `inputContent` field to
+    automatically read and base64-encode the file:
+    `--input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}'`
+    """
+
     input_content: Required[Annotated[str, PropertyInfo(alias="inputContent")]]
-    """Base64-encoded file content"""
+    """Base64-encoded file content.
+
+    In the Bem CLI, use `@path/to/file` to embed file contents automatically.
+    """
 
     input_type: Required[
         Annotated[
@@ -106,3 +119,9 @@ class Input(TypedDict, total=False):
     batch_files: Annotated[InputBatchFiles, PropertyInfo(alias="batchFiles")]
 
     single_file: Annotated[InputSingleFile, PropertyInfo(alias="singleFile")]
+    """A single file input with base64-encoded content.
+
+    When using the Bem CLI, use `@path/to/file` in the `inputContent` field to
+    automatically read and base64-encode the file:
+    `--input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}'`
+    """
