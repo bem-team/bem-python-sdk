@@ -93,6 +93,15 @@ class UpsertAnalyzeFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
+    enable_bounding_boxes: Annotated[bool, PropertyInfo(alias="enableBoundingBoxes")]
+    """Whether bounding box extraction is enabled.
+
+    Only applicable to analyze and extract functions. When true, the function
+    returns the document regions (page, coordinates) from which each field was
+    extracted. Enabling this automatically configures the function to use the
+    bounding box model. Disabling resets to the default.
+    """
+
     function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
