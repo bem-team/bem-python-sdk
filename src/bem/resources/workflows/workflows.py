@@ -440,10 +440,15 @@ class WorkflowsResource(SyncAPIResource):
         m4a, mp3, pdf, png, text, wav, webp, xls, xlsx, xml.
 
         Args:
-          input: Input to the workflow call. Provide exactly one of `singleFile` or `batchFiles`.
+          input: Input file(s) for a call. Provide exactly one of `singleFile` or `batchFiles`.
 
-          wait: When `true`, the endpoint blocks until the call completes (up to 30 seconds) and
-              returns the finished call object. Default: `false`.
+              In the CLI, use the nested flags `--input.single-file` or `--input.batch-files`
+              with `@path/to/file` for automatic file embedding:
+              `--input.single-file '{"inputContent": "@invoice.pdf", "inputType": "pdf"}' --wait`
+
+          wait: Block until the call completes (up to 30 seconds) and return the finished call
+              object. Default: `false`. This is a boolean flag — use `--wait` or
+              `--wait=true`, not `--wait true`.
 
           call_reference_id: Your reference ID for tracking this call.
 
@@ -937,10 +942,15 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         m4a, mp3, pdf, png, text, wav, webp, xls, xlsx, xml.
 
         Args:
-          input: Input to the workflow call. Provide exactly one of `singleFile` or `batchFiles`.
+          input: Input file(s) for a call. Provide exactly one of `singleFile` or `batchFiles`.
 
-          wait: When `true`, the endpoint blocks until the call completes (up to 30 seconds) and
-              returns the finished call object. Default: `false`.
+              In the CLI, use the nested flags `--input.single-file` or `--input.batch-files`
+              with `@path/to/file` for automatic file embedding:
+              `--input.single-file '{"inputContent": "@invoice.pdf", "inputType": "pdf"}' --wait`
+
+          wait: Block until the call completes (up to 30 seconds) and return the finished call
+              object. Default: `false`. This is a boolean flag — use `--wait` or
+              `--wait=true`, not `--wait true`.
 
           call_reference_id: Your reference ID for tracking this call.
 
