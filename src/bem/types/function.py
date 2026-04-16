@@ -122,6 +122,14 @@ class ExtractFunction(BaseModel):
 
 
 class AnalyzeFunction(BaseModel):
+    enable_bounding_boxes: bool = FieldInfo(alias="enableBoundingBoxes")
+    """Whether bounding box extraction is enabled.
+
+    Only applicable to analyze and extract functions. When true, the function
+    returns the document regions (page, coordinates) from which each field was
+    extracted.
+    """
+
     function_id: str = FieldInfo(alias="functionID")
     """Unique identifier of function."""
 

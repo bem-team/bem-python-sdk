@@ -215,6 +215,7 @@ class FunctionsResource(SyncAPIResource):
         function_name: str,
         type: Literal["analyze"],
         display_name: str | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -233,6 +234,12 @@ class FunctionsResource(SyncAPIResource):
         Must be UNIQUE on a per-environment basis.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
+
+          enable_bounding_boxes: Whether bounding box extraction is enabled. Only applicable to analyze and
+              extract functions. When true, the function returns the document regions (page,
+              coordinates) from which each field was extracted. Enabling this automatically
+              configures the function to use the bounding box model. Disabling resets to the
+              default.
 
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
@@ -562,6 +569,7 @@ class FunctionsResource(SyncAPIResource):
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         description: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
@@ -594,6 +602,7 @@ class FunctionsResource(SyncAPIResource):
                     "output_schema_name": output_schema_name,
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
+                    "enable_bounding_boxes": enable_bounding_boxes,
                     "description": description,
                     "routes": routes,
                     "destination_type": destination_type,
@@ -751,6 +760,7 @@ class FunctionsResource(SyncAPIResource):
         *,
         type: Literal["analyze"],
         display_name: str | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
@@ -768,6 +778,12 @@ class FunctionsResource(SyncAPIResource):
           display_name: Display name of function.
 
         Human-readable name to help you identify the function.
+
+          enable_bounding_boxes: Whether bounding box extraction is enabled. Only applicable to analyze and
+              extract functions. When true, the function returns the document regions (page,
+              coordinates) from which each field was extracted. Enabling this automatically
+              configures the function to use the bounding box model. Disabling resets to the
+              default.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
@@ -1094,6 +1110,7 @@ class FunctionsResource(SyncAPIResource):
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         description: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
@@ -1128,6 +1145,7 @@ class FunctionsResource(SyncAPIResource):
                     "output_schema_name": output_schema_name,
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
+                    "enable_bounding_boxes": enable_bounding_boxes,
                     "description": description,
                     "routes": routes,
                     "destination_type": destination_type,
@@ -1417,6 +1435,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         function_name: str,
         type: Literal["analyze"],
         display_name: str | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -1435,6 +1454,12 @@ class AsyncFunctionsResource(AsyncAPIResource):
         Must be UNIQUE on a per-environment basis.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
+
+          enable_bounding_boxes: Whether bounding box extraction is enabled. Only applicable to analyze and
+              extract functions. When true, the function returns the document regions (page,
+              coordinates) from which each field was extracted. Enabling this automatically
+              configures the function to use the bounding box model. Disabling resets to the
+              default.
 
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
@@ -1764,6 +1789,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         description: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
@@ -1796,6 +1822,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "output_schema_name": output_schema_name,
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
+                    "enable_bounding_boxes": enable_bounding_boxes,
                     "description": description,
                     "routes": routes,
                     "destination_type": destination_type,
@@ -1953,6 +1980,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         type: Literal["analyze"],
         display_name: str | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
@@ -1970,6 +1998,12 @@ class AsyncFunctionsResource(AsyncAPIResource):
           display_name: Display name of function.
 
         Human-readable name to help you identify the function.
+
+          enable_bounding_boxes: Whether bounding box extraction is enabled. Only applicable to analyze and
+              extract functions. When true, the function returns the document regions (page,
+              coordinates) from which each field was extracted. Enabling this automatically
+              configures the function to use the bounding box model. Disabling resets to the
+              default.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
@@ -2296,6 +2330,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         description: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
@@ -2330,6 +2365,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "output_schema_name": output_schema_name,
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
+                    "enable_bounding_boxes": enable_bounding_boxes,
                     "description": description,
                     "routes": routes,
                     "destination_type": destination_type,
