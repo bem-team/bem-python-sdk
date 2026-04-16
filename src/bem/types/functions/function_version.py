@@ -144,6 +144,12 @@ class AnalyzeFunctionVersion(BaseModel):
     output_schema_name: str = FieldInfo(alias="outputSchemaName")
     """Name of output schema object."""
 
+    pre_count: bool = FieldInfo(alias="preCount")
+    """
+    Reducing the risk of the model stopping early on long documents. Trade-off:
+    Increases total latency.
+    """
+
     type: Literal["analyze"]
 
     version_num: int = FieldInfo(alias="versionNum")

@@ -111,6 +111,12 @@ class CreateAnalyzeFunction(TypedDict, total=False):
     output_schema_name: Annotated[str, PropertyInfo(alias="outputSchemaName")]
     """Name of output schema object."""
 
+    pre_count: Annotated[bool, PropertyInfo(alias="preCount")]
+    """
+    Reducing the risk of the model stopping early on long documents. Trade-off:
+    Increases total latency. Compatible with `enableBoundingBoxes`.
+    """
+
     tags: SequenceNotStr[str]
     """Array of tags to categorize and organize functions."""
 
