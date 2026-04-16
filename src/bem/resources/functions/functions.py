@@ -218,6 +218,7 @@ class FunctionsResource(SyncAPIResource):
         enable_bounding_boxes: bool | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
+        pre_count: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -244,6 +245,10 @@ class FunctionsResource(SyncAPIResource):
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
           output_schema_name: Name of output schema object.
+
+          pre_count:
+              Reducing the risk of the model stopping early on long documents. Trade-off:
+              Increases total latency. Compatible with `enableBoundingBoxes`.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -570,6 +575,7 @@ class FunctionsResource(SyncAPIResource):
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         enable_bounding_boxes: bool | Omit = omit,
+        pre_count: bool | Omit = omit,
         description: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
@@ -603,6 +609,7 @@ class FunctionsResource(SyncAPIResource):
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
                     "enable_bounding_boxes": enable_bounding_boxes,
+                    "pre_count": pre_count,
                     "description": description,
                     "routes": routes,
                     "destination_type": destination_type,
@@ -764,6 +771,7 @@ class FunctionsResource(SyncAPIResource):
         function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
+        pre_count: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -790,6 +798,10 @@ class FunctionsResource(SyncAPIResource):
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
           output_schema_name: Name of output schema object.
+
+          pre_count:
+              Reducing the risk of the model stopping early on long documents. Trade-off:
+              Increases total latency. Compatible with `enableBoundingBoxes`.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -1111,6 +1123,7 @@ class FunctionsResource(SyncAPIResource):
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         enable_bounding_boxes: bool | Omit = omit,
+        pre_count: bool | Omit = omit,
         description: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
@@ -1146,6 +1159,7 @@ class FunctionsResource(SyncAPIResource):
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
                     "enable_bounding_boxes": enable_bounding_boxes,
+                    "pre_count": pre_count,
                     "description": description,
                     "routes": routes,
                     "destination_type": destination_type,
@@ -1438,6 +1452,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         enable_bounding_boxes: bool | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
+        pre_count: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1464,6 +1479,10 @@ class AsyncFunctionsResource(AsyncAPIResource):
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
           output_schema_name: Name of output schema object.
+
+          pre_count:
+              Reducing the risk of the model stopping early on long documents. Trade-off:
+              Increases total latency. Compatible with `enableBoundingBoxes`.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -1790,6 +1809,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         enable_bounding_boxes: bool | Omit = omit,
+        pre_count: bool | Omit = omit,
         description: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
@@ -1823,6 +1843,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
                     "enable_bounding_boxes": enable_bounding_boxes,
+                    "pre_count": pre_count,
                     "description": description,
                     "routes": routes,
                     "destination_type": destination_type,
@@ -1984,6 +2005,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
+        pre_count: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -2010,6 +2032,10 @@ class AsyncFunctionsResource(AsyncAPIResource):
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
           output_schema_name: Name of output schema object.
+
+          pre_count:
+              Reducing the risk of the model stopping early on long documents. Trade-off:
+              Increases total latency. Compatible with `enableBoundingBoxes`.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -2331,6 +2357,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         enable_bounding_boxes: bool | Omit = omit,
+        pre_count: bool | Omit = omit,
         description: str | Omit = omit,
         routes: Iterable[RouteListItemParam] | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
@@ -2366,6 +2393,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
                     "enable_bounding_boxes": enable_bounding_boxes,
+                    "pre_count": pre_count,
                     "description": description,
                     "routes": routes,
                     "destination_type": destination_type,

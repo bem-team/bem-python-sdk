@@ -324,6 +324,7 @@ class TestWorkflows:
             },
             wait=True,
             call_reference_id="callReferenceID",
+            metadata={},
         )
         assert_matches_type(CallGetResponse, workflow, path=["response"])
 
@@ -719,6 +720,7 @@ class TestAsyncWorkflows:
             },
             wait=True,
             call_reference_id="callReferenceID",
+            metadata={},
         )
         assert_matches_type(CallGetResponse, workflow, path=["response"])
 

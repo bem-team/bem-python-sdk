@@ -29,6 +29,14 @@ class WorkflowCallParams(TypedDict, total=False):
     call_reference_id: Annotated[str, PropertyInfo(alias="callReferenceID")]
     """Your reference ID for tracking this call."""
 
+    metadata: object
+    """Arbitrary JSON object attached to this call.
+
+    Stored on the call record and injected into `transformedContent` under the
+    reserved `_metadata` key (alongside `referenceID`). Must be a JSON object.
+    Maximum size: 4 KB.
+    """
+
 
 class InputBatchFilesInput(TypedDict, total=False):
     input_content: Required[Annotated[str, PropertyInfo(alias="inputContent")]]
