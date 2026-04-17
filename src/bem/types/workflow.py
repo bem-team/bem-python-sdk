@@ -2,6 +2,7 @@
 
 from typing import List, Optional
 from datetime import datetime
+from typing_extensions import Literal
 
 from pydantic import Field as FieldInfo
 
@@ -10,7 +11,36 @@ from .workflow_audit import WorkflowAudit
 from .workflow_edge_response import WorkflowEdgeResponse
 from .workflow_node_response import WorkflowNodeResponse
 
-__all__ = ["Workflow"]
+__all__ = ["Workflow", "Connector", "ConnectorParagon"]
+
+
+class ConnectorParagon(BaseModel):
+    """Paragon-integration configuration on a workflow connector."""
+
+    configuration: object
+    """Opaque per-integration configuration (e.g. `{"folderId": "..."}`)."""
+
+    integration: str
+    """Paragon integration key (e.g. "googledrive")."""
+
+    sync_id: str = FieldInfo(alias="syncID")
+    """Paragon sync ID managed by the server. Read-only."""
+
+
+class Connector(BaseModel):
+    """A connector attached to a workflow. Ingestion point that triggers the workflow."""
+
+    connector_id: str = FieldInfo(alias="connectorID")
+    """Unique connector API ID."""
+
+    name: str
+    """Human-friendly connector name."""
+
+    type: Literal["paragon"]
+    """Discriminator for a workflow connector. V3 supports `paragon` only."""
+
+    paragon: Optional[ConnectorParagon] = None
+    """Paragon-integration configuration on a workflow connector."""
 
 
 class Workflow(BaseModel):
@@ -18,6 +48,13 @@ class Workflow(BaseModel):
 
     id: str
     """Unique identifier of the workflow."""
+
+    connectors: List[Connector]
+    """Connectors currently attached to this workflow.
+
+    For version-scoped reads (`/versions/{n}`) this is always empty — connectors are
+    current-state and not part of version history.
+    """
 
     created_at: datetime = FieldInfo(alias="createdAt")
     """The date and time the workflow was created."""

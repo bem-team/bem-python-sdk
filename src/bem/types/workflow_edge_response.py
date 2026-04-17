@@ -20,3 +20,9 @@ class WorkflowEdgeResponse(BaseModel):
 
     destination_name: Optional[str] = FieldInfo(alias="destinationName", default=None)
     """Labelled outlet on the source node, if any."""
+
+    metadata: Optional[object] = None
+    """
+    Opaque free-form JSON object attached to this edge on create/update. Returned
+    verbatim; never interpreted by the server.
+    """

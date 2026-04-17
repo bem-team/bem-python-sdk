@@ -1,5 +1,7 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
+from typing import Optional
+
 from .._models import BaseModel
 from .function_version_identifier import FunctionVersionIdentifier
 
@@ -14,3 +16,9 @@ class WorkflowNodeResponse(BaseModel):
 
     name: str
     """Name of this call site, unique within the workflow version."""
+
+    metadata: Optional[object] = None
+    """
+    Opaque free-form JSON object attached to this node on create/update. Returned
+    verbatim; never interpreted by the server.
+    """
