@@ -354,6 +354,7 @@ class WorkflowsResource(SyncAPIResource):
         input: workflow_call_params.Input,
         wait: bool | Omit = omit,
         call_reference_id: str | Omit = omit,
+        metadata: object | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -452,6 +453,10 @@ class WorkflowsResource(SyncAPIResource):
 
           call_reference_id: Your reference ID for tracking this call.
 
+          metadata: Arbitrary JSON object attached to this call. Stored on the call record and
+              injected into `transformedContent` under the reserved `_metadata` key (alongside
+              `referenceID`). Must be a JSON object. Maximum size: 4 KB.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -468,6 +473,7 @@ class WorkflowsResource(SyncAPIResource):
                 {
                     "input": input,
                     "call_reference_id": call_reference_id,
+                    "metadata": metadata,
                 },
                 workflow_call_params.WorkflowCallParams,
             ),
@@ -856,6 +862,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         input: workflow_call_params.Input,
         wait: bool | Omit = omit,
         call_reference_id: str | Omit = omit,
+        metadata: object | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -954,6 +961,10 @@ class AsyncWorkflowsResource(AsyncAPIResource):
 
           call_reference_id: Your reference ID for tracking this call.
 
+          metadata: Arbitrary JSON object attached to this call. Stored on the call record and
+              injected into `transformedContent` under the reserved `_metadata` key (alongside
+              `referenceID`). Must be a JSON object. Maximum size: 4 KB.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -970,6 +981,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
                 {
                     "input": input,
                     "call_reference_id": call_reference_id,
+                    "metadata": metadata,
                 },
                 workflow_call_params.WorkflowCallParams,
             ),

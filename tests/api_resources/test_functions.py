@@ -142,6 +142,7 @@ class TestFunctions:
             enable_bounding_boxes=True,
             output_schema={},
             output_schema_name="outputSchemaName",
+            pre_count=True,
             tags=["string"],
         )
         assert_matches_type(FunctionResponse, function, path=["response"])
@@ -698,6 +699,7 @@ class TestFunctions:
             function_name="functionName",
             output_schema={},
             output_schema_name="outputSchemaName",
+            pre_count=True,
             tags=["string"],
         )
         assert_matches_type(FunctionResponse, function, path=["response"])
@@ -1351,6 +1353,7 @@ class TestAsyncFunctions:
             enable_bounding_boxes=True,
             output_schema={},
             output_schema_name="outputSchemaName",
+            pre_count=True,
             tags=["string"],
         )
         assert_matches_type(FunctionResponse, function, path=["response"])
@@ -1907,6 +1910,7 @@ class TestAsyncFunctions:
             function_name="functionName",
             output_schema={},
             output_schema_name="outputSchemaName",
+            pre_count=True,
             tags=["string"],
         )
         assert_matches_type(FunctionResponse, function, path=["response"])
