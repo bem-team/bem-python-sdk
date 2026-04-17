@@ -107,6 +107,7 @@ class WorkflowsResource(SyncAPIResource):
         main_node_name: str,
         name: str,
         nodes: Iterable[workflow_create_params.Node],
+        connectors: Iterable[workflow_create_params.Connector] | Omit = omit,
         display_name: str | Omit = omit,
         edges: Iterable[workflow_create_params.Edge] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -127,6 +128,9 @@ class WorkflowsResource(SyncAPIResource):
           name: Unique name for the workflow. Must match `^[a-zA-Z0-9_-]{1,128}$`.
 
           nodes: Call-site nodes in the DAG. At least one is required.
+
+          connectors: Connectors to attach to the workflow at creation. If any entry fails to
+              provision, the entire workflow creation is rolled back.
 
           display_name: Human-readable display name.
 
@@ -149,6 +153,7 @@ class WorkflowsResource(SyncAPIResource):
                     "main_node_name": main_node_name,
                     "name": name,
                     "nodes": nodes,
+                    "connectors": connectors,
                     "display_name": display_name,
                     "edges": edges,
                     "tags": tags,
@@ -198,6 +203,7 @@ class WorkflowsResource(SyncAPIResource):
         self,
         workflow_name: str,
         *,
+        connectors: Iterable[workflow_update_params.Connector] | Omit = omit,
         display_name: str | Omit = omit,
         edges: Iterable[workflow_update_params.Edge] | Omit = omit,
         main_node_name: str | Omit = omit,
@@ -215,6 +221,11 @@ class WorkflowsResource(SyncAPIResource):
         Update a Workflow
 
         Args:
+          connectors: Declarative, full-desired-state array of connectors. If omitted, existing
+              connectors are left unchanged. If provided, it replaces the current set: entries
+              with `connectorID` are updates, entries without are creates, and existing
+              connectors whose `connectorID` is absent are deleted.
+
           display_name: Human-readable display name.
 
           main_node_name: `mainNodeName`, `nodes`, and `edges` must be provided together to update the DAG
@@ -239,6 +250,7 @@ class WorkflowsResource(SyncAPIResource):
             path_template("/v3/workflows/{workflow_name}", workflow_name=workflow_name),
             body=maybe_transform(
                 {
+                    "connectors": connectors,
                     "display_name": display_name,
                     "edges": edges,
                     "main_node_name": main_node_name,
@@ -615,6 +627,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         main_node_name: str,
         name: str,
         nodes: Iterable[workflow_create_params.Node],
+        connectors: Iterable[workflow_create_params.Connector] | Omit = omit,
         display_name: str | Omit = omit,
         edges: Iterable[workflow_create_params.Edge] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -635,6 +648,9 @@ class AsyncWorkflowsResource(AsyncAPIResource):
           name: Unique name for the workflow. Must match `^[a-zA-Z0-9_-]{1,128}$`.
 
           nodes: Call-site nodes in the DAG. At least one is required.
+
+          connectors: Connectors to attach to the workflow at creation. If any entry fails to
+              provision, the entire workflow creation is rolled back.
 
           display_name: Human-readable display name.
 
@@ -657,6 +673,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
                     "main_node_name": main_node_name,
                     "name": name,
                     "nodes": nodes,
+                    "connectors": connectors,
                     "display_name": display_name,
                     "edges": edges,
                     "tags": tags,
@@ -706,6 +723,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         self,
         workflow_name: str,
         *,
+        connectors: Iterable[workflow_update_params.Connector] | Omit = omit,
         display_name: str | Omit = omit,
         edges: Iterable[workflow_update_params.Edge] | Omit = omit,
         main_node_name: str | Omit = omit,
@@ -723,6 +741,11 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         Update a Workflow
 
         Args:
+          connectors: Declarative, full-desired-state array of connectors. If omitted, existing
+              connectors are left unchanged. If provided, it replaces the current set: entries
+              with `connectorID` are updates, entries without are creates, and existing
+              connectors whose `connectorID` is absent are deleted.
+
           display_name: Human-readable display name.
 
           main_node_name: `mainNodeName`, `nodes`, and `edges` must be provided together to update the DAG
@@ -747,6 +770,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
             path_template("/v3/workflows/{workflow_name}", workflow_name=workflow_name),
             body=await async_maybe_transform(
                 {
+                    "connectors": connectors,
                     "display_name": display_name,
                     "edges": edges,
                     "main_node_name": main_node_name,
