@@ -9,8 +9,8 @@ import pytest
 
 from bem import Bem, AsyncBem
 from bem.types import (
+    Function,
     FunctionResponse,
-    FunctionListResponse,
 )
 from tests.utils import assert_matches_type
 from bem.pagination import SyncFunctionsPage, AsyncFunctionsPage
@@ -916,7 +916,7 @@ class TestFunctions:
     @parametrize
     def test_method_list(self, client: Bem) -> None:
         function = client.functions.list()
-        assert_matches_type(SyncFunctionsPage[FunctionListResponse], function, path=["response"])
+        assert_matches_type(SyncFunctionsPage[Function], function, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -934,7 +934,7 @@ class TestFunctions:
             workflow_ids=["string"],
             workflow_names=["string"],
         )
-        assert_matches_type(SyncFunctionsPage[FunctionListResponse], function, path=["response"])
+        assert_matches_type(SyncFunctionsPage[Function], function, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -944,7 +944,7 @@ class TestFunctions:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         function = response.parse()
-        assert_matches_type(SyncFunctionsPage[FunctionListResponse], function, path=["response"])
+        assert_matches_type(SyncFunctionsPage[Function], function, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -954,7 +954,7 @@ class TestFunctions:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             function = response.parse()
-            assert_matches_type(SyncFunctionsPage[FunctionListResponse], function, path=["response"])
+            assert_matches_type(SyncFunctionsPage[Function], function, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -1901,7 +1901,7 @@ class TestAsyncFunctions:
     @parametrize
     async def test_method_list(self, async_client: AsyncBem) -> None:
         function = await async_client.functions.list()
-        assert_matches_type(AsyncFunctionsPage[FunctionListResponse], function, path=["response"])
+        assert_matches_type(AsyncFunctionsPage[Function], function, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -1919,7 +1919,7 @@ class TestAsyncFunctions:
             workflow_ids=["string"],
             workflow_names=["string"],
         )
-        assert_matches_type(AsyncFunctionsPage[FunctionListResponse], function, path=["response"])
+        assert_matches_type(AsyncFunctionsPage[Function], function, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -1929,7 +1929,7 @@ class TestAsyncFunctions:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         function = await response.parse()
-        assert_matches_type(AsyncFunctionsPage[FunctionListResponse], function, path=["response"])
+        assert_matches_type(AsyncFunctionsPage[Function], function, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -1939,7 +1939,7 @@ class TestAsyncFunctions:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             function = await response.parse()
-            assert_matches_type(AsyncFunctionsPage[FunctionListResponse], function, path=["response"])
+            assert_matches_type(AsyncFunctionsPage[Function], function, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

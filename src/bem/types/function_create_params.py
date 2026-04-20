@@ -8,16 +8,13 @@ from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 from .enrich_config_param import EnrichConfigParam
+from .classification_list_item_param import ClassificationListItemParam
 from .split_function_semantic_page_item_class_param import SplitFunctionSemanticPageItemClassParam
 
 __all__ = [
     "FunctionCreateParams",
     "CreateExtractFunction",
     "CreateClassifyFunction",
-    "CreateClassifyFunctionClassification",
-    "CreateClassifyFunctionClassificationOrigin",
-    "CreateClassifyFunctionClassificationOriginEmail",
-    "CreateClassifyFunctionClassificationRegex",
     "CreateSendFunction",
     "CreateSplitFunction",
     "CreateSplitFunctionPrintPageSplitConfig",
@@ -63,7 +60,7 @@ class CreateClassifyFunction(TypedDict, total=False):
 
     type: Required[Literal["classify"]]
 
-    classifications: Iterable[CreateClassifyFunctionClassification]
+    classifications: Iterable[ClassificationListItemParam]
     """V3 create/update variants of the shared function payloads.
 
     The V3 Functions API no longer accepts the legacy `transform` or `analyze`
@@ -94,34 +91,6 @@ class CreateClassifyFunction(TypedDict, total=False):
 
     tags: SequenceNotStr[str]
     """Array of tags to categorize and organize functions."""
-
-
-class CreateClassifyFunctionClassificationOriginEmail(TypedDict, total=False):
-    patterns: SequenceNotStr[str]
-
-
-class CreateClassifyFunctionClassificationOrigin(TypedDict, total=False):
-    email: CreateClassifyFunctionClassificationOriginEmail
-
-
-class CreateClassifyFunctionClassificationRegex(TypedDict, total=False):
-    patterns: SequenceNotStr[str]
-
-
-class CreateClassifyFunctionClassification(TypedDict, total=False):
-    name: Required[str]
-
-    description: str
-
-    function_id: Annotated[str, PropertyInfo(alias="functionID")]
-
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
-
-    is_error_fallback: Annotated[bool, PropertyInfo(alias="isErrorFallback")]
-
-    origin: CreateClassifyFunctionClassificationOrigin
-
-    regex: CreateClassifyFunctionClassificationRegex
 
 
 class CreateSendFunction(TypedDict, total=False):

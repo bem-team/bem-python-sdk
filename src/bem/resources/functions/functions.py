@@ -36,10 +36,11 @@ from ..._response import (
 )
 from ...pagination import SyncFunctionsPage, AsyncFunctionsPage
 from ..._base_client import AsyncPaginator, make_request_options
+from ...types.function import Function
 from ...types.function_type import FunctionType
 from ...types.function_response import FunctionResponse
 from ...types.enrich_config_param import EnrichConfigParam
-from ...types.function_list_response import FunctionListResponse
+from ...types.classification_list_item_param import ClassificationListItemParam
 
 __all__ = ["FunctionsResource", "AsyncFunctionsResource"]
 
@@ -167,7 +168,7 @@ class FunctionsResource(SyncAPIResource):
         *,
         function_name: str,
         type: Literal["classify"],
-        classifications: Iterable[function_create_params.CreateClassifyFunctionClassification] | Omit = omit,
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         display_name: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -483,7 +484,7 @@ class FunctionsResource(SyncAPIResource):
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
-        classifications: Iterable[function_create_params.CreateClassifyFunctionClassification] | Omit = omit,
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
@@ -624,7 +625,7 @@ class FunctionsResource(SyncAPIResource):
         path_function_name: str,
         *,
         type: Literal["classify"],
-        classifications: Iterable[function_update_params.UpsertClassifyFunctionClassification] | Omit = omit,
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
@@ -934,7 +935,7 @@ class FunctionsResource(SyncAPIResource):
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
-        classifications: Iterable[function_update_params.UpsertClassifyFunctionClassification] | Omit = omit,
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
@@ -1011,7 +1012,7 @@ class FunctionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncFunctionsPage[FunctionListResponse]:
+    ) -> SyncFunctionsPage[Function]:
         """
         List Functions
 
@@ -1026,7 +1027,7 @@ class FunctionsResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/v3/functions",
-            page=SyncFunctionsPage[FunctionListResponse],
+            page=SyncFunctionsPage[Function],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -1049,7 +1050,7 @@ class FunctionsResource(SyncAPIResource):
                     function_list_params.FunctionListParams,
                 ),
             ),
-            model=cast(Any, FunctionListResponse),  # Union types cannot be passed in as arguments in the type system
+            model=cast(Any, Function),  # Union types cannot be passed in as arguments in the type system
         )
 
     def delete(
@@ -1210,7 +1211,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         function_name: str,
         type: Literal["classify"],
-        classifications: Iterable[function_create_params.CreateClassifyFunctionClassification] | Omit = omit,
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         display_name: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -1526,7 +1527,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
-        classifications: Iterable[function_create_params.CreateClassifyFunctionClassification] | Omit = omit,
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
@@ -1667,7 +1668,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         path_function_name: str,
         *,
         type: Literal["classify"],
-        classifications: Iterable[function_update_params.UpsertClassifyFunctionClassification] | Omit = omit,
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
@@ -1977,7 +1978,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
-        classifications: Iterable[function_update_params.UpsertClassifyFunctionClassification] | Omit = omit,
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
@@ -2054,7 +2055,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[FunctionListResponse, AsyncFunctionsPage[FunctionListResponse]]:
+    ) -> AsyncPaginator[Function, AsyncFunctionsPage[Function]]:
         """
         List Functions
 
@@ -2069,7 +2070,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/v3/functions",
-            page=AsyncFunctionsPage[FunctionListResponse],
+            page=AsyncFunctionsPage[Function],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -2092,7 +2093,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     function_list_params.FunctionListParams,
                 ),
             ),
-            model=cast(Any, FunctionListResponse),  # Union types cannot be passed in as arguments in the type system
+            model=cast(Any, Function),  # Union types cannot be passed in as arguments in the type system
         )
 
     async def delete(

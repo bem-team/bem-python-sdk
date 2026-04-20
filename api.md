@@ -4,15 +4,19 @@ Types:
 
 ```python
 from bem.types import (
+    ClassificationListItem,
+    CreateFunction,
     EnrichConfig,
     EnrichStep,
+    Function,
     FunctionAudit,
     FunctionResponse,
     FunctionType,
+    ListFunctionsResponse,
     SplitFunctionSemanticPageItemClass,
+    UpdateFunction,
     UserActionSummary,
     WorkflowUsageInfo,
-    FunctionListResponse,
 )
 ```
 
@@ -21,7 +25,7 @@ Methods:
 - <code title="post /v3/functions">client.functions.<a href="./src/bem/resources/functions/functions.py">create</a>(\*\*<a href="src/bem/types/function_create_params.py">params</a>) -> <a href="./src/bem/types/function_response.py">FunctionResponse</a></code>
 - <code title="get /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">retrieve</a>(function_name) -> <a href="./src/bem/types/function_response.py">FunctionResponse</a></code>
 - <code title="patch /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">update</a>(path_function_name, \*\*<a href="src/bem/types/function_update_params.py">params</a>) -> <a href="./src/bem/types/function_response.py">FunctionResponse</a></code>
-- <code title="get /v3/functions">client.functions.<a href="./src/bem/resources/functions/functions.py">list</a>(\*\*<a href="src/bem/types/function_list_params.py">params</a>) -> <a href="./src/bem/types/function_list_response.py">SyncFunctionsPage[FunctionListResponse]</a></code>
+- <code title="get /v3/functions">client.functions.<a href="./src/bem/resources/functions/functions.py">list</a>(\*\*<a href="src/bem/types/function_list_params.py">params</a>) -> <a href="./src/bem/types/function.py">SyncFunctionsPage[Function]</a></code>
 - <code title="delete /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">delete</a>(function_name) -> None</code>
 
 ## Copy
@@ -41,13 +45,17 @@ Methods:
 Types:
 
 ```python
-from bem.types.functions import VersionRetrieveResponse, VersionListResponse
+from bem.types.functions import (
+    FunctionVersion,
+    ListFunctionVersionsResponse,
+    VersionRetrieveResponse,
+)
 ```
 
 Methods:
 
 - <code title="get /v3/functions/{functionName}/versions/{versionNum}">client.functions.versions.<a href="./src/bem/resources/functions/versions.py">retrieve</a>(version_num, \*, function_name) -> <a href="./src/bem/types/functions/version_retrieve_response.py">VersionRetrieveResponse</a></code>
-- <code title="get /v3/functions/{functionName}/versions">client.functions.versions.<a href="./src/bem/resources/functions/versions.py">list</a>(function_name) -> <a href="./src/bem/types/functions/version_list_response.py">VersionListResponse</a></code>
+- <code title="get /v3/functions/{functionName}/versions">client.functions.versions.<a href="./src/bem/resources/functions/versions.py">list</a>(function_name) -> <a href="./src/bem/types/functions/list_function_versions_response.py">ListFunctionVersionsResponse</a></code>
 
 # Calls
 
