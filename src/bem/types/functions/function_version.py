@@ -1,38 +1,36 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import List, Union, Optional
+from datetime import datetime
 from typing_extensions import Literal, Annotated, TypeAlias
 
 from pydantic import Field as FieldInfo
 
-from .._utils import PropertyInfo
-from .._models import BaseModel
-from .enrich_config import EnrichConfig
-from .function_audit import FunctionAudit
-from .workflow_usage_info import WorkflowUsageInfo
-from .split_function_semantic_page_item_class import SplitFunctionSemanticPageItemClass
+from ..._utils import PropertyInfo
+from ..._models import BaseModel
+from ..enrich_config import EnrichConfig
+from ..function_audit import FunctionAudit
+from ..workflow_usage_info import WorkflowUsageInfo
+from ..classification_list_item import ClassificationListItem
+from ..split_function_semantic_page_item_class import SplitFunctionSemanticPageItemClass
 
 __all__ = [
-    "FunctionListResponse",
-    "TransformFunction",
-    "ExtractFunction",
-    "AnalyzeFunction",
-    "ClassifyFunction",
-    "ClassifyFunctionClassification",
-    "ClassifyFunctionClassificationOrigin",
-    "ClassifyFunctionClassificationOriginEmail",
-    "ClassifyFunctionClassificationRegex",
-    "SendFunction",
-    "SplitFunction",
-    "SplitFunctionPrintPageSplitConfig",
-    "SplitFunctionSemanticPageSplitConfig",
-    "JoinFunction",
-    "PayloadShapingFunction",
-    "EnrichFunction",
+    "FunctionVersion",
+    "TransformFunctionVersion",
+    "ExtractFunctionVersion",
+    "AnalyzeFunctionVersion",
+    "ClassifyFunctionVersion",
+    "SendFunctionVersion",
+    "SplitFunctionVersion",
+    "SplitFunctionVersionPrintPageSplitConfig",
+    "SplitFunctionVersionSemanticPageSplitConfig",
+    "JoinFunctionVersion",
+    "EnrichFunctionVersion",
+    "PayloadShapingFunctionVersion",
 ]
 
 
-class TransformFunction(BaseModel):
+class TransformFunctionVersion(BaseModel):
     email_address: str = FieldInfo(alias="emailAddress")
     """Email address automatically created by bem.
 
@@ -63,7 +61,10 @@ class TransformFunction(BaseModel):
     """Version number of function."""
 
     audit: Optional[FunctionAudit] = None
-    """Audit trail information for the function."""
+    """Audit trail information for the function version."""
+
+    created_at: Optional[datetime] = FieldInfo(alias="createdAt", default=None)
+    """The date and time the function version was created."""
 
     display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
     """Display name of function.
@@ -78,12 +79,7 @@ class TransformFunction(BaseModel):
     """List of workflows that use this function."""
 
 
-class ExtractFunction(BaseModel):
-    """
-    A function that extracts structured JSON from documents and images.
-    Accepts a wide range of input types including PDFs, images, spreadsheets, emails, and more.
-    """
-
+class ExtractFunctionVersion(BaseModel):
     function_id: str = FieldInfo(alias="functionID")
     """Unique identifier of function."""
 
@@ -109,7 +105,10 @@ class ExtractFunction(BaseModel):
     """Version number of function."""
 
     audit: Optional[FunctionAudit] = None
-    """Audit trail information for the function."""
+    """Audit trail information for the function version."""
+
+    created_at: Optional[datetime] = FieldInfo(alias="createdAt", default=None)
+    """The date and time the function version was created."""
 
     display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
     """Display name of function.
@@ -124,7 +123,7 @@ class ExtractFunction(BaseModel):
     """List of workflows that use this function."""
 
 
-class AnalyzeFunction(BaseModel):
+class AnalyzeFunctionVersion(BaseModel):
     enable_bounding_boxes: bool = FieldInfo(alias="enableBoundingBoxes")
     """Whether bounding box extraction is enabled.
 
@@ -157,7 +156,10 @@ class AnalyzeFunction(BaseModel):
     """Version number of function."""
 
     audit: Optional[FunctionAudit] = None
-    """Audit trail information for the function."""
+    """Audit trail information for the function version."""
+
+    created_at: Optional[datetime] = FieldInfo(alias="createdAt", default=None)
+    """The date and time the function version was created."""
 
     display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
     """Display name of function.
@@ -172,42 +174,13 @@ class AnalyzeFunction(BaseModel):
     """List of workflows that use this function."""
 
 
-class ClassifyFunctionClassificationOriginEmail(BaseModel):
-    patterns: Optional[List[str]] = None
-
-
-class ClassifyFunctionClassificationOrigin(BaseModel):
-    email: Optional[ClassifyFunctionClassificationOriginEmail] = None
-
-
-class ClassifyFunctionClassificationRegex(BaseModel):
-    patterns: Optional[List[str]] = None
-
-
-class ClassifyFunctionClassification(BaseModel):
-    name: str
-
-    description: Optional[str] = None
-
-    function_id: Optional[str] = FieldInfo(alias="functionID", default=None)
-
-    function_name: Optional[str] = FieldInfo(alias="functionName", default=None)
-
-    is_error_fallback: Optional[bool] = FieldInfo(alias="isErrorFallback", default=None)
-
-    origin: Optional[ClassifyFunctionClassificationOrigin] = None
-
-    regex: Optional[ClassifyFunctionClassificationRegex] = None
-
-
-class ClassifyFunction(BaseModel):
-    """V3 read-side shape of a Classify (internally Route) function.
-
-    Mirrors
-    {
+class ClassifyFunctionVersion(BaseModel):
+    """
+    V3 read-side shape of a Classify (internally Route) function version.
+    Mirrors {
     """
 
-    classifications: List[ClassifyFunctionClassification]
+    classifications: List[ClassificationListItem]
     """V3 create/update variants of the shared function payloads.
 
     The V3 Functions API no longer accepts the legacy `transform` or `analyze`
@@ -248,7 +221,10 @@ class ClassifyFunction(BaseModel):
     """Version number of function."""
 
     audit: Optional[FunctionAudit] = None
-    """Audit trail information for the function."""
+    """Audit trail information for the function version."""
+
+    created_at: Optional[datetime] = FieldInfo(alias="createdAt", default=None)
+    """The date and time the function version was created."""
 
     display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
     """Display name of function.
@@ -263,13 +239,7 @@ class ClassifyFunction(BaseModel):
     """List of workflows that use this function."""
 
 
-class SendFunction(BaseModel):
-    """
-    A function that delivers workflow outputs to an external destination.
-    Send functions receive the output of an upstream workflow node and forward it
-    to a webhook, S3 bucket, or Google Drive folder.
-    """
-
+class SendFunctionVersion(BaseModel):
     destination_type: Literal["webhook", "s3", "google_drive"] = FieldInfo(alias="destinationType")
     """Destination type for a Send function."""
 
@@ -285,7 +255,10 @@ class SendFunction(BaseModel):
     """Version number of function."""
 
     audit: Optional[FunctionAudit] = None
-    """Audit trail information for the function."""
+    """Audit trail information for the function version."""
+
+    created_at: Optional[datetime] = FieldInfo(alias="createdAt", default=None)
+    """The date and time the function version was created."""
 
     display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
     """Display name of function.
@@ -294,16 +267,10 @@ class SendFunction(BaseModel):
     """
 
     google_drive_folder_id: Optional[str] = FieldInfo(alias="googleDriveFolderId", default=None)
-    """Google Drive folder ID.
-
-    Present when destinationType is google_drive. Managed via Paragon OAuth.
-    """
 
     s3_bucket: Optional[str] = FieldInfo(alias="s3Bucket", default=None)
-    """S3 bucket to upload the payload to. Present when destinationType is s3."""
 
     s3_prefix: Optional[str] = FieldInfo(alias="s3Prefix", default=None)
-    """S3 key prefix (folder path). Optional, present when destinationType is s3."""
 
     tags: Optional[List[str]] = None
     """Array of tags to categorize and organize functions."""
@@ -312,25 +279,23 @@ class SendFunction(BaseModel):
     """List of workflows that use this function."""
 
     webhook_signing_enabled: Optional[bool] = FieldInfo(alias="webhookSigningEnabled", default=None)
-    """Whether webhook payloads are signed with an HMAC-SHA256 `bem-signature` header."""
+    """
+    Whether webhook deliveries are signed with an HMAC-SHA256 `bem-signature`
+    header.
+    """
 
     webhook_url: Optional[str] = FieldInfo(alias="webhookUrl", default=None)
-    """Webhook URL to POST the payload to. Present when destinationType is webhook."""
 
 
-class SplitFunctionPrintPageSplitConfig(BaseModel):
-    """Configuration for print page splitting."""
-
+class SplitFunctionVersionPrintPageSplitConfig(BaseModel):
     next_function_id: Optional[str] = FieldInfo(alias="nextFunctionID", default=None)
 
 
-class SplitFunctionSemanticPageSplitConfig(BaseModel):
-    """Configuration for semantic page splitting."""
-
+class SplitFunctionVersionSemanticPageSplitConfig(BaseModel):
     item_classes: Optional[List[SplitFunctionSemanticPageItemClass]] = FieldInfo(alias="itemClasses", default=None)
 
 
-class SplitFunction(BaseModel):
+class SplitFunctionVersion(BaseModel):
     function_id: str = FieldInfo(alias="functionID")
     """Unique identifier of function."""
 
@@ -338,7 +303,6 @@ class SplitFunction(BaseModel):
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     split_type: Literal["print_page", "semantic_page"] = FieldInfo(alias="splitType")
-    """The method used to split pages."""
 
     type: Literal["split"]
 
@@ -346,7 +310,10 @@ class SplitFunction(BaseModel):
     """Version number of function."""
 
     audit: Optional[FunctionAudit] = None
-    """Audit trail information for the function."""
+    """Audit trail information for the function version."""
+
+    created_at: Optional[datetime] = FieldInfo(alias="createdAt", default=None)
+    """The date and time the function version was created."""
 
     display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
     """Display name of function.
@@ -354,15 +321,13 @@ class SplitFunction(BaseModel):
     Human-readable name to help you identify the function.
     """
 
-    print_page_split_config: Optional[SplitFunctionPrintPageSplitConfig] = FieldInfo(
+    print_page_split_config: Optional[SplitFunctionVersionPrintPageSplitConfig] = FieldInfo(
         alias="printPageSplitConfig", default=None
     )
-    """Configuration for print page splitting."""
 
-    semantic_page_split_config: Optional[SplitFunctionSemanticPageSplitConfig] = FieldInfo(
+    semantic_page_split_config: Optional[SplitFunctionVersionSemanticPageSplitConfig] = FieldInfo(
         alias="semanticPageSplitConfig", default=None
     )
-    """Configuration for semantic page splitting."""
 
     tags: Optional[List[str]] = None
     """Array of tags to categorize and organize functions."""
@@ -371,7 +336,7 @@ class SplitFunction(BaseModel):
     """List of workflows that use this function."""
 
 
-class JoinFunction(BaseModel):
+class JoinFunctionVersion(BaseModel):
     description: str
     """Description of join function."""
 
@@ -396,7 +361,10 @@ class JoinFunction(BaseModel):
     """Version number of function."""
 
     audit: Optional[FunctionAudit] = None
-    """Audit trail information for the function."""
+    """Audit trail information for the function version."""
+
+    created_at: Optional[datetime] = FieldInfo(alias="createdAt", default=None)
+    """The date and time the function version was created."""
 
     display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
     """Display name of function.
@@ -411,51 +379,7 @@ class JoinFunction(BaseModel):
     """List of workflows that use this function."""
 
 
-class PayloadShapingFunction(BaseModel):
-    """
-    A function that transforms and customizes input payloads using JMESPath expressions.
-    Payload shaping allows you to extract specific data, perform calculations, and reshape
-    complex input structures into simplified, standardized output formats tailored to your
-    downstream systems or business requirements.
-    """
-
-    function_id: str = FieldInfo(alias="functionID")
-    """Unique identifier of function."""
-
-    function_name: str = FieldInfo(alias="functionName")
-    """Name of function. Must be UNIQUE on a per-environment basis."""
-
-    shaping_schema: str = FieldInfo(alias="shapingSchema")
-    """
-    JMESPath expression that defines how to transform and customize the input
-    payload structure. Payload shaping allows you to extract, reshape, and
-    reorganize data from complex input payloads into a simplified, standardized
-    output format. Use JMESPath syntax to select specific fields, perform
-    calculations, and create new data structures tailored to your needs.
-    """
-
-    type: Literal["payload_shaping"]
-
-    version_num: int = FieldInfo(alias="versionNum")
-    """Version number of function."""
-
-    audit: Optional[FunctionAudit] = None
-    """Audit trail information for the function."""
-
-    display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
-    """Display name of function.
-
-    Human-readable name to help you identify the function.
-    """
-
-    tags: Optional[List[str]] = None
-    """Array of tags to categorize and organize functions."""
-
-    used_in_workflows: Optional[List[WorkflowUsageInfo]] = FieldInfo(alias="usedInWorkflows", default=None)
-    """List of workflows that use this function."""
-
-
-class EnrichFunction(BaseModel):
+class EnrichFunctionVersion(BaseModel):
     config: EnrichConfig
     """Configuration for enrich function with semantic search steps.
 
@@ -496,7 +420,10 @@ class EnrichFunction(BaseModel):
     """Version number of function."""
 
     audit: Optional[FunctionAudit] = None
-    """Audit trail information for the function."""
+    """Audit trail information for the function version."""
+
+    created_at: Optional[datetime] = FieldInfo(alias="createdAt", default=None)
+    """The date and time the function version was created."""
 
     display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
     """Display name of function.
@@ -511,17 +438,64 @@ class EnrichFunction(BaseModel):
     """List of workflows that use this function."""
 
 
-FunctionListResponse: TypeAlias = Annotated[
+class PayloadShapingFunctionVersion(BaseModel):
+    """
+    A version of a payload shaping function that transforms and customizes input payloads using JMESPath expressions.
+    Payload shaping allows you to extract specific data, perform calculations, and reshape
+    complex input structures into simplified, standardized output formats tailored to your
+    downstream systems or business requirements.
+    """
+
+    function_id: str = FieldInfo(alias="functionID")
+    """Unique identifier of function."""
+
+    function_name: str = FieldInfo(alias="functionName")
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
+    shaping_schema: str = FieldInfo(alias="shapingSchema")
+    """
+    JMESPath expression that defines how to transform and customize the input
+    payload structure. Payload shaping allows you to extract, reshape, and
+    reorganize data from complex input payloads into a simplified, standardized
+    output format. Use JMESPath syntax to select specific fields, perform
+    calculations, and create new data structures tailored to your needs.
+    """
+
+    type: Literal["payload_shaping"]
+
+    version_num: int = FieldInfo(alias="versionNum")
+    """Version number of function."""
+
+    audit: Optional[FunctionAudit] = None
+    """Audit trail information for the function version."""
+
+    created_at: Optional[datetime] = FieldInfo(alias="createdAt", default=None)
+    """The date and time the function version was created."""
+
+    display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
+    """Display name of function.
+
+    Human-readable name to help you identify the function.
+    """
+
+    tags: Optional[List[str]] = None
+    """Array of tags to categorize and organize functions."""
+
+    used_in_workflows: Optional[List[WorkflowUsageInfo]] = FieldInfo(alias="usedInWorkflows", default=None)
+    """List of workflows that use this function."""
+
+
+FunctionVersion: TypeAlias = Annotated[
     Union[
-        TransformFunction,
-        ExtractFunction,
-        AnalyzeFunction,
-        ClassifyFunction,
-        SendFunction,
-        SplitFunction,
-        JoinFunction,
-        PayloadShapingFunction,
-        EnrichFunction,
+        TransformFunctionVersion,
+        ExtractFunctionVersion,
+        AnalyzeFunctionVersion,
+        ClassifyFunctionVersion,
+        SendFunctionVersion,
+        SplitFunctionVersion,
+        JoinFunctionVersion,
+        EnrichFunctionVersion,
+        PayloadShapingFunctionVersion,
     ],
     PropertyInfo(discriminator="type"),
 ]

@@ -12,20 +12,20 @@ from .classification_list_item_param import ClassificationListItemParam
 from .split_function_semantic_page_item_class_param import SplitFunctionSemanticPageItemClassParam
 
 __all__ = [
-    "FunctionUpdateParams",
-    "UpsertExtractFunction",
-    "UpsertClassifyFunction",
-    "UpsertSendFunction",
-    "UpsertSplitFunction",
-    "UpsertSplitFunctionPrintPageSplitConfig",
-    "UpsertSplitFunctionSemanticPageSplitConfig",
-    "UpsertJoinFunction",
-    "UpsertPayloadShapingFunction",
+    "UpdateFunctionParam",
+    "ExtractFunction",
+    "ClassifyFunction",
+    "SendFunction",
+    "SplitFunction",
+    "SplitFunctionPrintPageSplitConfig",
+    "SplitFunctionSemanticPageSplitConfig",
+    "JoinFunction",
+    "PayloadShapingFunction",
     "UpsertEnrichFunction",
 ]
 
 
-class UpsertExtractFunction(TypedDict, total=False):
+class ExtractFunction(TypedDict, total=False):
     type: Required[Literal["extract"]]
 
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
@@ -54,7 +54,13 @@ class UpsertExtractFunction(TypedDict, total=False):
     """Array of tags to categorize and organize functions."""
 
 
-class UpsertClassifyFunction(TypedDict, total=False):
+class ClassifyFunction(TypedDict, total=False):
+    """V3 wire form of the Route (classify) function upsert payload.
+
+    Mirrors
+    {
+    """
+
     type: Required[Literal["classify"]]
 
     classifications: Iterable[ClassificationListItemParam]
@@ -93,7 +99,7 @@ class UpsertClassifyFunction(TypedDict, total=False):
     """Array of tags to categorize and organize functions."""
 
 
-class UpsertSendFunction(TypedDict, total=False):
+class SendFunction(TypedDict, total=False):
     type: Required[Literal["send"]]
 
     destination_type: Annotated[Literal["webhook", "s3", "google_drive"], PropertyInfo(alias="destinationType")]
@@ -134,7 +140,17 @@ class UpsertSendFunction(TypedDict, total=False):
     """Webhook URL to POST the payload to. Required when destinationType is webhook."""
 
 
-class UpsertSplitFunction(TypedDict, total=False):
+class SplitFunctionPrintPageSplitConfig(TypedDict, total=False):
+    next_function_id: Annotated[str, PropertyInfo(alias="nextFunctionID")]
+
+    next_function_name: Annotated[str, PropertyInfo(alias="nextFunctionName")]
+
+
+class SplitFunctionSemanticPageSplitConfig(TypedDict, total=False):
+    item_classes: Annotated[Iterable[SplitFunctionSemanticPageItemClassParam], PropertyInfo(alias="itemClasses")]
+
+
+class SplitFunction(TypedDict, total=False):
     type: Required[Literal["split"]]
 
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
@@ -146,12 +162,10 @@ class UpsertSplitFunction(TypedDict, total=False):
     function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
-    print_page_split_config: Annotated[
-        UpsertSplitFunctionPrintPageSplitConfig, PropertyInfo(alias="printPageSplitConfig")
-    ]
+    print_page_split_config: Annotated[SplitFunctionPrintPageSplitConfig, PropertyInfo(alias="printPageSplitConfig")]
 
     semantic_page_split_config: Annotated[
-        UpsertSplitFunctionSemanticPageSplitConfig, PropertyInfo(alias="semanticPageSplitConfig")
+        SplitFunctionSemanticPageSplitConfig, PropertyInfo(alias="semanticPageSplitConfig")
     ]
 
     split_type: Annotated[Literal["print_page", "semantic_page"], PropertyInfo(alias="splitType")]
@@ -160,17 +174,7 @@ class UpsertSplitFunction(TypedDict, total=False):
     """Array of tags to categorize and organize functions."""
 
 
-class UpsertSplitFunctionPrintPageSplitConfig(TypedDict, total=False):
-    next_function_id: Annotated[str, PropertyInfo(alias="nextFunctionID")]
-
-    next_function_name: Annotated[str, PropertyInfo(alias="nextFunctionName")]
-
-
-class UpsertSplitFunctionSemanticPageSplitConfig(TypedDict, total=False):
-    item_classes: Annotated[Iterable[SplitFunctionSemanticPageItemClassParam], PropertyInfo(alias="itemClasses")]
-
-
-class UpsertJoinFunction(TypedDict, total=False):
+class JoinFunction(TypedDict, total=False):
     type: Required[Literal["join"]]
 
     description: str
@@ -198,7 +202,14 @@ class UpsertJoinFunction(TypedDict, total=False):
     """Array of tags to categorize and organize functions."""
 
 
-class UpsertPayloadShapingFunction(TypedDict, total=False):
+class PayloadShapingFunction(TypedDict, total=False):
+    """
+    A function that transforms and customizes input payloads using JMESPath expressions.
+    Payload shaping allows you to extract specific data, perform calculations, and reshape
+    complex input structures into simplified, standardized output formats tailored to your
+    downstream systems or business requirements.
+    """
+
     type: Required[Literal["payload_shaping"]]
 
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
@@ -255,12 +266,12 @@ class UpsertEnrichFunction(TypedDict, total=False):
     """
 
 
-FunctionUpdateParams: TypeAlias = Union[
-    UpsertExtractFunction,
-    UpsertClassifyFunction,
-    UpsertSendFunction,
-    UpsertSplitFunction,
-    UpsertJoinFunction,
-    UpsertPayloadShapingFunction,
+UpdateFunctionParam: TypeAlias = Union[
+    ExtractFunction,
+    ClassifyFunction,
+    SendFunction,
+    SplitFunction,
+    JoinFunction,
+    PayloadShapingFunction,
     UpsertEnrichFunction,
 ]

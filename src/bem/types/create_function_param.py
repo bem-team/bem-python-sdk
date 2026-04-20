@@ -12,20 +12,23 @@ from .classification_list_item_param import ClassificationListItemParam
 from .split_function_semantic_page_item_class_param import SplitFunctionSemanticPageItemClassParam
 
 __all__ = [
-    "FunctionUpdateParams",
-    "UpsertExtractFunction",
-    "UpsertClassifyFunction",
-    "UpsertSendFunction",
-    "UpsertSplitFunction",
-    "UpsertSplitFunctionPrintPageSplitConfig",
-    "UpsertSplitFunctionSemanticPageSplitConfig",
-    "UpsertJoinFunction",
-    "UpsertPayloadShapingFunction",
-    "UpsertEnrichFunction",
+    "CreateFunctionParam",
+    "ExtractFunction",
+    "ClassifyFunction",
+    "SendFunction",
+    "SplitFunction",
+    "SplitFunctionPrintPageSplitConfig",
+    "SplitFunctionSemanticPageSplitConfig",
+    "JoinFunction",
+    "PayloadShapingFunction",
+    "EnrichFunction",
 ]
 
 
-class UpsertExtractFunction(TypedDict, total=False):
+class ExtractFunction(TypedDict, total=False):
+    function_name: Required[Annotated[str, PropertyInfo(alias="functionName")]]
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
     type: Required[Literal["extract"]]
 
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
@@ -33,9 +36,6 @@ class UpsertExtractFunction(TypedDict, total=False):
 
     Human-readable name to help you identify the function.
     """
-
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
-    """Name of function. Must be UNIQUE on a per-environment basis."""
 
     output_schema: Annotated[object, PropertyInfo(alias="outputSchema")]
     """Desired output structure defined in standard JSON Schema convention."""
@@ -54,7 +54,16 @@ class UpsertExtractFunction(TypedDict, total=False):
     """Array of tags to categorize and organize functions."""
 
 
-class UpsertClassifyFunction(TypedDict, total=False):
+class ClassifyFunction(TypedDict, total=False):
+    """V3 wire form of the Route (classify) function create payload.
+
+    Mirrors
+    {
+    """
+
+    function_name: Required[Annotated[str, PropertyInfo(alias="functionName")]]
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
     type: Required[Literal["classify"]]
 
     classifications: Iterable[ClassificationListItemParam]
@@ -86,14 +95,14 @@ class UpsertClassifyFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
-    """Name of function. Must be UNIQUE on a per-environment basis."""
-
     tags: SequenceNotStr[str]
     """Array of tags to categorize and organize functions."""
 
 
-class UpsertSendFunction(TypedDict, total=False):
+class SendFunction(TypedDict, total=False):
+    function_name: Required[Annotated[str, PropertyInfo(alias="functionName")]]
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
     type: Required[Literal["send"]]
 
     destination_type: Annotated[Literal["webhook", "s3", "google_drive"], PropertyInfo(alias="destinationType")]
@@ -104,9 +113,6 @@ class UpsertSendFunction(TypedDict, total=False):
 
     Human-readable name to help you identify the function.
     """
-
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
-    """Name of function. Must be UNIQUE on a per-environment basis."""
 
     google_drive_folder_id: Annotated[str, PropertyInfo(alias="googleDriveFolderId")]
     """Google Drive folder ID.
@@ -134,7 +140,20 @@ class UpsertSendFunction(TypedDict, total=False):
     """Webhook URL to POST the payload to. Required when destinationType is webhook."""
 
 
-class UpsertSplitFunction(TypedDict, total=False):
+class SplitFunctionPrintPageSplitConfig(TypedDict, total=False):
+    next_function_id: Annotated[str, PropertyInfo(alias="nextFunctionID")]
+
+    next_function_name: Annotated[str, PropertyInfo(alias="nextFunctionName")]
+
+
+class SplitFunctionSemanticPageSplitConfig(TypedDict, total=False):
+    item_classes: Annotated[Iterable[SplitFunctionSemanticPageItemClassParam], PropertyInfo(alias="itemClasses")]
+
+
+class SplitFunction(TypedDict, total=False):
+    function_name: Required[Annotated[str, PropertyInfo(alias="functionName")]]
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
     type: Required[Literal["split"]]
 
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
@@ -143,15 +162,10 @@ class UpsertSplitFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
-    """Name of function. Must be UNIQUE on a per-environment basis."""
-
-    print_page_split_config: Annotated[
-        UpsertSplitFunctionPrintPageSplitConfig, PropertyInfo(alias="printPageSplitConfig")
-    ]
+    print_page_split_config: Annotated[SplitFunctionPrintPageSplitConfig, PropertyInfo(alias="printPageSplitConfig")]
 
     semantic_page_split_config: Annotated[
-        UpsertSplitFunctionSemanticPageSplitConfig, PropertyInfo(alias="semanticPageSplitConfig")
+        SplitFunctionSemanticPageSplitConfig, PropertyInfo(alias="semanticPageSplitConfig")
     ]
 
     split_type: Annotated[Literal["print_page", "semantic_page"], PropertyInfo(alias="splitType")]
@@ -160,17 +174,10 @@ class UpsertSplitFunction(TypedDict, total=False):
     """Array of tags to categorize and organize functions."""
 
 
-class UpsertSplitFunctionPrintPageSplitConfig(TypedDict, total=False):
-    next_function_id: Annotated[str, PropertyInfo(alias="nextFunctionID")]
+class JoinFunction(TypedDict, total=False):
+    function_name: Required[Annotated[str, PropertyInfo(alias="functionName")]]
+    """Name of function. Must be UNIQUE on a per-environment basis."""
 
-    next_function_name: Annotated[str, PropertyInfo(alias="nextFunctionName")]
-
-
-class UpsertSplitFunctionSemanticPageSplitConfig(TypedDict, total=False):
-    item_classes: Annotated[Iterable[SplitFunctionSemanticPageItemClassParam], PropertyInfo(alias="itemClasses")]
-
-
-class UpsertJoinFunction(TypedDict, total=False):
     type: Required[Literal["join"]]
 
     description: str
@@ -181,9 +188,6 @@ class UpsertJoinFunction(TypedDict, total=False):
 
     Human-readable name to help you identify the function.
     """
-
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
-    """Name of function. Must be UNIQUE on a per-environment basis."""
 
     join_type: Annotated[Literal["standard"], PropertyInfo(alias="joinType")]
     """The type of join to perform."""
@@ -198,7 +202,10 @@ class UpsertJoinFunction(TypedDict, total=False):
     """Array of tags to categorize and organize functions."""
 
 
-class UpsertPayloadShapingFunction(TypedDict, total=False):
+class PayloadShapingFunction(TypedDict, total=False):
+    function_name: Required[Annotated[str, PropertyInfo(alias="functionName")]]
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
     type: Required[Literal["payload_shaping"]]
 
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
@@ -206,9 +213,6 @@ class UpsertPayloadShapingFunction(TypedDict, total=False):
 
     Human-readable name to help you identify the function.
     """
-
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
-    """Name of function. Must be UNIQUE on a per-environment basis."""
 
     shaping_schema: Annotated[str, PropertyInfo(alias="shapingSchema")]
     """
@@ -223,7 +227,10 @@ class UpsertPayloadShapingFunction(TypedDict, total=False):
     """Array of tags to categorize and organize functions."""
 
 
-class UpsertEnrichFunction(TypedDict, total=False):
+class EnrichFunction(TypedDict, total=False):
+    function_name: Required[Annotated[str, PropertyInfo(alias="functionName")]]
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
     type: Required[Literal["enrich"]]
 
     config: EnrichConfigParam
@@ -254,13 +261,16 @@ class UpsertEnrichFunction(TypedDict, total=False):
     - Steps are executed sequentially
     """
 
+    display_name: Annotated[str, PropertyInfo(alias="displayName")]
+    """Display name of function.
 
-FunctionUpdateParams: TypeAlias = Union[
-    UpsertExtractFunction,
-    UpsertClassifyFunction,
-    UpsertSendFunction,
-    UpsertSplitFunction,
-    UpsertJoinFunction,
-    UpsertPayloadShapingFunction,
-    UpsertEnrichFunction,
+    Human-readable name to help you identify the function.
+    """
+
+    tags: SequenceNotStr[str]
+    """Array of tags to categorize and organize functions."""
+
+
+CreateFunctionParam: TypeAlias = Union[
+    ExtractFunction, ClassifyFunction, SendFunction, SplitFunction, JoinFunction, PayloadShapingFunction, EnrichFunction
 ]
