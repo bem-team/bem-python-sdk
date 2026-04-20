@@ -43,7 +43,7 @@ client = Bem(
 
 function_response = client.functions.create(
     function_name="functionName",
-    type="transform",
+    type="extract",
 )
 print(function_response.function)
 ```
@@ -70,7 +70,7 @@ client = AsyncBem(
 async def main() -> None:
     function_response = await client.functions.create(
         function_name="functionName",
-        type="transform",
+        type="extract",
     )
     print(function_response.function)
 
@@ -107,7 +107,7 @@ async def main() -> None:
     ) as client:
         function_response = await client.functions.create(
             function_name="functionName",
-            type="transform",
+            type="extract",
         )
         print(function_response.function)
 
@@ -222,7 +222,7 @@ client = Bem()
 try:
     client.functions.create(
         function_name="functionName",
-        type="transform",
+        type="extract",
     )
 except bem.APIConnectionError as e:
     print("The server could not be reached")
@@ -268,7 +268,7 @@ client = Bem(
 # Or, configure per-request:
 client.with_options(max_retries=5).functions.create(
     function_name="functionName",
-    type="transform",
+    type="extract",
 )
 ```
 
@@ -294,7 +294,7 @@ client = Bem(
 # Override per-request:
 client.with_options(timeout=5.0).functions.create(
     function_name="functionName",
-    type="transform",
+    type="extract",
 )
 ```
 
@@ -338,7 +338,7 @@ from bem import Bem
 client = Bem()
 response = client.functions.with_raw_response.create(
     function_name="functionName",
-    type="transform",
+    type="extract",
 )
 print(response.headers.get('X-My-Header'))
 
@@ -359,7 +359,7 @@ To stream the response body, use `.with_streaming_response` instead, which requi
 ```python
 with client.functions.with_streaming_response.create(
     function_name="functionName",
-    type="transform",
+    type="extract",
 ) as response:
     print(response.headers.get("X-My-Header"))
 

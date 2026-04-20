@@ -868,7 +868,7 @@ class TestBem:
         respx_mock.post("/v3/functions").mock(side_effect=httpx.TimeoutException("Test timeout error"))
 
         with pytest.raises(APITimeoutError):
-            client.functions.with_streaming_response.create(function_name="functionName", type="transform").__enter__()
+            client.functions.with_streaming_response.create(function_name="functionName", type="extract").__enter__()
 
         assert _get_open_connections(client) == 0
 
@@ -878,7 +878,7 @@ class TestBem:
         respx_mock.post("/v3/functions").mock(return_value=httpx.Response(500))
 
         with pytest.raises(APIStatusError):
-            client.functions.with_streaming_response.create(function_name="functionName", type="transform").__enter__()
+            client.functions.with_streaming_response.create(function_name="functionName", type="extract").__enter__()
         assert _get_open_connections(client) == 0
 
     @pytest.mark.parametrize("failures_before_success", [0, 2, 4])
@@ -907,7 +907,7 @@ class TestBem:
 
         respx_mock.post("/v3/functions").mock(side_effect=retry_handler)
 
-        response = client.functions.with_raw_response.create(function_name="functionName", type="transform")
+        response = client.functions.with_raw_response.create(function_name="functionName", type="extract")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -930,7 +930,7 @@ class TestBem:
         respx_mock.post("/v3/functions").mock(side_effect=retry_handler)
 
         response = client.functions.with_raw_response.create(
-            function_name="functionName", type="transform", extra_headers={"x-stainless-retry-count": Omit()}
+            function_name="functionName", type="extract", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -955,7 +955,7 @@ class TestBem:
         respx_mock.post("/v3/functions").mock(side_effect=retry_handler)
 
         response = client.functions.with_raw_response.create(
-            function_name="functionName", type="transform", extra_headers={"x-stainless-retry-count": "42"}
+            function_name="functionName", type="extract", extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"
@@ -1791,7 +1791,7 @@ class TestAsyncBem:
 
         with pytest.raises(APITimeoutError):
             await async_client.functions.with_streaming_response.create(
-                function_name="functionName", type="transform"
+                function_name="functionName", type="extract"
             ).__aenter__()
 
         assert _get_open_connections(async_client) == 0
@@ -1803,7 +1803,7 @@ class TestAsyncBem:
 
         with pytest.raises(APIStatusError):
             await async_client.functions.with_streaming_response.create(
-                function_name="functionName", type="transform"
+                function_name="functionName", type="extract"
             ).__aenter__()
         assert _get_open_connections(async_client) == 0
 
@@ -1833,7 +1833,7 @@ class TestAsyncBem:
 
         respx_mock.post("/v3/functions").mock(side_effect=retry_handler)
 
-        response = await client.functions.with_raw_response.create(function_name="functionName", type="transform")
+        response = await client.functions.with_raw_response.create(function_name="functionName", type="extract")
 
         assert response.retries_taken == failures_before_success
         assert int(response.http_request.headers.get("x-stainless-retry-count")) == failures_before_success
@@ -1858,7 +1858,7 @@ class TestAsyncBem:
         respx_mock.post("/v3/functions").mock(side_effect=retry_handler)
 
         response = await client.functions.with_raw_response.create(
-            function_name="functionName", type="transform", extra_headers={"x-stainless-retry-count": Omit()}
+            function_name="functionName", type="extract", extra_headers={"x-stainless-retry-count": Omit()}
         )
 
         assert len(response.http_request.headers.get_list("x-stainless-retry-count")) == 0
@@ -1883,7 +1883,7 @@ class TestAsyncBem:
         respx_mock.post("/v3/functions").mock(side_effect=retry_handler)
 
         response = await client.functions.with_raw_response.create(
-            function_name="functionName", type="transform", extra_headers={"x-stainless-retry-count": "42"}
+            function_name="functionName", type="extract", extra_headers={"x-stainless-retry-count": "42"}
         )
 
         assert response.http_request.headers.get("x-stainless-retry-count") == "42"

@@ -15,8 +15,8 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
+from ...types.functions.version_list_response import VersionListResponse
 from ...types.functions.version_retrieve_response import VersionRetrieveResponse
-from ...types.functions.list_function_versions_response import ListFunctionVersionsResponse
 
 __all__ = ["VersionsResource", "AsyncVersionsResource"]
 
@@ -26,13 +26,13 @@ class VersionsResource(SyncAPIResource):
 
     Each function type serves a specific purpose:
 
-    - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-    - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+    - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
     - **Route**: Direct data to different processing paths based on conditions
     - **Split**: Break multi-page documents into individual pages for parallel processing
     - **Join**: Combine outputs from multiple function calls into a single result
     - **Payload Shaping**: Transform and restructure data using JMESPath expressions
     - **Enrich**: Enhance data with semantic search against collections
+    - **Send**: Deliver workflow outputs to downstream destinations
 
     Use these endpoints to create, update, list, and manage your functions.
     """
@@ -104,7 +104,7 @@ class VersionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ListFunctionVersionsResponse:
+    ) -> VersionListResponse:
         """
         List Function Versions
 
@@ -124,7 +124,7 @@ class VersionsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ListFunctionVersionsResponse,
+            cast_to=VersionListResponse,
         )
 
 
@@ -133,13 +133,13 @@ class AsyncVersionsResource(AsyncAPIResource):
 
     Each function type serves a specific purpose:
 
-    - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-    - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+    - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
     - **Route**: Direct data to different processing paths based on conditions
     - **Split**: Break multi-page documents into individual pages for parallel processing
     - **Join**: Combine outputs from multiple function calls into a single result
     - **Payload Shaping**: Transform and restructure data using JMESPath expressions
     - **Enrich**: Enhance data with semantic search against collections
+    - **Send**: Deliver workflow outputs to downstream destinations
 
     Use these endpoints to create, update, list, and manage your functions.
     """
@@ -211,7 +211,7 @@ class AsyncVersionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ListFunctionVersionsResponse:
+    ) -> VersionListResponse:
         """
         List Function Versions
 
@@ -231,7 +231,7 @@ class AsyncVersionsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ListFunctionVersionsResponse,
+            cast_to=VersionListResponse,
         )
 
 
