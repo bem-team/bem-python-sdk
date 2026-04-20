@@ -6,7 +6,7 @@ from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
 
-__all__ = ["RouteListItem", "Origin", "OriginEmail", "Regex"]
+__all__ = ["ClassificationListItem", "Origin", "OriginEmail", "Regex"]
 
 
 class OriginEmail(BaseModel):
@@ -21,7 +21,7 @@ class Regex(BaseModel):
     patterns: Optional[List[str]] = None
 
 
-class RouteListItem(BaseModel):
+class ClassificationListItem(BaseModel):
     name: str
 
     description: Optional[str] = None

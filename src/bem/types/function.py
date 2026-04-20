@@ -9,8 +9,8 @@ from .._utils import PropertyInfo
 from .._models import BaseModel
 from .enrich_config import EnrichConfig
 from .function_audit import FunctionAudit
-from .route_list_item import RouteListItem
 from .workflow_usage_info import WorkflowUsageInfo
+from .classification_list_item import ClassificationListItem
 from .split_function_semantic_page_item_class import SplitFunctionSemanticPageItemClass
 
 __all__ = [
@@ -18,7 +18,7 @@ __all__ = [
     "TransformFunction",
     "ExtractFunction",
     "AnalyzeFunction",
-    "RouteFunction",
+    "ClassifyFunction",
     "SendFunction",
     "SplitFunction",
     "SplitFunctionPrintPageSplitConfig",
@@ -169,18 +169,40 @@ class AnalyzeFunction(BaseModel):
     """List of workflows that use this function."""
 
 
-class RouteFunction(BaseModel):
-    description: str
-    """Description of router.
+class ClassifyFunction(BaseModel):
+    """V3 read-side shape of a Classify (internally Route) function.
 
-    Can be used to provide additional context on router's purpose and expected
+    Mirrors
+    {
+    """
+
+    classifications: List[ClassificationListItem]
+    """V3 create/update variants of the shared function payloads.
+
+    The V3 Functions API no longer accepts the legacy `transform` or `analyze`
+    function types when creating new functions or updating existing ones — both have
+    been unified under `extract`. Existing functions of those types remain readable
+    and callable via V3, so the V3 read-side unions still include `transform` and
+    `analyze` variants.
+
+    The V3 API also renames the internal `route` function type to `classify` on the
+    wire, and the associated `routes` field to `classifications` (type
+    `ClassificationList`). Platform-internal storage and processing still use
+    `route` / `routes`; the rename is applied only at the V3 API boundary.V3-facing
+    name for the list of classifications a classify function can produce.
+    """
+
+    description: str
+    """Description of classifier.
+
+    Can be used to provide additional context on classifier's purpose and expected
     inputs.
     """
 
     email_address: str = FieldInfo(alias="emailAddress")
     """Email address automatically created by bem.
 
-    You can forward emails with or without attachments, to be routed.
+    You can forward emails with or without attachments, to be classified.
     """
 
     function_id: str = FieldInfo(alias="functionID")
@@ -189,10 +211,7 @@ class RouteFunction(BaseModel):
     function_name: str = FieldInfo(alias="functionName")
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
-    routes: List[RouteListItem]
-    """List of routes."""
-
-    type: Literal["route"]
+    type: Literal["classify"]
 
     version_num: int = FieldInfo(alias="versionNum")
     """Version number of function."""
@@ -466,7 +485,7 @@ Function: TypeAlias = Annotated[
         TransformFunction,
         ExtractFunction,
         AnalyzeFunction,
-        RouteFunction,
+        ClassifyFunction,
         SendFunction,
         SplitFunction,
         JoinFunction,

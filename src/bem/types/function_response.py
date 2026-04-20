@@ -14,8 +14,8 @@ class FunctionResponse(BaseModel):
     """
 
     function: Function
-    """
-    A function that extracts structured JSON from documents and images. Accepts a
-    wide range of input types including PDFs, images, spreadsheets, emails, and
-    more.
+    """V3 read-side union.
+
+    Same shape as the shared `Function` union but with `classify` in place of
+    `route`. Legacy `transform` and `analyze` functions remain readable via V3.
     """

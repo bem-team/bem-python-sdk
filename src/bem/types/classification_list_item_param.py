@@ -7,7 +7,7 @@ from typing_extensions import Required, Annotated, TypedDict
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 
-__all__ = ["RouteListItemParam", "Origin", "OriginEmail", "Regex"]
+__all__ = ["ClassificationListItemParam", "Origin", "OriginEmail", "Regex"]
 
 
 class OriginEmail(TypedDict, total=False):
@@ -22,7 +22,7 @@ class Regex(TypedDict, total=False):
     patterns: SequenceNotStr[str]
 
 
-class RouteListItemParam(TypedDict, total=False):
+class ClassificationListItemParam(TypedDict, total=False):
     name: Required[str]
 
     description: str

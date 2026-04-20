@@ -8,15 +8,13 @@ from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 from .enrich_config_param import EnrichConfigParam
-from .route_list_item_param import RouteListItemParam
+from .classification_list_item_param import ClassificationListItemParam
 from .split_function_semantic_page_item_class_param import SplitFunctionSemanticPageItemClassParam
 
 __all__ = [
     "CreateFunctionParam",
-    "TransformFunction",
     "ExtractFunction",
-    "AnalyzeFunction",
-    "RouteFunction",
+    "ClassifyFunction",
     "SendFunction",
     "SplitFunction",
     "SplitFunctionPrintPageSplitConfig",
@@ -25,34 +23,6 @@ __all__ = [
     "PayloadShapingFunction",
     "EnrichFunction",
 ]
-
-
-class TransformFunction(TypedDict, total=False):
-    function_name: Required[Annotated[str, PropertyInfo(alias="functionName")]]
-    """Name of function. Must be UNIQUE on a per-environment basis."""
-
-    type: Required[Literal["transform"]]
-
-    display_name: Annotated[str, PropertyInfo(alias="displayName")]
-    """Display name of function.
-
-    Human-readable name to help you identify the function.
-    """
-
-    output_schema: Annotated[object, PropertyInfo(alias="outputSchema")]
-    """Desired output structure defined in standard JSON Schema convention."""
-
-    output_schema_name: Annotated[str, PropertyInfo(alias="outputSchemaName")]
-    """Name of output schema object."""
-
-    tabular_chunking_enabled: Annotated[bool, PropertyInfo(alias="tabularChunkingEnabled")]
-    """Whether tabular chunking is enabled on the pipeline.
-
-    This processes tables in CSV/Excel in row batches, rather than all rows at once.
-    """
-
-    tags: SequenceNotStr[str]
-    """Array of tags to categorize and organize functions."""
 
 
 class ExtractFunction(TypedDict, total=False):
@@ -84,53 +54,38 @@ class ExtractFunction(TypedDict, total=False):
     """Array of tags to categorize and organize functions."""
 
 
-class AnalyzeFunction(TypedDict, total=False):
+class ClassifyFunction(TypedDict, total=False):
+    """V3 wire form of the Route (classify) function create payload.
+
+    Mirrors
+    {
+    """
+
     function_name: Required[Annotated[str, PropertyInfo(alias="functionName")]]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
-    type: Required[Literal["analyze"]]
+    type: Required[Literal["classify"]]
 
-    display_name: Annotated[str, PropertyInfo(alias="displayName")]
-    """Display name of function.
+    classifications: Iterable[ClassificationListItemParam]
+    """V3 create/update variants of the shared function payloads.
 
-    Human-readable name to help you identify the function.
+    The V3 Functions API no longer accepts the legacy `transform` or `analyze`
+    function types when creating new functions or updating existing ones — both have
+    been unified under `extract`. Existing functions of those types remain readable
+    and callable via V3, so the V3 read-side unions still include `transform` and
+    `analyze` variants.
+
+    The V3 API also renames the internal `route` function type to `classify` on the
+    wire, and the associated `routes` field to `classifications` (type
+    `ClassificationList`). Platform-internal storage and processing still use
+    `route` / `routes`; the rename is applied only at the V3 API boundary.V3-facing
+    name for the list of classifications a classify function can produce.
     """
-
-    enable_bounding_boxes: Annotated[bool, PropertyInfo(alias="enableBoundingBoxes")]
-    """Whether bounding box extraction is enabled.
-
-    Only applicable to analyze and extract functions. When true, the function
-    returns the document regions (page, coordinates) from which each field was
-    extracted. Enabling this automatically configures the function to use the
-    bounding box model. Disabling resets to the default.
-    """
-
-    output_schema: Annotated[object, PropertyInfo(alias="outputSchema")]
-    """Desired output structure defined in standard JSON Schema convention."""
-
-    output_schema_name: Annotated[str, PropertyInfo(alias="outputSchemaName")]
-    """Name of output schema object."""
-
-    pre_count: Annotated[bool, PropertyInfo(alias="preCount")]
-    """
-    Reducing the risk of the model stopping early on long documents. Trade-off:
-    Increases total latency. Compatible with `enableBoundingBoxes`.
-    """
-
-    tags: SequenceNotStr[str]
-    """Array of tags to categorize and organize functions."""
-
-
-class RouteFunction(TypedDict, total=False):
-    function_name: Required[Annotated[str, PropertyInfo(alias="functionName")]]
-    """Name of function. Must be UNIQUE on a per-environment basis."""
-
-    type: Required[Literal["route"]]
 
     description: str
-    """Description of router.
+    """Description of classifier.
 
-    Can be used to provide additional context on router's purpose and expected
+    Can be used to provide additional context on classifier's purpose and expected
     inputs.
     """
 
@@ -139,9 +94,6 @@ class RouteFunction(TypedDict, total=False):
 
     Human-readable name to help you identify the function.
     """
-
-    routes: Iterable[RouteListItemParam]
-    """List of routes."""
 
     tags: SequenceNotStr[str]
     """Array of tags to categorize and organize functions."""
@@ -320,13 +272,5 @@ class EnrichFunction(TypedDict, total=False):
 
 
 CreateFunctionParam: TypeAlias = Union[
-    TransformFunction,
-    ExtractFunction,
-    AnalyzeFunction,
-    RouteFunction,
-    SendFunction,
-    SplitFunction,
-    JoinFunction,
-    PayloadShapingFunction,
-    EnrichFunction,
+    ExtractFunction, ClassifyFunction, SendFunction, SplitFunction, JoinFunction, PayloadShapingFunction, EnrichFunction
 ]

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.13.0 (2026-04-20)
+
+Full Changelog: [v0.12.0...v0.13.0](https://github.com/bem-team/bem-python-sdk/compare/v0.12.0...v0.13.0)
+
+### Features
+
+* **api:** api update ([48a73ff](https://github.com/bem-team/bem-python-sdk/commit/48a73ff0f6c14d97f240f5994e2d12f9b4e18625))
+* **api:** api update ([6a0d2cb](https://github.com/bem-team/bem-python-sdk/commit/6a0d2cbbeee39cb4b77ec8c8f670d8ad8e033f5c))
+* **api:** fix model references in Stainless config ([b05e209](https://github.com/bem-team/bem-python-sdk/commit/b05e2093ae1c7b85908a40663f56210602b9de88))
+
+
+### Performance Improvements
+
+* **client:** optimize file structure copying in multipart requests ([be37a99](https://github.com/bem-team/bem-python-sdk/commit/be37a99ba020de68ca3ba7ffa0dbbde8befd1452))
+
 ## 0.12.0 (2026-04-17)
 
 Full Changelog: [v0.11.0...v0.12.0](https://github.com/bem-team/bem-python-sdk/compare/v0.11.0...v0.12.0)

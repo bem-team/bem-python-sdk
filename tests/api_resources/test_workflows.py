@@ -48,7 +48,19 @@ class TestWorkflows:
                         "name": "name",
                         "version_num": 0,
                     },
+                    "metadata": {},
                     "name": "name",
+                }
+            ],
+            connectors=[
+                {
+                    "name": "name",
+                    "type": "paragon",
+                    "connector_id": "connectorID",
+                    "paragon": {
+                        "configuration": {},
+                        "integration": "integration",
+                    },
                 }
             ],
             display_name="displayName",
@@ -57,6 +69,7 @@ class TestWorkflows:
                     "destination_node_name": "destinationNodeName",
                     "source_node_name": "sourceNodeName",
                     "destination_name": "destinationName",
+                    "metadata": {},
                 }
             ],
             tags=["string"],
@@ -148,12 +161,24 @@ class TestWorkflows:
     def test_method_update_with_all_params(self, client: Bem) -> None:
         workflow = client.workflows.update(
             workflow_name="workflowName",
+            connectors=[
+                {
+                    "name": "name",
+                    "type": "paragon",
+                    "connector_id": "connectorID",
+                    "paragon": {
+                        "configuration": {},
+                        "integration": "integration",
+                    },
+                }
+            ],
             display_name="displayName",
             edges=[
                 {
                     "destination_node_name": "destinationNodeName",
                     "source_node_name": "sourceNodeName",
                     "destination_name": "destinationName",
+                    "metadata": {},
                 }
             ],
             main_node_name="mainNodeName",
@@ -165,6 +190,7 @@ class TestWorkflows:
                         "name": "name",
                         "version_num": 0,
                     },
+                    "metadata": {},
                     "name": "name",
                 }
             ],
@@ -444,7 +470,19 @@ class TestAsyncWorkflows:
                         "name": "name",
                         "version_num": 0,
                     },
+                    "metadata": {},
                     "name": "name",
+                }
+            ],
+            connectors=[
+                {
+                    "name": "name",
+                    "type": "paragon",
+                    "connector_id": "connectorID",
+                    "paragon": {
+                        "configuration": {},
+                        "integration": "integration",
+                    },
                 }
             ],
             display_name="displayName",
@@ -453,6 +491,7 @@ class TestAsyncWorkflows:
                     "destination_node_name": "destinationNodeName",
                     "source_node_name": "sourceNodeName",
                     "destination_name": "destinationName",
+                    "metadata": {},
                 }
             ],
             tags=["string"],
@@ -544,12 +583,24 @@ class TestAsyncWorkflows:
     async def test_method_update_with_all_params(self, async_client: AsyncBem) -> None:
         workflow = await async_client.workflows.update(
             workflow_name="workflowName",
+            connectors=[
+                {
+                    "name": "name",
+                    "type": "paragon",
+                    "connector_id": "connectorID",
+                    "paragon": {
+                        "configuration": {},
+                        "integration": "integration",
+                    },
+                }
+            ],
             display_name="displayName",
             edges=[
                 {
                     "destination_node_name": "destinationNodeName",
                     "source_node_name": "sourceNodeName",
                     "destination_name": "destinationName",
+                    "metadata": {},
                 }
             ],
             main_node_name="mainNodeName",
@@ -561,6 +612,7 @@ class TestAsyncWorkflows:
                         "name": "name",
                         "version_num": 0,
                     },
+                    "metadata": {},
                     "name": "name",
                 }
             ],

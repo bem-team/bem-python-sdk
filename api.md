@@ -4,6 +4,7 @@ Types:
 
 ```python
 from bem.types import (
+    ClassificationListItem,
     CreateFunction,
     EnrichConfig,
     EnrichStep,
@@ -12,7 +13,6 @@ from bem.types import (
     FunctionResponse,
     FunctionType,
     ListFunctionsResponse,
-    RouteListItem,
     SplitFunctionSemanticPageItemClass,
     UpdateFunction,
     UserActionSummary,

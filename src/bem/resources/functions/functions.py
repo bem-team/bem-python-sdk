@@ -40,7 +40,7 @@ from ...types.function import Function
 from ...types.function_type import FunctionType
 from ...types.function_response import FunctionResponse
 from ...types.enrich_config_param import EnrichConfigParam
-from ...types.route_list_item_param import RouteListItemParam
+from ...types.classification_list_item_param import ClassificationListItemParam
 
 __all__ = ["FunctionsResource", "AsyncFunctionsResource"]
 
@@ -50,13 +50,13 @@ class FunctionsResource(SyncAPIResource):
 
     Each function type serves a specific purpose:
 
-    - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-    - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+    - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
     - **Route**: Direct data to different processing paths based on conditions
     - **Split**: Break multi-page documents into individual pages for parallel processing
     - **Join**: Combine outputs from multiple function calls into a single result
     - **Payload Shaping**: Transform and restructure data using JMESPath expressions
     - **Enrich**: Enhance data with semantic search against collections
+    - **Send**: Deliver workflow outputs to downstream destinations
 
     Use these endpoints to create, update, list, and manage your functions.
     """
@@ -67,13 +67,13 @@ class FunctionsResource(SyncAPIResource):
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -85,13 +85,13 @@ class FunctionsResource(SyncAPIResource):
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -115,52 +115,6 @@ class FunctionsResource(SyncAPIResource):
         For more information, see https://www.github.com/bem-team/bem-python-sdk#with_streaming_response
         """
         return FunctionsResourceWithStreamingResponse(self)
-
-    @overload
-    def create(
-        self,
-        *,
-        function_name: str,
-        type: Literal["transform"],
-        display_name: str | Omit = omit,
-        output_schema: object | Omit = omit,
-        output_schema_name: str | Omit = omit,
-        tabular_chunking_enabled: bool | Omit = omit,
-        tags: SequenceNotStr[str] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponse:
-        """Create a Function
-
-        Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
-
-          display_name: Display name of function. Human-readable name to help you identify the function.
-
-          output_schema: Desired output structure defined in standard JSON Schema convention.
-
-          output_schema_name: Name of output schema object.
-
-          tabular_chunking_enabled: Whether tabular chunking is enabled on the pipeline. This processes tables in
-              CSV/Excel in row batches, rather than all rows at once.
-
-          tags: Array of tags to categorize and organize functions.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        ...
 
     @overload
     def create(
@@ -213,64 +167,10 @@ class FunctionsResource(SyncAPIResource):
         self,
         *,
         function_name: str,
-        type: Literal["analyze"],
-        display_name: str | Omit = omit,
-        enable_bounding_boxes: bool | Omit = omit,
-        output_schema: object | Omit = omit,
-        output_schema_name: str | Omit = omit,
-        pre_count: bool | Omit = omit,
-        tags: SequenceNotStr[str] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponse:
-        """Create a Function
-
-        Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
-
-          display_name: Display name of function. Human-readable name to help you identify the function.
-
-          enable_bounding_boxes: Whether bounding box extraction is enabled. Only applicable to analyze and
-              extract functions. When true, the function returns the document regions (page,
-              coordinates) from which each field was extracted. Enabling this automatically
-              configures the function to use the bounding box model. Disabling resets to the
-              default.
-
-          output_schema: Desired output structure defined in standard JSON Schema convention.
-
-          output_schema_name: Name of output schema object.
-
-          pre_count:
-              Reducing the risk of the model stopping early on long documents. Trade-off:
-              Increases total latency. Compatible with `enableBoundingBoxes`.
-
-          tags: Array of tags to categorize and organize functions.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        ...
-
-    @overload
-    def create(
-        self,
-        *,
-        function_name: str,
-        type: Literal["route"],
+        type: Literal["classify"],
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         display_name: str | Omit = omit,
-        routes: Iterable[RouteListItemParam] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -286,12 +186,24 @@ class FunctionsResource(SyncAPIResource):
 
         Must be UNIQUE on a per-environment basis.
 
-          description: Description of router. Can be used to provide additional context on router's
-              purpose and expected inputs.
+          classifications: V3 create/update variants of the shared function payloads.
+
+              The V3 Functions API no longer accepts the legacy `transform` or `analyze`
+              function types when creating new functions or updating existing ones — both have
+              been unified under `extract`. Existing functions of those types remain readable
+              and callable via V3, so the V3 read-side unions still include `transform` and
+              `analyze` variants.
+
+              The V3 API also renames the internal `route` function type to `classify` on the
+              wire, and the associated `routes` field to `classifications` (type
+              `ClassificationList`). Platform-internal storage and processing still use
+              `route` / `routes`; the rename is applied only at the V3 API boundary.V3-facing
+              name for the list of classifications a classify function can produce.
+
+          description: Description of classifier. Can be used to provide additional context on
+              classifier's purpose and expected inputs.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
-
-          routes: List of routes.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -560,10 +472,8 @@ class FunctionsResource(SyncAPIResource):
         self,
         *,
         function_name: str,
-        type: Literal["transform"]
-        | Literal["extract"]
-        | Literal["analyze"]
-        | Literal["route"]
+        type: Literal["extract"]
+        | Literal["classify"]
         | Literal["send"]
         | Literal["split"]
         | Literal["join"]
@@ -574,10 +484,8 @@ class FunctionsResource(SyncAPIResource):
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
-        enable_bounding_boxes: bool | Omit = omit,
-        pre_count: bool | Omit = omit,
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
-        routes: Iterable[RouteListItemParam] | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
@@ -608,10 +516,8 @@ class FunctionsResource(SyncAPIResource):
                     "output_schema_name": output_schema_name,
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
-                    "enable_bounding_boxes": enable_bounding_boxes,
-                    "pre_count": pre_count,
+                    "classifications": classifications,
                     "description": description,
-                    "routes": routes,
                     "destination_type": destination_type,
                     "google_drive_folder_id": google_drive_folder_id,
                     "s3_bucket": s3_bucket,
@@ -671,53 +577,6 @@ class FunctionsResource(SyncAPIResource):
         self,
         path_function_name: str,
         *,
-        type: Literal["transform"],
-        display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
-        output_schema: object | Omit = omit,
-        output_schema_name: str | Omit = omit,
-        tabular_chunking_enabled: bool | Omit = omit,
-        tags: SequenceNotStr[str] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponse:
-        """Update a Function
-
-        Args:
-          display_name: Display name of function.
-
-        Human-readable name to help you identify the function.
-
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
-
-          output_schema: Desired output structure defined in standard JSON Schema convention.
-
-          output_schema_name: Name of output schema object.
-
-          tabular_chunking_enabled: Whether tabular chunking is enabled on the pipeline. This processes tables in
-              CSV/Excel in row batches, rather than all rows at once.
-
-          tags: Array of tags to categorize and organize functions.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        ...
-
-    @overload
-    def update(
-        self,
-        path_function_name: str,
-        *,
         type: Literal["extract"],
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
@@ -765,66 +624,11 @@ class FunctionsResource(SyncAPIResource):
         self,
         path_function_name: str,
         *,
-        type: Literal["analyze"],
-        display_name: str | Omit = omit,
-        enable_bounding_boxes: bool | Omit = omit,
-        function_name: str | Omit = omit,
-        output_schema: object | Omit = omit,
-        output_schema_name: str | Omit = omit,
-        pre_count: bool | Omit = omit,
-        tags: SequenceNotStr[str] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponse:
-        """Update a Function
-
-        Args:
-          display_name: Display name of function.
-
-        Human-readable name to help you identify the function.
-
-          enable_bounding_boxes: Whether bounding box extraction is enabled. Only applicable to analyze and
-              extract functions. When true, the function returns the document regions (page,
-              coordinates) from which each field was extracted. Enabling this automatically
-              configures the function to use the bounding box model. Disabling resets to the
-              default.
-
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
-
-          output_schema: Desired output structure defined in standard JSON Schema convention.
-
-          output_schema_name: Name of output schema object.
-
-          pre_count:
-              Reducing the risk of the model stopping early on long documents. Trade-off:
-              Increases total latency. Compatible with `enableBoundingBoxes`.
-
-          tags: Array of tags to categorize and organize functions.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        ...
-
-    @overload
-    def update(
-        self,
-        path_function_name: str,
-        *,
-        type: Literal["route"],
+        type: Literal["classify"],
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
-        routes: Iterable[RouteListItemParam] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -833,19 +637,30 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Update a Function
+        """
+        Update a Function
 
         Args:
-          description: Description of router.
+          classifications: V3 create/update variants of the shared function payloads.
 
-        Can be used to provide additional context on router's
-              purpose and expected inputs.
+              The V3 Functions API no longer accepts the legacy `transform` or `analyze`
+              function types when creating new functions or updating existing ones — both have
+              been unified under `extract`. Existing functions of those types remain readable
+              and callable via V3, so the V3 read-side unions still include `transform` and
+              `analyze` variants.
+
+              The V3 API also renames the internal `route` function type to `classify` on the
+              wire, and the associated `routes` field to `classifications` (type
+              `ClassificationList`). Platform-internal storage and processing still use
+              `route` / `routes`; the rename is applied only at the V3 API boundary.V3-facing
+              name for the list of classifications a classify function can produce.
+
+          description: Description of classifier. Can be used to provide additional context on
+              classifier's purpose and expected inputs.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
-
-          routes: List of routes.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -1107,10 +922,8 @@ class FunctionsResource(SyncAPIResource):
         self,
         path_function_name: str,
         *,
-        type: Literal["transform"]
-        | Literal["extract"]
-        | Literal["analyze"]
-        | Literal["route"]
+        type: Literal["extract"]
+        | Literal["classify"]
         | Literal["send"]
         | Literal["split"]
         | Literal["join"]
@@ -1122,10 +935,8 @@ class FunctionsResource(SyncAPIResource):
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
-        enable_bounding_boxes: bool | Omit = omit,
-        pre_count: bool | Omit = omit,
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
-        routes: Iterable[RouteListItemParam] | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
@@ -1158,10 +969,8 @@ class FunctionsResource(SyncAPIResource):
                     "output_schema_name": output_schema_name,
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
-                    "enable_bounding_boxes": enable_bounding_boxes,
-                    "pre_count": pre_count,
+                    "classifications": classifications,
                     "description": description,
-                    "routes": routes,
                     "destination_type": destination_type,
                     "google_drive_folder_id": google_drive_folder_id,
                     "s3_bucket": s3_bucket,
@@ -1284,13 +1093,13 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
     Each function type serves a specific purpose:
 
-    - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-    - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+    - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
     - **Route**: Direct data to different processing paths based on conditions
     - **Split**: Break multi-page documents into individual pages for parallel processing
     - **Join**: Combine outputs from multiple function calls into a single result
     - **Payload Shaping**: Transform and restructure data using JMESPath expressions
     - **Enrich**: Enhance data with semantic search against collections
+    - **Send**: Deliver workflow outputs to downstream destinations
 
     Use these endpoints to create, update, list, and manage your functions.
     """
@@ -1301,13 +1110,13 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -1319,13 +1128,13 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -1349,52 +1158,6 @@ class AsyncFunctionsResource(AsyncAPIResource):
         For more information, see https://www.github.com/bem-team/bem-python-sdk#with_streaming_response
         """
         return AsyncFunctionsResourceWithStreamingResponse(self)
-
-    @overload
-    async def create(
-        self,
-        *,
-        function_name: str,
-        type: Literal["transform"],
-        display_name: str | Omit = omit,
-        output_schema: object | Omit = omit,
-        output_schema_name: str | Omit = omit,
-        tabular_chunking_enabled: bool | Omit = omit,
-        tags: SequenceNotStr[str] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponse:
-        """Create a Function
-
-        Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
-
-          display_name: Display name of function. Human-readable name to help you identify the function.
-
-          output_schema: Desired output structure defined in standard JSON Schema convention.
-
-          output_schema_name: Name of output schema object.
-
-          tabular_chunking_enabled: Whether tabular chunking is enabled on the pipeline. This processes tables in
-              CSV/Excel in row batches, rather than all rows at once.
-
-          tags: Array of tags to categorize and organize functions.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        ...
 
     @overload
     async def create(
@@ -1447,64 +1210,10 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         *,
         function_name: str,
-        type: Literal["analyze"],
-        display_name: str | Omit = omit,
-        enable_bounding_boxes: bool | Omit = omit,
-        output_schema: object | Omit = omit,
-        output_schema_name: str | Omit = omit,
-        pre_count: bool | Omit = omit,
-        tags: SequenceNotStr[str] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponse:
-        """Create a Function
-
-        Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
-
-          display_name: Display name of function. Human-readable name to help you identify the function.
-
-          enable_bounding_boxes: Whether bounding box extraction is enabled. Only applicable to analyze and
-              extract functions. When true, the function returns the document regions (page,
-              coordinates) from which each field was extracted. Enabling this automatically
-              configures the function to use the bounding box model. Disabling resets to the
-              default.
-
-          output_schema: Desired output structure defined in standard JSON Schema convention.
-
-          output_schema_name: Name of output schema object.
-
-          pre_count:
-              Reducing the risk of the model stopping early on long documents. Trade-off:
-              Increases total latency. Compatible with `enableBoundingBoxes`.
-
-          tags: Array of tags to categorize and organize functions.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        ...
-
-    @overload
-    async def create(
-        self,
-        *,
-        function_name: str,
-        type: Literal["route"],
+        type: Literal["classify"],
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         display_name: str | Omit = omit,
-        routes: Iterable[RouteListItemParam] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1520,12 +1229,24 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
         Must be UNIQUE on a per-environment basis.
 
-          description: Description of router. Can be used to provide additional context on router's
-              purpose and expected inputs.
+          classifications: V3 create/update variants of the shared function payloads.
+
+              The V3 Functions API no longer accepts the legacy `transform` or `analyze`
+              function types when creating new functions or updating existing ones — both have
+              been unified under `extract`. Existing functions of those types remain readable
+              and callable via V3, so the V3 read-side unions still include `transform` and
+              `analyze` variants.
+
+              The V3 API also renames the internal `route` function type to `classify` on the
+              wire, and the associated `routes` field to `classifications` (type
+              `ClassificationList`). Platform-internal storage and processing still use
+              `route` / `routes`; the rename is applied only at the V3 API boundary.V3-facing
+              name for the list of classifications a classify function can produce.
+
+          description: Description of classifier. Can be used to provide additional context on
+              classifier's purpose and expected inputs.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
-
-          routes: List of routes.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -1794,10 +1515,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         *,
         function_name: str,
-        type: Literal["transform"]
-        | Literal["extract"]
-        | Literal["analyze"]
-        | Literal["route"]
+        type: Literal["extract"]
+        | Literal["classify"]
         | Literal["send"]
         | Literal["split"]
         | Literal["join"]
@@ -1808,10 +1527,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
-        enable_bounding_boxes: bool | Omit = omit,
-        pre_count: bool | Omit = omit,
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
-        routes: Iterable[RouteListItemParam] | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
@@ -1842,10 +1559,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "output_schema_name": output_schema_name,
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
-                    "enable_bounding_boxes": enable_bounding_boxes,
-                    "pre_count": pre_count,
+                    "classifications": classifications,
                     "description": description,
-                    "routes": routes,
                     "destination_type": destination_type,
                     "google_drive_folder_id": google_drive_folder_id,
                     "s3_bucket": s3_bucket,
@@ -1905,53 +1620,6 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         path_function_name: str,
         *,
-        type: Literal["transform"],
-        display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
-        output_schema: object | Omit = omit,
-        output_schema_name: str | Omit = omit,
-        tabular_chunking_enabled: bool | Omit = omit,
-        tags: SequenceNotStr[str] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponse:
-        """Update a Function
-
-        Args:
-          display_name: Display name of function.
-
-        Human-readable name to help you identify the function.
-
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
-
-          output_schema: Desired output structure defined in standard JSON Schema convention.
-
-          output_schema_name: Name of output schema object.
-
-          tabular_chunking_enabled: Whether tabular chunking is enabled on the pipeline. This processes tables in
-              CSV/Excel in row batches, rather than all rows at once.
-
-          tags: Array of tags to categorize and organize functions.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        ...
-
-    @overload
-    async def update(
-        self,
-        path_function_name: str,
-        *,
         type: Literal["extract"],
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
@@ -1999,66 +1667,11 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         path_function_name: str,
         *,
-        type: Literal["analyze"],
-        display_name: str | Omit = omit,
-        enable_bounding_boxes: bool | Omit = omit,
-        function_name: str | Omit = omit,
-        output_schema: object | Omit = omit,
-        output_schema_name: str | Omit = omit,
-        pre_count: bool | Omit = omit,
-        tags: SequenceNotStr[str] | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FunctionResponse:
-        """Update a Function
-
-        Args:
-          display_name: Display name of function.
-
-        Human-readable name to help you identify the function.
-
-          enable_bounding_boxes: Whether bounding box extraction is enabled. Only applicable to analyze and
-              extract functions. When true, the function returns the document regions (page,
-              coordinates) from which each field was extracted. Enabling this automatically
-              configures the function to use the bounding box model. Disabling resets to the
-              default.
-
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
-
-          output_schema: Desired output structure defined in standard JSON Schema convention.
-
-          output_schema_name: Name of output schema object.
-
-          pre_count:
-              Reducing the risk of the model stopping early on long documents. Trade-off:
-              Increases total latency. Compatible with `enableBoundingBoxes`.
-
-          tags: Array of tags to categorize and organize functions.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        ...
-
-    @overload
-    async def update(
-        self,
-        path_function_name: str,
-        *,
-        type: Literal["route"],
+        type: Literal["classify"],
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
-        routes: Iterable[RouteListItemParam] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -2067,19 +1680,30 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Update a Function
+        """
+        Update a Function
 
         Args:
-          description: Description of router.
+          classifications: V3 create/update variants of the shared function payloads.
 
-        Can be used to provide additional context on router's
-              purpose and expected inputs.
+              The V3 Functions API no longer accepts the legacy `transform` or `analyze`
+              function types when creating new functions or updating existing ones — both have
+              been unified under `extract`. Existing functions of those types remain readable
+              and callable via V3, so the V3 read-side unions still include `transform` and
+              `analyze` variants.
+
+              The V3 API also renames the internal `route` function type to `classify` on the
+              wire, and the associated `routes` field to `classifications` (type
+              `ClassificationList`). Platform-internal storage and processing still use
+              `route` / `routes`; the rename is applied only at the V3 API boundary.V3-facing
+              name for the list of classifications a classify function can produce.
+
+          description: Description of classifier. Can be used to provide additional context on
+              classifier's purpose and expected inputs.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
-
-          routes: List of routes.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -2341,10 +1965,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         path_function_name: str,
         *,
-        type: Literal["transform"]
-        | Literal["extract"]
-        | Literal["analyze"]
-        | Literal["route"]
+        type: Literal["extract"]
+        | Literal["classify"]
         | Literal["send"]
         | Literal["split"]
         | Literal["join"]
@@ -2356,10 +1978,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         output_schema_name: str | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
-        enable_bounding_boxes: bool | Omit = omit,
-        pre_count: bool | Omit = omit,
+        classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
-        routes: Iterable[RouteListItemParam] | Omit = omit,
         destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
@@ -2392,10 +2012,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "output_schema_name": output_schema_name,
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
-                    "enable_bounding_boxes": enable_bounding_boxes,
-                    "pre_count": pre_count,
+                    "classifications": classifications,
                     "description": description,
-                    "routes": routes,
                     "destination_type": destination_type,
                     "google_drive_folder_id": google_drive_folder_id,
                     "s3_bucket": s3_bucket,
@@ -2539,13 +2157,13 @@ class FunctionsResourceWithRawResponse:
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -2557,13 +2175,13 @@ class FunctionsResourceWithRawResponse:
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -2596,13 +2214,13 @@ class AsyncFunctionsResourceWithRawResponse:
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -2614,13 +2232,13 @@ class AsyncFunctionsResourceWithRawResponse:
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -2653,13 +2271,13 @@ class FunctionsResourceWithStreamingResponse:
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -2671,13 +2289,13 @@ class FunctionsResourceWithStreamingResponse:
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -2710,13 +2328,13 @@ class AsyncFunctionsResourceWithStreamingResponse:
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -2728,13 +2346,13 @@ class AsyncFunctionsResourceWithStreamingResponse:
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """

@@ -8,15 +8,13 @@ from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 from .enrich_config_param import EnrichConfigParam
-from .route_list_item_param import RouteListItemParam
+from .classification_list_item_param import ClassificationListItemParam
 from .split_function_semantic_page_item_class_param import SplitFunctionSemanticPageItemClassParam
 
 __all__ = [
     "FunctionUpdateParams",
-    "UpsertTransformFunction",
     "UpsertExtractFunction",
-    "UpsertAnalyzeFunction",
-    "UpsertRouteFunction",
+    "UpsertClassifyFunction",
     "UpsertSendFunction",
     "UpsertSplitFunction",
     "UpsertSplitFunctionPrintPageSplitConfig",
@@ -25,34 +23,6 @@ __all__ = [
     "UpsertPayloadShapingFunction",
     "UpsertEnrichFunction",
 ]
-
-
-class UpsertTransformFunction(TypedDict, total=False):
-    type: Required[Literal["transform"]]
-
-    display_name: Annotated[str, PropertyInfo(alias="displayName")]
-    """Display name of function.
-
-    Human-readable name to help you identify the function.
-    """
-
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
-    """Name of function. Must be UNIQUE on a per-environment basis."""
-
-    output_schema: Annotated[object, PropertyInfo(alias="outputSchema")]
-    """Desired output structure defined in standard JSON Schema convention."""
-
-    output_schema_name: Annotated[str, PropertyInfo(alias="outputSchemaName")]
-    """Name of output schema object."""
-
-    tabular_chunking_enabled: Annotated[bool, PropertyInfo(alias="tabularChunkingEnabled")]
-    """Whether tabular chunking is enabled on the pipeline.
-
-    This processes tables in CSV/Excel in row batches, rather than all rows at once.
-    """
-
-    tags: SequenceNotStr[str]
-    """Array of tags to categorize and organize functions."""
 
 
 class UpsertExtractFunction(TypedDict, total=False):
@@ -84,50 +54,29 @@ class UpsertExtractFunction(TypedDict, total=False):
     """Array of tags to categorize and organize functions."""
 
 
-class UpsertAnalyzeFunction(TypedDict, total=False):
-    type: Required[Literal["analyze"]]
+class UpsertClassifyFunction(TypedDict, total=False):
+    type: Required[Literal["classify"]]
 
-    display_name: Annotated[str, PropertyInfo(alias="displayName")]
-    """Display name of function.
+    classifications: Iterable[ClassificationListItemParam]
+    """V3 create/update variants of the shared function payloads.
 
-    Human-readable name to help you identify the function.
+    The V3 Functions API no longer accepts the legacy `transform` or `analyze`
+    function types when creating new functions or updating existing ones — both have
+    been unified under `extract`. Existing functions of those types remain readable
+    and callable via V3, so the V3 read-side unions still include `transform` and
+    `analyze` variants.
+
+    The V3 API also renames the internal `route` function type to `classify` on the
+    wire, and the associated `routes` field to `classifications` (type
+    `ClassificationList`). Platform-internal storage and processing still use
+    `route` / `routes`; the rename is applied only at the V3 API boundary.V3-facing
+    name for the list of classifications a classify function can produce.
     """
-
-    enable_bounding_boxes: Annotated[bool, PropertyInfo(alias="enableBoundingBoxes")]
-    """Whether bounding box extraction is enabled.
-
-    Only applicable to analyze and extract functions. When true, the function
-    returns the document regions (page, coordinates) from which each field was
-    extracted. Enabling this automatically configures the function to use the
-    bounding box model. Disabling resets to the default.
-    """
-
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
-    """Name of function. Must be UNIQUE on a per-environment basis."""
-
-    output_schema: Annotated[object, PropertyInfo(alias="outputSchema")]
-    """Desired output structure defined in standard JSON Schema convention."""
-
-    output_schema_name: Annotated[str, PropertyInfo(alias="outputSchemaName")]
-    """Name of output schema object."""
-
-    pre_count: Annotated[bool, PropertyInfo(alias="preCount")]
-    """
-    Reducing the risk of the model stopping early on long documents. Trade-off:
-    Increases total latency. Compatible with `enableBoundingBoxes`.
-    """
-
-    tags: SequenceNotStr[str]
-    """Array of tags to categorize and organize functions."""
-
-
-class UpsertRouteFunction(TypedDict, total=False):
-    type: Required[Literal["route"]]
 
     description: str
-    """Description of router.
+    """Description of classifier.
 
-    Can be used to provide additional context on router's purpose and expected
+    Can be used to provide additional context on classifier's purpose and expected
     inputs.
     """
 
@@ -139,9 +88,6 @@ class UpsertRouteFunction(TypedDict, total=False):
 
     function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
-
-    routes: Iterable[RouteListItemParam]
-    """List of routes."""
 
     tags: SequenceNotStr[str]
     """Array of tags to categorize and organize functions."""
@@ -310,10 +256,8 @@ class UpsertEnrichFunction(TypedDict, total=False):
 
 
 FunctionUpdateParams: TypeAlias = Union[
-    UpsertTransformFunction,
     UpsertExtractFunction,
-    UpsertAnalyzeFunction,
-    UpsertRouteFunction,
+    UpsertClassifyFunction,
     UpsertSendFunction,
     UpsertSplitFunction,
     UpsertJoinFunction,
