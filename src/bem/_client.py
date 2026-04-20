@@ -104,13 +104,13 @@ class Bem(SyncAPIClient):
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -200,7 +200,7 @@ class Bem(SyncAPIClient):
 
         Upload a file (PDF, image, spreadsheet, email, etc.) and receive a general-purpose JSON Schema
         that captures the document's structure. The inferred schema can be used directly as the
-        `outputSchema` when creating Transform functions.
+        `outputSchema` when creating Extract functions.
 
         The schema is designed to be broadly applicable to documents of the same type, not just
         the specific file uploaded.
@@ -388,13 +388,13 @@ class AsyncBem(AsyncAPIClient):
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -484,7 +484,7 @@ class AsyncBem(AsyncAPIClient):
 
         Upload a file (PDF, image, spreadsheet, email, etc.) and receive a general-purpose JSON Schema
         that captures the document's structure. The inferred schema can be used directly as the
-        `outputSchema` when creating Transform functions.
+        `outputSchema` when creating Extract functions.
 
         The schema is designed to be broadly applicable to documents of the same type, not just
         the specific file uploaded.
@@ -623,13 +623,13 @@ class BemWithRawResponse:
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -719,7 +719,7 @@ class BemWithRawResponse:
 
         Upload a file (PDF, image, spreadsheet, email, etc.) and receive a general-purpose JSON Schema
         that captures the document's structure. The inferred schema can be used directly as the
-        `outputSchema` when creating Transform functions.
+        `outputSchema` when creating Extract functions.
 
         The schema is designed to be broadly applicable to documents of the same type, not just
         the specific file uploaded.
@@ -741,13 +741,13 @@ class AsyncBemWithRawResponse:
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -837,7 +837,7 @@ class AsyncBemWithRawResponse:
 
         Upload a file (PDF, image, spreadsheet, email, etc.) and receive a general-purpose JSON Schema
         that captures the document's structure. The inferred schema can be used directly as the
-        `outputSchema` when creating Transform functions.
+        `outputSchema` when creating Extract functions.
 
         The schema is designed to be broadly applicable to documents of the same type, not just
         the specific file uploaded.
@@ -859,13 +859,13 @@ class BemWithStreamedResponse:
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -955,7 +955,7 @@ class BemWithStreamedResponse:
 
         Upload a file (PDF, image, spreadsheet, email, etc.) and receive a general-purpose JSON Schema
         that captures the document's structure. The inferred schema can be used directly as the
-        `outputSchema` when creating Transform functions.
+        `outputSchema` when creating Extract functions.
 
         The schema is designed to be broadly applicable to documents of the same type, not just
         the specific file uploaded.
@@ -977,13 +977,13 @@ class AsyncBemWithStreamedResponse:
 
         Each function type serves a specific purpose:
 
-        - **Transform**: Extract structured JSON data from unstructured documents (PDFs, emails, images)
-        - **Analyze**: Perform visual analysis on documents to extract layout-aware information
+        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
         - **Route**: Direct data to different processing paths based on conditions
         - **Split**: Break multi-page documents into individual pages for parallel processing
         - **Join**: Combine outputs from multiple function calls into a single result
         - **Payload Shaping**: Transform and restructure data using JMESPath expressions
         - **Enrich**: Enhance data with semantic search against collections
+        - **Send**: Deliver workflow outputs to downstream destinations
 
         Use these endpoints to create, update, list, and manage your functions.
         """
@@ -1073,7 +1073,7 @@ class AsyncBemWithStreamedResponse:
 
         Upload a file (PDF, image, spreadsheet, email, etc.) and receive a general-purpose JSON Schema
         that captures the document's structure. The inferred schema can be used directly as the
-        `outputSchema` when creating Transform functions.
+        `outputSchema` when creating Extract functions.
 
         The schema is designed to be broadly applicable to documents of the same type, not just
         the specific file uploaded.
