@@ -40,7 +40,6 @@ from .error_retrieve_response import ErrorRetrieveResponse as ErrorRetrieveRespo
 from .list_functions_response import ListFunctionsResponse as ListFunctionsResponse
 from .classification_list_item import ClassificationListItem as ClassificationListItem
 from .output_retrieve_response import OutputRetrieveResponse as OutputRetrieveResponse
-from .workflow_create_response import WorkflowCreateResponse as WorkflowCreateResponse
 from .workflow_update_response import WorkflowUpdateResponse as WorkflowUpdateResponse
 from .infer_schema_create_params import InferSchemaCreateParams as InferSchemaCreateParams
 from .workflow_retrieve_response import WorkflowRetrieveResponse as WorkflowRetrieveResponse

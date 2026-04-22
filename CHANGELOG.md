@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.14.0 (2026-04-22)
+
+Full Changelog: [v0.13.0...v0.14.0](https://github.com/bem-team/bem-python-sdk/compare/v0.13.0...v0.14.0)
+
+### Features
+
+* **api:** manual updates ([c3d222d](https://github.com/bem-team/bem-python-sdk/commit/c3d222d6f8a966043a99dff65e163a11e5112933))
+
+
+### Chores
+
+* **internal:** more robust bootstrap script ([b48289e](https://github.com/bem-team/bem-python-sdk/commit/b48289eb2ef0454f0c37280ecc0da688b3f09106))
+
 ## 0.13.0 (2026-04-20)
 
 Full Changelog: [v0.12.0...v0.13.0](https://github.com/bem-team/bem-python-sdk/compare/v0.12.0...v0.13.0)

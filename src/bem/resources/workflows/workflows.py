@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Iterable
+from typing import Type, Iterable, Optional, cast
 from typing_extensions import Literal
 
 import httpx
@@ -32,12 +32,12 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
+from ..._wrappers import WorkflowWrapper
 from ...pagination import SyncWorkflowsPage, AsyncWorkflowsPage
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.workflow import Workflow
 from ...types.call_get_response import CallGetResponse
 from ...types.workflow_copy_response import WorkflowCopyResponse
-from ...types.workflow_create_response import WorkflowCreateResponse
 from ...types.workflow_update_response import WorkflowUpdateResponse
 from ...types.workflow_retrieve_response import WorkflowRetrieveResponse
 
@@ -117,7 +117,7 @@ class WorkflowsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WorkflowCreateResponse:
+    ) -> Optional[Workflow]:
         """Create a Workflow
 
         Args:
@@ -161,9 +161,13 @@ class WorkflowsResource(SyncAPIResource):
                 workflow_create_params.WorkflowCreateParams,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                post_parser=WorkflowWrapper[Optional[Workflow]]._unwrapper,
             ),
-            cast_to=WorkflowCreateResponse,
+            cast_to=cast(Type[Optional[Workflow]], WorkflowWrapper[Workflow]),
         )
 
     def retrieve(
@@ -637,7 +641,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WorkflowCreateResponse:
+    ) -> Optional[Workflow]:
         """Create a Workflow
 
         Args:
@@ -681,9 +685,13 @@ class AsyncWorkflowsResource(AsyncAPIResource):
                 workflow_create_params.WorkflowCreateParams,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                post_parser=WorkflowWrapper[Optional[Workflow]]._unwrapper,
             ),
-            cast_to=WorkflowCreateResponse,
+            cast_to=cast(Type[Optional[Workflow]], WorkflowWrapper[Workflow]),
         )
 
     async def retrieve(
