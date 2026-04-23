@@ -8,7 +8,7 @@ from typing import Any, cast
 import pytest
 
 from bem import Bem, AsyncBem
-from bem.types import Call, CallGetResponse
+from bem.types import Call, CallGetResponse, CallRetrieveTraceResponse
 from tests.utils import assert_matches_type
 from bem.pagination import SyncCallsPage, AsyncCallsPage
 
@@ -105,6 +105,48 @@ class TestCalls:
 
         assert cast(Any, response.is_closed) is True
 
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_retrieve_trace(self, client: Bem) -> None:
+        call = client.calls.retrieve_trace(
+            "callID",
+        )
+        assert_matches_type(CallRetrieveTraceResponse, call, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_retrieve_trace(self, client: Bem) -> None:
+        response = client.calls.with_raw_response.retrieve_trace(
+            "callID",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        call = response.parse()
+        assert_matches_type(CallRetrieveTraceResponse, call, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_retrieve_trace(self, client: Bem) -> None:
+        with client.calls.with_streaming_response.retrieve_trace(
+            "callID",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            call = response.parse()
+            assert_matches_type(CallRetrieveTraceResponse, call, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_retrieve_trace(self, client: Bem) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `call_id` but received ''"):
+            client.calls.with_raw_response.retrieve_trace(
+                "",
+            )
+
 
 class TestAsyncCalls:
     parametrize = pytest.mark.parametrize(
@@ -197,3 +239,45 @@ class TestAsyncCalls:
             assert_matches_type(AsyncCallsPage[Call], call, path=["response"])
 
         assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_retrieve_trace(self, async_client: AsyncBem) -> None:
+        call = await async_client.calls.retrieve_trace(
+            "callID",
+        )
+        assert_matches_type(CallRetrieveTraceResponse, call, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_retrieve_trace(self, async_client: AsyncBem) -> None:
+        response = await async_client.calls.with_raw_response.retrieve_trace(
+            "callID",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        call = await response.parse()
+        assert_matches_type(CallRetrieveTraceResponse, call, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_retrieve_trace(self, async_client: AsyncBem) -> None:
+        async with async_client.calls.with_streaming_response.retrieve_trace(
+            "callID",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            call = await response.parse()
+            assert_matches_type(CallRetrieveTraceResponse, call, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_retrieve_trace(self, async_client: AsyncBem) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `call_id` but received ''"):
+            await async_client.calls.with_raw_response.retrieve_trace(
+                "",
+            )
