@@ -22,6 +22,7 @@ from ..pagination import SyncCallsPage, AsyncCallsPage
 from ..types.call import Call
 from .._base_client import AsyncPaginator, make_request_options
 from ..types.call_get_response import CallGetResponse
+from ..types.call_retrieve_trace_response import CallRetrieveTraceResponse
 
 __all__ = ["CallsResource", "AsyncCallsResource"]
 
@@ -184,6 +185,56 @@ class CallsResource(SyncAPIResource):
             model=Call,
         )
 
+    def retrieve_trace(
+        self,
+        call_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CallRetrieveTraceResponse:
+        """
+        **Retrieve the full execution trace of a workflow call.**
+
+        Returns all function calls and events emitted during the call as flat arrays.
+        The DAG can be reconstructed using `FunctionCallResponseBase.sourceEventID` (the
+        event that spawned each function call) and each event's `functionCallID` (the
+        function call that emitted it).
+
+        ## Graph structure
+
+        - A function call with no `sourceEventID` is the root.
+        - An event's `functionCallID` points to the function call that emitted it.
+        - A function call's `sourceEventID` points to the event that triggered it.
+        - `workflowNodeName` identifies the DAG node; `incomingDestinationName`
+          identifies the labelled outlet used to reach this call (absent for unlabelled
+          edges and root calls).
+
+        The trace is available as soon as the call exists and grows as execution
+        proceeds.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not call_id:
+            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
+        return self._get(
+            path_template("/v3/calls/{call_id}/trace", call_id=call_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=CallRetrieveTraceResponse,
+        )
+
 
 class AsyncCallsResource(AsyncAPIResource):
     """
@@ -343,6 +394,56 @@ class AsyncCallsResource(AsyncAPIResource):
             model=Call,
         )
 
+    async def retrieve_trace(
+        self,
+        call_id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> CallRetrieveTraceResponse:
+        """
+        **Retrieve the full execution trace of a workflow call.**
+
+        Returns all function calls and events emitted during the call as flat arrays.
+        The DAG can be reconstructed using `FunctionCallResponseBase.sourceEventID` (the
+        event that spawned each function call) and each event's `functionCallID` (the
+        function call that emitted it).
+
+        ## Graph structure
+
+        - A function call with no `sourceEventID` is the root.
+        - An event's `functionCallID` points to the function call that emitted it.
+        - A function call's `sourceEventID` points to the event that triggered it.
+        - `workflowNodeName` identifies the DAG node; `incomingDestinationName`
+          identifies the labelled outlet used to reach this call (absent for unlabelled
+          edges and root calls).
+
+        The trace is available as soon as the call exists and grows as execution
+        proceeds.
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not call_id:
+            raise ValueError(f"Expected a non-empty value for `call_id` but received {call_id!r}")
+        return await self._get(
+            path_template("/v3/calls/{call_id}/trace", call_id=call_id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=CallRetrieveTraceResponse,
+        )
+
 
 class CallsResourceWithRawResponse:
     def __init__(self, calls: CallsResource) -> None:
@@ -353,6 +454,9 @@ class CallsResourceWithRawResponse:
         )
         self.list = to_raw_response_wrapper(
             calls.list,
+        )
+        self.retrieve_trace = to_raw_response_wrapper(
+            calls.retrieve_trace,
         )
 
 
@@ -366,6 +470,9 @@ class AsyncCallsResourceWithRawResponse:
         self.list = async_to_raw_response_wrapper(
             calls.list,
         )
+        self.retrieve_trace = async_to_raw_response_wrapper(
+            calls.retrieve_trace,
+        )
 
 
 class CallsResourceWithStreamingResponse:
@@ -378,6 +485,9 @@ class CallsResourceWithStreamingResponse:
         self.list = to_streamed_response_wrapper(
             calls.list,
         )
+        self.retrieve_trace = to_streamed_response_wrapper(
+            calls.retrieve_trace,
+        )
 
 
 class AsyncCallsResourceWithStreamingResponse:
@@ -389,4 +499,7 @@ class AsyncCallsResourceWithStreamingResponse:
         )
         self.list = async_to_streamed_response_wrapper(
             calls.list,
+        )
+        self.retrieve_trace = async_to_streamed_response_wrapper(
+            calls.retrieve_trace,
         )
