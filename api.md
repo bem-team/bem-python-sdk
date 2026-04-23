@@ -62,13 +62,14 @@ Methods:
 Types:
 
 ```python
-from bem.types import Call, CallGetResponse
+from bem.types import Call, CallGetResponse, CallRetrieveTraceResponse
 ```
 
 Methods:
 
 - <code title="get /v3/calls/{callID}">client.calls.<a href="./src/bem/resources/calls.py">retrieve</a>(call_id) -> <a href="./src/bem/types/call_get_response.py">CallGetResponse</a></code>
 - <code title="get /v3/calls">client.calls.<a href="./src/bem/resources/calls.py">list</a>(\*\*<a href="src/bem/types/call_list_params.py">params</a>) -> <a href="./src/bem/types/call.py">SyncCallsPage[Call]</a></code>
+- <code title="get /v3/calls/{callID}/trace">client.calls.<a href="./src/bem/resources/calls.py">retrieve_trace</a>(call_id) -> <a href="./src/bem/types/call_retrieve_trace_response.py">CallRetrieveTraceResponse</a></code>
 
 # Errors
 
@@ -147,3 +148,63 @@ from bem.types import InferSchemaCreateResponse
 Methods:
 
 - <code title="post /v3/infer-schema">client.infer_schema.<a href="./src/bem/resources/infer_schema.py">create</a>(\*\*<a href="src/bem/types/infer_schema_create_params.py">params</a>) -> <a href="./src/bem/types/infer_schema_create_response.py">InferSchemaCreateResponse</a></code>
+
+# Collections
+
+Types:
+
+```python
+from bem.types import (
+    CollectionCreateResponse,
+    CollectionListResponse,
+    CollectionCountTokensResponse,
+)
+```
+
+Methods:
+
+- <code title="post /v3/collections">client.collections.<a href="./src/bem/resources/collections/collections.py">create</a>(\*\*<a href="src/bem/types/collection_create_params.py">params</a>) -> <a href="./src/bem/types/collection_create_response.py">CollectionCreateResponse</a></code>
+- <code title="get /v3/collections">client.collections.<a href="./src/bem/resources/collections/collections.py">list</a>(\*\*<a href="src/bem/types/collection_list_params.py">params</a>) -> <a href="./src/bem/types/collection_list_response.py">CollectionListResponse</a></code>
+- <code title="delete /v3/collections">client.collections.<a href="./src/bem/resources/collections/collections.py">delete</a>(\*\*<a href="src/bem/types/collection_delete_params.py">params</a>) -> None</code>
+- <code title="post /v3/collections/token-count">client.collections.<a href="./src/bem/resources/collections/collections.py">count_tokens</a>(\*\*<a href="src/bem/types/collection_count_tokens_params.py">params</a>) -> <a href="./src/bem/types/collection_count_tokens_response.py">CollectionCountTokensResponse</a></code>
+
+## Items
+
+Types:
+
+```python
+from bem.types.collections import ItemRetrieveResponse, ItemUpdateResponse, ItemAddResponse
+```
+
+Methods:
+
+- <code title="get /v3/collections/items">client.collections.items.<a href="./src/bem/resources/collections/items.py">retrieve</a>(\*\*<a href="src/bem/types/collections/item_retrieve_params.py">params</a>) -> <a href="./src/bem/types/collections/item_retrieve_response.py">ItemRetrieveResponse</a></code>
+- <code title="put /v3/collections/items">client.collections.items.<a href="./src/bem/resources/collections/items.py">update</a>(\*\*<a href="src/bem/types/collections/item_update_params.py">params</a>) -> <a href="./src/bem/types/collections/item_update_response.py">ItemUpdateResponse</a></code>
+- <code title="delete /v3/collections/items">client.collections.items.<a href="./src/bem/resources/collections/items.py">delete</a>(\*\*<a href="src/bem/types/collections/item_delete_params.py">params</a>) -> None</code>
+- <code title="post /v3/collections/items">client.collections.items.<a href="./src/bem/resources/collections/items.py">add</a>(\*\*<a href="src/bem/types/collections/item_add_params.py">params</a>) -> <a href="./src/bem/types/collections/item_add_response.py">ItemAddResponse</a></code>
+
+# Events
+
+Types:
+
+```python
+from bem.types import EventSubmitFeedbackResponse
+```
+
+Methods:
+
+- <code title="post /v3/events/{eventID}/feedback">client.events.<a href="./src/bem/resources/events.py">submit_feedback</a>(event_id, \*\*<a href="src/bem/types/event_submit_feedback_params.py">params</a>) -> <a href="./src/bem/types/event_submit_feedback_response.py">EventSubmitFeedbackResponse</a></code>
+
+# WebhookSecret
+
+Types:
+
+```python
+from bem.types import WebhookSecretCreateResponse, WebhookSecretRetrieveResponse
+```
+
+Methods:
+
+- <code title="post /v3/webhook-secret">client.webhook_secret.<a href="./src/bem/resources/webhook_secret.py">create</a>() -> <a href="./src/bem/types/webhook_secret_create_response.py">WebhookSecretCreateResponse</a></code>
+- <code title="get /v3/webhook-secret">client.webhook_secret.<a href="./src/bem/resources/webhook_secret.py">retrieve</a>() -> <a href="./src/bem/types/webhook_secret_retrieve_response.py">WebhookSecretRetrieveResponse</a></code>
+- <code title="delete /v3/webhook-secret">client.webhook_secret.<a href="./src/bem/resources/webhook_secret.py">revoke</a>() -> None</code>

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.15.0 (2026-04-23)
+
+Full Changelog: [v0.14.0...v0.15.0](https://github.com/bem-team/bem-python-sdk/compare/v0.14.0...v0.15.0)
+
+### Features
+
+* **api:** new endpoints ([7a53650](https://github.com/bem-team/bem-python-sdk/commit/7a536504eb300fc58c454d65164e6ef871d77908))
+
 ## 0.14.0 (2026-04-22)
 
 Full Changelog: [v0.13.0...v0.14.0](https://github.com/bem-team/bem-python-sdk/compare/v0.13.0...v0.14.0)

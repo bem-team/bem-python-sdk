@@ -16,6 +16,14 @@ from .errors import (
     ErrorsResourceWithStreamingResponse,
     AsyncErrorsResourceWithStreamingResponse,
 )
+from .events import (
+    EventsResource,
+    AsyncEventsResource,
+    EventsResourceWithRawResponse,
+    AsyncEventsResourceWithRawResponse,
+    EventsResourceWithStreamingResponse,
+    AsyncEventsResourceWithStreamingResponse,
+)
 from .outputs import (
     OutputsResource,
     AsyncOutputsResource,
@@ -40,6 +48,14 @@ from .workflows import (
     WorkflowsResourceWithStreamingResponse,
     AsyncWorkflowsResourceWithStreamingResponse,
 )
+from .collections import (
+    CollectionsResource,
+    AsyncCollectionsResource,
+    CollectionsResourceWithRawResponse,
+    AsyncCollectionsResourceWithRawResponse,
+    CollectionsResourceWithStreamingResponse,
+    AsyncCollectionsResourceWithStreamingResponse,
+)
 from .infer_schema import (
     InferSchemaResource,
     AsyncInferSchemaResource,
@@ -47,6 +63,14 @@ from .infer_schema import (
     AsyncInferSchemaResourceWithRawResponse,
     InferSchemaResourceWithStreamingResponse,
     AsyncInferSchemaResourceWithStreamingResponse,
+)
+from .webhook_secret import (
+    WebhookSecretResource,
+    AsyncWebhookSecretResource,
+    WebhookSecretResourceWithRawResponse,
+    AsyncWebhookSecretResourceWithRawResponse,
+    WebhookSecretResourceWithStreamingResponse,
+    AsyncWebhookSecretResourceWithStreamingResponse,
 )
 
 __all__ = [
@@ -86,4 +110,22 @@ __all__ = [
     "AsyncInferSchemaResourceWithRawResponse",
     "InferSchemaResourceWithStreamingResponse",
     "AsyncInferSchemaResourceWithStreamingResponse",
+    "CollectionsResource",
+    "AsyncCollectionsResource",
+    "CollectionsResourceWithRawResponse",
+    "AsyncCollectionsResourceWithRawResponse",
+    "CollectionsResourceWithStreamingResponse",
+    "AsyncCollectionsResourceWithStreamingResponse",
+    "EventsResource",
+    "AsyncEventsResource",
+    "EventsResourceWithRawResponse",
+    "AsyncEventsResourceWithRawResponse",
+    "EventsResourceWithStreamingResponse",
+    "AsyncEventsResourceWithStreamingResponse",
+    "WebhookSecretResource",
+    "AsyncWebhookSecretResource",
+    "WebhookSecretResourceWithRawResponse",
+    "AsyncWebhookSecretResourceWithRawResponse",
+    "WebhookSecretResourceWithStreamingResponse",
+    "AsyncWebhookSecretResourceWithStreamingResponse",
 ]
