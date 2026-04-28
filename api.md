@@ -89,13 +89,13 @@ Methods:
 Types:
 
 ```python
-from bem.types import AnyType, Event, OutputRetrieveResponse
+from bem.types import AnyType, OutputRetrieveResponse, OutputListResponse
 ```
 
 Methods:
 
 - <code title="get /v3/outputs/{eventID}">client.outputs.<a href="./src/bem/resources/outputs.py">retrieve</a>(event_id) -> <a href="./src/bem/types/output_retrieve_response.py">OutputRetrieveResponse</a></code>
-- <code title="get /v3/outputs">client.outputs.<a href="./src/bem/resources/outputs.py">list</a>(\*\*<a href="src/bem/types/output_list_params.py">params</a>) -> <a href="./src/bem/types/event.py">SyncOutputsPage[Event]</a></code>
+- <code title="get /v3/outputs">client.outputs.<a href="./src/bem/resources/outputs.py">list</a>(\*\*<a href="src/bem/types/output_list_params.py">params</a>) -> <a href="./src/bem/types/output_list_response.py">SyncOutputsPage[OutputListResponse]</a></code>
 
 # Workflows
 

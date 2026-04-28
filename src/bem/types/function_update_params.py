@@ -22,6 +22,8 @@ __all__ = [
     "UpsertJoinFunction",
     "UpsertPayloadShapingFunction",
     "UpsertEnrichFunction",
+    "UpsertParseFunction",
+    "UpsertParseFunctionParseConfig",
 ]
 
 
@@ -34,6 +36,16 @@ class UpsertExtractFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
+    enable_bounding_boxes: Annotated[bool, PropertyInfo(alias="enableBoundingBoxes")]
+    """Whether bounding box extraction is enabled.
+
+    Applies to vision input types (pdf, png, jpeg, heic, heif, webp) that dispatch
+    through the analyze path. When true, the function returns the document regions
+    (page, coordinates) from which each field was extracted. Enabling this
+    automatically configures the function to use the bounding box model. Disabling
+    resets to the default.
+    """
+
     function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
@@ -42,6 +54,12 @@ class UpsertExtractFunction(TypedDict, total=False):
 
     output_schema_name: Annotated[str, PropertyInfo(alias="outputSchemaName")]
     """Name of output schema object."""
+
+    pre_count: Annotated[bool, PropertyInfo(alias="preCount")]
+    """
+    Reducing the risk of the model stopping early on long documents. Trade-off:
+    Increases total latency. Compatible with `enableBoundingBoxes`.
+    """
 
     tabular_chunking_enabled: Annotated[bool, PropertyInfo(alias="tabularChunkingEnabled")]
     """Whether tabular chunking is enabled.
@@ -58,19 +76,9 @@ class UpsertClassifyFunction(TypedDict, total=False):
     type: Required[Literal["classify"]]
 
     classifications: Iterable[ClassificationListItemParam]
-    """V3 create/update variants of the shared function payloads.
+    """List of classifications a classify function can produce.
 
-    The V3 Functions API no longer accepts the legacy `transform` or `analyze`
-    function types when creating new functions or updating existing ones — both have
-    been unified under `extract`. Existing functions of those types remain readable
-    and callable via V3, so the V3 read-side unions still include `transform` and
-    `analyze` variants.
-
-    The V3 API also renames the internal `route` function type to `classify` on the
-    wire, and the associated `routes` field to `classifications` (type
-    `ClassificationList`). Platform-internal storage and processing still use
-    `route` / `routes`; the rename is applied only at the V3 API boundary.V3-facing
-    name for the list of classifications a classify function can produce.
+    Shares the underlying route list shape.
     """
 
     description: str
@@ -255,6 +263,66 @@ class UpsertEnrichFunction(TypedDict, total=False):
     """
 
 
+class UpsertParseFunction(TypedDict, total=False):
+    type: Required[Literal["parse"]]
+
+    display_name: Annotated[str, PropertyInfo(alias="displayName")]
+    """Display name of function.
+
+    Human-readable name to help you identify the function.
+    """
+
+    function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
+    parse_config: Annotated[UpsertParseFunctionParseConfig, PropertyInfo(alias="parseConfig")]
+    """Per-version configuration for a Parse function.
+
+    Parse renders document pages (PDF, image) via vision LLM and emits structured
+    JSON. The two toggles below independently control entity extraction (a per-call
+    output concern) and cross-document memory linking (an environment-wide concern).
+    """
+
+    tags: SequenceNotStr[str]
+    """Array of tags to categorize and organize functions."""
+
+
+class UpsertParseFunctionParseConfig(TypedDict, total=False):
+    """Per-version configuration for a Parse function.
+
+    Parse renders document pages (PDF, image) via vision LLM and emits
+    structured JSON. The two toggles below independently control entity
+    extraction (a per-call output concern) and cross-document memory
+    linking (an environment-wide concern).
+    """
+
+    extract_entities: Annotated[bool, PropertyInfo(alias="extractEntities")]
+    """
+    When true, extract named entities (people, organizations, products, studies,
+    identifiers, etc.) and the relationships between them, and dedupe by canonical
+    name within the document. When false, only `sections[]` is extracted;
+    `entities[]` and `relationships[]` come back empty in the parse output. Defaults
+    to true.
+    """
+
+    link_across_documents: Annotated[bool, PropertyInfo(alias="linkAcrossDocuments")]
+    """
+    When true, link this document's entities to entities seen in earlier documents
+    in this environment, building one canonical record per real-world thing across
+    the corpus. Visible in the Memory tab and queryable via `POST /v3/fs` (op=find /
+    open / xref). Doesn't change this call's parse output. Requires
+    `extractEntities=true`. Defaults to true.
+    """
+
+    schema: object
+    """Optional JSONSchema.
+
+    When provided, each chunk performs schema-guided extraction. When absent, chunks
+    perform open-ended discovery and return sections, entities, and relationships
+    per the discovery schema.
+    """
+
+
 FunctionUpdateParams: TypeAlias = Union[
     UpsertExtractFunction,
     UpsertClassifyFunction,
@@ -263,4 +331,5 @@ FunctionUpdateParams: TypeAlias = Union[
     UpsertJoinFunction,
     UpsertPayloadShapingFunction,
     UpsertEnrichFunction,
+    UpsertParseFunction,
 ]

@@ -123,8 +123,10 @@ class FunctionsResource(SyncAPIResource):
         function_name: str,
         type: Literal["extract"],
         display_name: str | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
+        pre_count: bool | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -134,18 +136,47 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
+
+          enable_bounding_boxes: Whether bounding box extraction is enabled. Applies to vision input types (pdf,
+              png, jpeg, heic, heif, webp) that dispatch through the analyze path. When true,
+              the function returns the document regions (page, coordinates) from which each
+              field was extracted. Enabling this automatically configures the function to use
+              the bounding box model. Disabling resets to the default.
 
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
           output_schema_name: Name of output schema object.
+
+          pre_count:
+              Reducing the risk of the model stopping early on long documents. Trade-off:
+              Increases total latency. Compatible with `enableBoundingBoxes`.
 
           tabular_chunking_enabled: Whether tabular chunking is enabled. When true, tables in CSV/Excel files are
               processed in row batches rather than all at once.
@@ -179,26 +210,34 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
-        Must be UNIQUE on a per-environment basis.
-
-          classifications: V3 create/update variants of the shared function payloads.
-
-              The V3 Functions API no longer accepts the legacy `transform` or `analyze`
-              function types when creating new functions or updating existing ones — both have
-              been unified under `extract`. Existing functions of those types remain readable
-              and callable via V3, so the V3 read-side unions still include `transform` and
-              `analyze` variants.
-
-              The V3 API also renames the internal `route` function type to `classify` on the
-              wire, and the associated `routes` field to `classifications` (type
-              `ClassificationList`). Platform-internal storage and processing still use
-              `route` / `routes`; the rename is applied only at the V3 API boundary.V3-facing
-              name for the list of classifications a classify function can produce.
+          classifications: List of classifications a classify function can produce. Shares the underlying
+              route list shape.
 
           description: Description of classifier. Can be used to provide additional context on
               classifier's purpose and expected inputs.
@@ -238,12 +277,31 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           destination_type: Destination type for a Send function.
 
@@ -292,12 +350,31 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
@@ -332,12 +409,31 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           description: Description of join function.
 
@@ -377,12 +473,31 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
@@ -420,12 +535,31 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           config: Configuration for enrich function with semantic search steps.
 
@@ -467,6 +601,68 @@ class FunctionsResource(SyncAPIResource):
         """
         ...
 
+    @overload
+    def create(
+        self,
+        *,
+        function_name: str,
+        type: Literal["parse"],
+        display_name: str | Omit = omit,
+        parse_config: function_create_params.CreateParseFunctionParseConfig | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
+
+        Args:
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          parse_config: Per-version configuration for a Parse function.
+
+              Parse renders document pages (PDF, image) via vision LLM and emits structured
+              JSON. The two toggles below independently control entity extraction (a per-call
+              output concern) and cross-document memory linking (an environment-wide concern).
+
+          tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
     @required_args(["function_name", "type"])
     def create(
         self,
@@ -478,10 +674,13 @@ class FunctionsResource(SyncAPIResource):
         | Literal["split"]
         | Literal["join"]
         | Literal["payload_shaping"]
-        | Literal["enrich"],
+        | Literal["enrich"]
+        | Literal["parse"],
         display_name: str | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
+        pre_count: bool | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
@@ -498,6 +697,7 @@ class FunctionsResource(SyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
+        parse_config: function_create_params.CreateParseFunctionParseConfig | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -512,8 +712,10 @@ class FunctionsResource(SyncAPIResource):
                     "function_name": function_name,
                     "type": type,
                     "display_name": display_name,
+                    "enable_bounding_boxes": enable_bounding_boxes,
                     "output_schema": output_schema,
                     "output_schema_name": output_schema_name,
+                    "pre_count": pre_count,
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
                     "classifications": classifications,
@@ -530,6 +732,7 @@ class FunctionsResource(SyncAPIResource):
                     "join_type": join_type,
                     "shaping_schema": shaping_schema,
                     "config": config,
+                    "parse_config": parse_config,
                 },
                 function_create_params.FunctionCreateParams,
             ),
@@ -551,7 +754,11 @@ class FunctionsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
         """
-        Get a Function
+        **Retrieve a function's current version by name.**
+
+        Returns the function record with its `currentVersionNum` and the configuration
+        of that version. To inspect a historical version, use
+        `GET /v3/functions/{functionName}/versions/{versionNum}`.
 
         Args:
           extra_headers: Send extra headers
@@ -579,9 +786,11 @@ class FunctionsResource(SyncAPIResource):
         *,
         type: Literal["extract"],
         display_name: str | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
+        pre_count: bool | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -591,18 +800,47 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
-          display_name: Display name of function.
+          display_name: Display name of function. Human-readable name to help you identify the function.
 
-        Human-readable name to help you identify the function.
+          enable_bounding_boxes: Whether bounding box extraction is enabled. Applies to vision input types (pdf,
+              png, jpeg, heic, heif, webp) that dispatch through the analyze path. When true,
+              the function returns the document regions (page, coordinates) from which each
+              field was extracted. Enabling this automatically configures the function to use
+              the bounding box model. Disabling resets to the default.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
           output_schema_name: Name of output schema object.
+
+          pre_count:
+              Reducing the risk of the model stopping early on long documents. Trade-off:
+              Increases total latency. Compatible with `enableBoundingBoxes`.
 
           tabular_chunking_enabled: Whether tabular chunking is enabled. When true, tables in CSV/Excel files are
               processed in row batches rather than all at once.
@@ -637,23 +875,32 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """
-        Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
-          classifications: V3 create/update variants of the shared function payloads.
-
-              The V3 Functions API no longer accepts the legacy `transform` or `analyze`
-              function types when creating new functions or updating existing ones — both have
-              been unified under `extract`. Existing functions of those types remain readable
-              and callable via V3, so the V3 read-side unions still include `transform` and
-              `analyze` variants.
-
-              The V3 API also renames the internal `route` function type to `classify` on the
-              wire, and the associated `routes` field to `classifications` (type
-              `ClassificationList`). Platform-internal storage and processing still use
-              `route` / `routes`; the rename is applied only at the V3 API boundary.V3-facing
-              name for the list of classifications a classify function can produce.
+          classifications: List of classifications a classify function can produce. Shares the underlying
+              route list shape.
 
           description: Description of classifier. Can be used to provide additional context on
               classifier's purpose and expected inputs.
@@ -696,8 +943,28 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """
-        Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
           destination_type: Destination type for a Send function.
@@ -750,12 +1017,31 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
-          display_name: Display name of function.
-
-        Human-readable name to help you identify the function.
+          display_name: Display name of function. Human-readable name to help you identify the function.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
@@ -791,8 +1077,28 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """
-        Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
           description: Description of join function.
@@ -836,12 +1142,31 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
-          display_name: Display name of function.
-
-        Human-readable name to help you identify the function.
+          display_name: Display name of function. Human-readable name to help you identify the function.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
@@ -877,8 +1202,28 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """
-        Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
           config: Configuration for enrich function with semantic search steps.
@@ -917,6 +1262,69 @@ class FunctionsResource(SyncAPIResource):
         """
         ...
 
+    @overload
+    def update(
+        self,
+        path_function_name: str,
+        *,
+        type: Literal["parse"],
+        display_name: str | Omit = omit,
+        function_name: str | Omit = omit,
+        parse_config: function_update_params.UpsertParseFunctionParseConfig | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
+
+        Args:
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          parse_config: Per-version configuration for a Parse function.
+
+              Parse renders document pages (PDF, image) via vision LLM and emits structured
+              JSON. The two toggles below independently control entity extraction (a per-call
+              output concern) and cross-document memory linking (an environment-wide concern).
+
+          tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
     @required_args(["type"])
     def update(
         self,
@@ -928,11 +1336,14 @@ class FunctionsResource(SyncAPIResource):
         | Literal["split"]
         | Literal["join"]
         | Literal["payload_shaping"]
-        | Literal["enrich"],
+        | Literal["enrich"]
+        | Literal["parse"],
         display_name: str | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
+        pre_count: bool | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
@@ -949,6 +1360,7 @@ class FunctionsResource(SyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
+        parse_config: function_update_params.UpsertParseFunctionParseConfig | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -964,9 +1376,11 @@ class FunctionsResource(SyncAPIResource):
                 {
                     "type": type,
                     "display_name": display_name,
+                    "enable_bounding_boxes": enable_bounding_boxes,
                     "function_name": function_name,
                     "output_schema": output_schema,
                     "output_schema_name": output_schema_name,
+                    "pre_count": pre_count,
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
                     "classifications": classifications,
@@ -983,6 +1397,7 @@ class FunctionsResource(SyncAPIResource):
                     "join_type": join_type,
                     "shaping_schema": shaping_schema,
                     "config": config,
+                    "parse_config": parse_config,
                 },
                 function_update_params.FunctionUpdateParams,
             ),
@@ -1014,7 +1429,27 @@ class FunctionsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> SyncFunctionsPage[Function]:
         """
-        List Functions
+        **List functions in the current environment.**
+
+        Returns each function's current version. Combine filters freely — they AND
+        together.
+
+        ## Filtering
+
+        - `functionIDs` / `functionNames`: exact-match identity filters.
+        - `displayName`: case-insensitive substring match.
+        - `types`: one or more of `extract`, `classify`, `split`, `join`, `enrich`,
+          `payload_shaping`. Legacy `transform`, `analyze`, `route`, and `send` types
+          remain readable via this filter.
+        - `tags`: returns functions tagged with any of the supplied tags.
+        - `workflowIDs` / `workflowNames`: returns only functions referenced by the
+          named workflows. Useful for "what functions does this workflow depend on?"
+          lookups.
+
+        ## Pagination
+
+        Cursor-based with `startingAfter` and `endingBefore` (functionIDs). Default
+        limit 50, maximum 100.
 
         Args:
           extra_headers: Send extra headers
@@ -1064,8 +1499,25 @@ class FunctionsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """
-        Delete a Function
+        """**Delete a function and every one of its versions.**
+
+        Permanent.
+
+        Running and queued calls that reference this function continue to
+        completion against the version they captured at call time, but no new calls can
+        target it.
+
+        ## Before deleting
+
+        Workflow nodes that reference this function will fail at call time after
+        deletion. List workflows that reference it first:
+
+        ```
+        GET /v3/workflows?functionNames=my-function
+        ```
+
+        Update or remove those workflows, or create a replacement function and re-point
+        the workflow nodes, before deleting.
 
         Args:
           extra_headers: Send extra headers
@@ -1166,8 +1618,10 @@ class AsyncFunctionsResource(AsyncAPIResource):
         function_name: str,
         type: Literal["extract"],
         display_name: str | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
+        pre_count: bool | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1177,18 +1631,47 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
+
+          enable_bounding_boxes: Whether bounding box extraction is enabled. Applies to vision input types (pdf,
+              png, jpeg, heic, heif, webp) that dispatch through the analyze path. When true,
+              the function returns the document regions (page, coordinates) from which each
+              field was extracted. Enabling this automatically configures the function to use
+              the bounding box model. Disabling resets to the default.
 
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
           output_schema_name: Name of output schema object.
+
+          pre_count:
+              Reducing the risk of the model stopping early on long documents. Trade-off:
+              Increases total latency. Compatible with `enableBoundingBoxes`.
 
           tabular_chunking_enabled: Whether tabular chunking is enabled. When true, tables in CSV/Excel files are
               processed in row batches rather than all at once.
@@ -1222,26 +1705,34 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
-        Must be UNIQUE on a per-environment basis.
-
-          classifications: V3 create/update variants of the shared function payloads.
-
-              The V3 Functions API no longer accepts the legacy `transform` or `analyze`
-              function types when creating new functions or updating existing ones — both have
-              been unified under `extract`. Existing functions of those types remain readable
-              and callable via V3, so the V3 read-side unions still include `transform` and
-              `analyze` variants.
-
-              The V3 API also renames the internal `route` function type to `classify` on the
-              wire, and the associated `routes` field to `classifications` (type
-              `ClassificationList`). Platform-internal storage and processing still use
-              `route` / `routes`; the rename is applied only at the V3 API boundary.V3-facing
-              name for the list of classifications a classify function can produce.
+          classifications: List of classifications a classify function can produce. Shares the underlying
+              route list shape.
 
           description: Description of classifier. Can be used to provide additional context on
               classifier's purpose and expected inputs.
@@ -1281,12 +1772,31 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           destination_type: Destination type for a Send function.
 
@@ -1335,12 +1845,31 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
@@ -1375,12 +1904,31 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           description: Description of join function.
 
@@ -1420,12 +1968,31 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
@@ -1463,12 +2030,31 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Create a Function
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
 
         Args:
-          function_name: Name of function.
-
-        Must be UNIQUE on a per-environment basis.
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           config: Configuration for enrich function with semantic search steps.
 
@@ -1510,6 +2096,68 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         ...
 
+    @overload
+    async def create(
+        self,
+        *,
+        function_name: str,
+        type: Literal["parse"],
+        display_name: str | Omit = omit,
+        parse_config: function_create_params.CreateParseFunctionParseConfig | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """
+        **Create a function.**
+
+        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
+        `payload_shaping`) determines which configuration fields are required — see
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
+
+        Args:
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          parse_config: Per-version configuration for a Parse function.
+
+              Parse renders document pages (PDF, image) via vision LLM and emits structured
+              JSON. The two toggles below independently control entity extraction (a per-call
+              output concern) and cross-document memory linking (an environment-wide concern).
+
+          tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
     @required_args(["function_name", "type"])
     async def create(
         self,
@@ -1521,10 +2169,13 @@ class AsyncFunctionsResource(AsyncAPIResource):
         | Literal["split"]
         | Literal["join"]
         | Literal["payload_shaping"]
-        | Literal["enrich"],
+        | Literal["enrich"]
+        | Literal["parse"],
         display_name: str | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
+        pre_count: bool | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
@@ -1541,6 +2192,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
+        parse_config: function_create_params.CreateParseFunctionParseConfig | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1555,8 +2207,10 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "function_name": function_name,
                     "type": type,
                     "display_name": display_name,
+                    "enable_bounding_boxes": enable_bounding_boxes,
                     "output_schema": output_schema,
                     "output_schema_name": output_schema_name,
+                    "pre_count": pre_count,
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
                     "classifications": classifications,
@@ -1573,6 +2227,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "join_type": join_type,
                     "shaping_schema": shaping_schema,
                     "config": config,
+                    "parse_config": parse_config,
                 },
                 function_create_params.FunctionCreateParams,
             ),
@@ -1594,7 +2249,11 @@ class AsyncFunctionsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
         """
-        Get a Function
+        **Retrieve a function's current version by name.**
+
+        Returns the function record with its `currentVersionNum` and the configuration
+        of that version. To inspect a historical version, use
+        `GET /v3/functions/{functionName}/versions/{versionNum}`.
 
         Args:
           extra_headers: Send extra headers
@@ -1622,9 +2281,11 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         type: Literal["extract"],
         display_name: str | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
+        pre_count: bool | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1634,18 +2295,47 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
-          display_name: Display name of function.
+          display_name: Display name of function. Human-readable name to help you identify the function.
 
-        Human-readable name to help you identify the function.
+          enable_bounding_boxes: Whether bounding box extraction is enabled. Applies to vision input types (pdf,
+              png, jpeg, heic, heif, webp) that dispatch through the analyze path. When true,
+              the function returns the document regions (page, coordinates) from which each
+              field was extracted. Enabling this automatically configures the function to use
+              the bounding box model. Disabling resets to the default.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
           output_schema_name: Name of output schema object.
+
+          pre_count:
+              Reducing the risk of the model stopping early on long documents. Trade-off:
+              Increases total latency. Compatible with `enableBoundingBoxes`.
 
           tabular_chunking_enabled: Whether tabular chunking is enabled. When true, tables in CSV/Excel files are
               processed in row batches rather than all at once.
@@ -1680,23 +2370,32 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """
-        Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
-          classifications: V3 create/update variants of the shared function payloads.
-
-              The V3 Functions API no longer accepts the legacy `transform` or `analyze`
-              function types when creating new functions or updating existing ones — both have
-              been unified under `extract`. Existing functions of those types remain readable
-              and callable via V3, so the V3 read-side unions still include `transform` and
-              `analyze` variants.
-
-              The V3 API also renames the internal `route` function type to `classify` on the
-              wire, and the associated `routes` field to `classifications` (type
-              `ClassificationList`). Platform-internal storage and processing still use
-              `route` / `routes`; the rename is applied only at the V3 API boundary.V3-facing
-              name for the list of classifications a classify function can produce.
+          classifications: List of classifications a classify function can produce. Shares the underlying
+              route list shape.
 
           description: Description of classifier. Can be used to provide additional context on
               classifier's purpose and expected inputs.
@@ -1739,8 +2438,28 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """
-        Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
           destination_type: Destination type for a Send function.
@@ -1793,12 +2512,31 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
-          display_name: Display name of function.
-
-        Human-readable name to help you identify the function.
+          display_name: Display name of function. Human-readable name to help you identify the function.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
@@ -1834,8 +2572,28 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """
-        Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
           description: Description of join function.
@@ -1879,12 +2637,31 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
-          display_name: Display name of function.
-
-        Human-readable name to help you identify the function.
+          display_name: Display name of function. Human-readable name to help you identify the function.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
@@ -1920,8 +2697,28 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """
-        Update a Function
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
 
         Args:
           config: Configuration for enrich function with semantic search steps.
@@ -1960,6 +2757,69 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         ...
 
+    @overload
+    async def update(
+        self,
+        path_function_name: str,
+        *,
+        type: Literal["parse"],
+        display_name: str | Omit = omit,
+        function_name: str | Omit = omit,
+        parse_config: function_update_params.UpsertParseFunctionParseConfig | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
+
+        Args:
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          parse_config: Per-version configuration for a Parse function.
+
+              Parse renders document pages (PDF, image) via vision LLM and emits structured
+              JSON. The two toggles below independently control entity extraction (a per-call
+              output concern) and cross-document memory linking (an environment-wide concern).
+
+          tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
     @required_args(["type"])
     async def update(
         self,
@@ -1971,11 +2831,14 @@ class AsyncFunctionsResource(AsyncAPIResource):
         | Literal["split"]
         | Literal["join"]
         | Literal["payload_shaping"]
-        | Literal["enrich"],
+        | Literal["enrich"]
+        | Literal["parse"],
         display_name: str | Omit = omit,
+        enable_bounding_boxes: bool | Omit = omit,
         function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
+        pre_count: bool | Omit = omit,
         tabular_chunking_enabled: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
@@ -1992,6 +2855,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
+        parse_config: function_update_params.UpsertParseFunctionParseConfig | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -2007,9 +2871,11 @@ class AsyncFunctionsResource(AsyncAPIResource):
                 {
                     "type": type,
                     "display_name": display_name,
+                    "enable_bounding_boxes": enable_bounding_boxes,
                     "function_name": function_name,
                     "output_schema": output_schema,
                     "output_schema_name": output_schema_name,
+                    "pre_count": pre_count,
                     "tabular_chunking_enabled": tabular_chunking_enabled,
                     "tags": tags,
                     "classifications": classifications,
@@ -2026,6 +2892,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "join_type": join_type,
                     "shaping_schema": shaping_schema,
                     "config": config,
+                    "parse_config": parse_config,
                 },
                 function_update_params.FunctionUpdateParams,
             ),
@@ -2057,7 +2924,27 @@ class AsyncFunctionsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> AsyncPaginator[Function, AsyncFunctionsPage[Function]]:
         """
-        List Functions
+        **List functions in the current environment.**
+
+        Returns each function's current version. Combine filters freely — they AND
+        together.
+
+        ## Filtering
+
+        - `functionIDs` / `functionNames`: exact-match identity filters.
+        - `displayName`: case-insensitive substring match.
+        - `types`: one or more of `extract`, `classify`, `split`, `join`, `enrich`,
+          `payload_shaping`. Legacy `transform`, `analyze`, `route`, and `send` types
+          remain readable via this filter.
+        - `tags`: returns functions tagged with any of the supplied tags.
+        - `workflowIDs` / `workflowNames`: returns only functions referenced by the
+          named workflows. Useful for "what functions does this workflow depend on?"
+          lookups.
+
+        ## Pagination
+
+        Cursor-based with `startingAfter` and `endingBefore` (functionIDs). Default
+        limit 50, maximum 100.
 
         Args:
           extra_headers: Send extra headers
@@ -2107,8 +2994,25 @@ class AsyncFunctionsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> None:
-        """
-        Delete a Function
+        """**Delete a function and every one of its versions.**
+
+        Permanent.
+
+        Running and queued calls that reference this function continue to
+        completion against the version they captured at call time, but no new calls can
+        target it.
+
+        ## Before deleting
+
+        Workflow nodes that reference this function will fail at call time after
+        deletion. List workflows that reference it first:
+
+        ```
+        GET /v3/workflows?functionNames=my-function
+        ```
+
+        Update or remove those workflows, or create a replacement function and re-point
+        the workflow nodes, before deleting.
 
         Args:
           extra_headers: Send extra headers

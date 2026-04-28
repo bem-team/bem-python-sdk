@@ -37,8 +37,10 @@ class TestFunctions:
             function_name="functionName",
             type="extract",
             display_name="displayName",
+            enable_bounding_boxes=True,
             output_schema={},
             output_schema_name="outputSchemaName",
+            pre_count=True,
             tabular_chunking_enabled=True,
             tags=["string"],
         )
@@ -414,6 +416,59 @@ class TestFunctions:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
+    def test_method_create_overload_8(self, client: Bem) -> None:
+        function = client.functions.create(
+            function_name="functionName",
+            type="parse",
+        )
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_create_with_all_params_overload_8(self, client: Bem) -> None:
+        function = client.functions.create(
+            function_name="functionName",
+            type="parse",
+            display_name="displayName",
+            parse_config={
+                "extract_entities": True,
+                "link_across_documents": True,
+                "schema": {},
+            },
+            tags=["string"],
+        )
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_create_overload_8(self, client: Bem) -> None:
+        response = client.functions.with_raw_response.create(
+            function_name="functionName",
+            type="parse",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        function = response.parse()
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_create_overload_8(self, client: Bem) -> None:
+        with client.functions.with_streaming_response.create(
+            function_name="functionName",
+            type="parse",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            function = response.parse()
+            assert_matches_type(FunctionResponse, function, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
     def test_method_retrieve(self, client: Bem) -> None:
         function = client.functions.retrieve(
             "functionName",
@@ -470,9 +525,11 @@ class TestFunctions:
             path_function_name="functionName",
             type="extract",
             display_name="displayName",
+            enable_bounding_boxes=True,
             function_name="functionName",
             output_schema={},
             output_schema_name="outputSchemaName",
+            pre_count=True,
             tabular_chunking_enabled=True,
             tags=["string"],
         )
@@ -914,6 +971,69 @@ class TestFunctions:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
+    def test_method_update_overload_8(self, client: Bem) -> None:
+        function = client.functions.update(
+            path_function_name="functionName",
+            type="parse",
+        )
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_update_with_all_params_overload_8(self, client: Bem) -> None:
+        function = client.functions.update(
+            path_function_name="functionName",
+            type="parse",
+            display_name="displayName",
+            function_name="functionName",
+            parse_config={
+                "extract_entities": True,
+                "link_across_documents": True,
+                "schema": {},
+            },
+            tags=["string"],
+        )
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_update_overload_8(self, client: Bem) -> None:
+        response = client.functions.with_raw_response.update(
+            path_function_name="functionName",
+            type="parse",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        function = response.parse()
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_update_overload_8(self, client: Bem) -> None:
+        with client.functions.with_streaming_response.update(
+            path_function_name="functionName",
+            type="parse",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            function = response.parse()
+            assert_matches_type(FunctionResponse, function, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_path_params_update_overload_8(self, client: Bem) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `path_function_name` but received ''"):
+            client.functions.with_raw_response.update(
+                path_function_name="",
+                type="parse",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
     def test_method_list(self, client: Bem) -> None:
         function = client.functions.list()
         assert_matches_type(SyncFunctionsPage[Function], function, path=["response"])
@@ -1022,8 +1142,10 @@ class TestAsyncFunctions:
             function_name="functionName",
             type="extract",
             display_name="displayName",
+            enable_bounding_boxes=True,
             output_schema={},
             output_schema_name="outputSchemaName",
+            pre_count=True,
             tabular_chunking_enabled=True,
             tags=["string"],
         )
@@ -1399,6 +1521,59 @@ class TestAsyncFunctions:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
+    async def test_method_create_overload_8(self, async_client: AsyncBem) -> None:
+        function = await async_client.functions.create(
+            function_name="functionName",
+            type="parse",
+        )
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_create_with_all_params_overload_8(self, async_client: AsyncBem) -> None:
+        function = await async_client.functions.create(
+            function_name="functionName",
+            type="parse",
+            display_name="displayName",
+            parse_config={
+                "extract_entities": True,
+                "link_across_documents": True,
+                "schema": {},
+            },
+            tags=["string"],
+        )
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_create_overload_8(self, async_client: AsyncBem) -> None:
+        response = await async_client.functions.with_raw_response.create(
+            function_name="functionName",
+            type="parse",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        function = await response.parse()
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_create_overload_8(self, async_client: AsyncBem) -> None:
+        async with async_client.functions.with_streaming_response.create(
+            function_name="functionName",
+            type="parse",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            function = await response.parse()
+            assert_matches_type(FunctionResponse, function, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
     async def test_method_retrieve(self, async_client: AsyncBem) -> None:
         function = await async_client.functions.retrieve(
             "functionName",
@@ -1455,9 +1630,11 @@ class TestAsyncFunctions:
             path_function_name="functionName",
             type="extract",
             display_name="displayName",
+            enable_bounding_boxes=True,
             function_name="functionName",
             output_schema={},
             output_schema_name="outputSchemaName",
+            pre_count=True,
             tabular_chunking_enabled=True,
             tags=["string"],
         )
@@ -1895,6 +2072,69 @@ class TestAsyncFunctions:
             await async_client.functions.with_raw_response.update(
                 path_function_name="",
                 type="enrich",
+            )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_update_overload_8(self, async_client: AsyncBem) -> None:
+        function = await async_client.functions.update(
+            path_function_name="functionName",
+            type="parse",
+        )
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_update_with_all_params_overload_8(self, async_client: AsyncBem) -> None:
+        function = await async_client.functions.update(
+            path_function_name="functionName",
+            type="parse",
+            display_name="displayName",
+            function_name="functionName",
+            parse_config={
+                "extract_entities": True,
+                "link_across_documents": True,
+                "schema": {},
+            },
+            tags=["string"],
+        )
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_update_overload_8(self, async_client: AsyncBem) -> None:
+        response = await async_client.functions.with_raw_response.update(
+            path_function_name="functionName",
+            type="parse",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        function = await response.parse()
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_update_overload_8(self, async_client: AsyncBem) -> None:
+        async with async_client.functions.with_streaming_response.update(
+            path_function_name="functionName",
+            type="parse",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            function = await response.parse()
+            assert_matches_type(FunctionResponse, function, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_path_params_update_overload_8(self, async_client: AsyncBem) -> None:
+        with pytest.raises(ValueError, match=r"Expected a non-empty value for `path_function_name` but received ''"):
+            await async_client.functions.with_raw_response.update(
+                path_function_name="",
+                type="parse",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
