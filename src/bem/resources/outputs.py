@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Any, Iterable, cast
 from typing_extensions import Literal
 
 import httpx
@@ -19,8 +19,8 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from ..pagination import SyncOutputsPage, AsyncOutputsPage
-from ..types.event import Event
 from .._base_client import AsyncPaginator, make_request_options
+from ..types.output_list_response import OutputListResponse
 from ..types.output_retrieve_response import OutputRetrieveResponse
 
 __all__ = ["OutputsResource", "AsyncOutputsResource"]
@@ -100,14 +100,19 @@ class OutputsResource(SyncAPIResource):
         *,
         call_ids: SequenceNotStr[str] | Omit = omit,
         ending_before: str | Omit = omit,
+        event_ids: SequenceNotStr[str] | Omit = omit,
         function_ids: SequenceNotStr[str] | Omit = omit,
         function_names: SequenceNotStr[str] | Omit = omit,
+        function_version_nums: Iterable[int] | Omit = omit,
         include_intermediate: bool | Omit = omit,
+        is_labelled: bool | Omit = omit,
+        is_regression: bool | Omit = omit,
         limit: int | Omit = omit,
         reference_ids: SequenceNotStr[str] | Omit = omit,
         reference_id_substring: str | Omit = omit,
         sort_order: Literal["asc", "desc"] | Omit = omit,
         starting_after: str | Omit = omit,
+        transformation_ids: SequenceNotStr[str] | Omit = omit,
         workflow_ids: SequenceNotStr[str] | Omit = omit,
         workflow_names: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -116,7 +121,7 @@ class OutputsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncOutputsPage[Event]:
+    ) -> SyncOutputsPage[OutputListResponse]:
         """
         **List terminal non-error output events.**
 
@@ -138,10 +143,27 @@ class OutputsResource(SyncAPIResource):
         Args:
           call_ids: Filter to outputs from specific calls.
 
+          event_ids: Filter to specific output events by their event IDs (KSUIDs).
+
+          function_version_nums: Filter to specific function version numbers.
+
           include_intermediate: When `true`, includes intermediate events (those that spawned a downstream
               function call). Default: `false`.
 
+          is_labelled: If `true`, only outputs with a corrected (labelled) payload. If `false`, only
+              outputs that are not labelled. If omitted, no filter is applied.
+
+          is_regression: If `true`, only regression-marked outputs. If `false`, only non-regression
+              outputs. If omitted, no filter is applied.
+
+              Note: clients migrating from `/v1-beta/transformations` should pass
+              `isRegression=false` explicitly to preserve the legacy default (regressions
+              hidden unless explicitly requested).
+
           reference_id_substring: Case-insensitive substring match against `referenceID`.
+
+          transformation_ids: Filter by legacy transformation IDs. Provided for backwards compatibility with
+              clients migrating from `/v1-beta/transformations`.
 
           extra_headers: Send extra headers
 
@@ -153,7 +175,7 @@ class OutputsResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/v3/outputs",
-            page=SyncOutputsPage[Event],
+            page=SyncOutputsPage[OutputListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -163,21 +185,26 @@ class OutputsResource(SyncAPIResource):
                     {
                         "call_ids": call_ids,
                         "ending_before": ending_before,
+                        "event_ids": event_ids,
                         "function_ids": function_ids,
                         "function_names": function_names,
+                        "function_version_nums": function_version_nums,
                         "include_intermediate": include_intermediate,
+                        "is_labelled": is_labelled,
+                        "is_regression": is_regression,
                         "limit": limit,
                         "reference_ids": reference_ids,
                         "reference_id_substring": reference_id_substring,
                         "sort_order": sort_order,
                         "starting_after": starting_after,
+                        "transformation_ids": transformation_ids,
                         "workflow_ids": workflow_ids,
                         "workflow_names": workflow_names,
                     },
                     output_list_params.OutputListParams,
                 ),
             ),
-            model=cast(Any, Event),  # Union types cannot be passed in as arguments in the type system
+            model=cast(Any, OutputListResponse),  # Union types cannot be passed in as arguments in the type system
         )
 
 
@@ -255,14 +282,19 @@ class AsyncOutputsResource(AsyncAPIResource):
         *,
         call_ids: SequenceNotStr[str] | Omit = omit,
         ending_before: str | Omit = omit,
+        event_ids: SequenceNotStr[str] | Omit = omit,
         function_ids: SequenceNotStr[str] | Omit = omit,
         function_names: SequenceNotStr[str] | Omit = omit,
+        function_version_nums: Iterable[int] | Omit = omit,
         include_intermediate: bool | Omit = omit,
+        is_labelled: bool | Omit = omit,
+        is_regression: bool | Omit = omit,
         limit: int | Omit = omit,
         reference_ids: SequenceNotStr[str] | Omit = omit,
         reference_id_substring: str | Omit = omit,
         sort_order: Literal["asc", "desc"] | Omit = omit,
         starting_after: str | Omit = omit,
+        transformation_ids: SequenceNotStr[str] | Omit = omit,
         workflow_ids: SequenceNotStr[str] | Omit = omit,
         workflow_names: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -271,7 +303,7 @@ class AsyncOutputsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[Event, AsyncOutputsPage[Event]]:
+    ) -> AsyncPaginator[OutputListResponse, AsyncOutputsPage[OutputListResponse]]:
         """
         **List terminal non-error output events.**
 
@@ -293,10 +325,27 @@ class AsyncOutputsResource(AsyncAPIResource):
         Args:
           call_ids: Filter to outputs from specific calls.
 
+          event_ids: Filter to specific output events by their event IDs (KSUIDs).
+
+          function_version_nums: Filter to specific function version numbers.
+
           include_intermediate: When `true`, includes intermediate events (those that spawned a downstream
               function call). Default: `false`.
 
+          is_labelled: If `true`, only outputs with a corrected (labelled) payload. If `false`, only
+              outputs that are not labelled. If omitted, no filter is applied.
+
+          is_regression: If `true`, only regression-marked outputs. If `false`, only non-regression
+              outputs. If omitted, no filter is applied.
+
+              Note: clients migrating from `/v1-beta/transformations` should pass
+              `isRegression=false` explicitly to preserve the legacy default (regressions
+              hidden unless explicitly requested).
+
           reference_id_substring: Case-insensitive substring match against `referenceID`.
+
+          transformation_ids: Filter by legacy transformation IDs. Provided for backwards compatibility with
+              clients migrating from `/v1-beta/transformations`.
 
           extra_headers: Send extra headers
 
@@ -308,7 +357,7 @@ class AsyncOutputsResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/v3/outputs",
-            page=AsyncOutputsPage[Event],
+            page=AsyncOutputsPage[OutputListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -318,21 +367,26 @@ class AsyncOutputsResource(AsyncAPIResource):
                     {
                         "call_ids": call_ids,
                         "ending_before": ending_before,
+                        "event_ids": event_ids,
                         "function_ids": function_ids,
                         "function_names": function_names,
+                        "function_version_nums": function_version_nums,
                         "include_intermediate": include_intermediate,
+                        "is_labelled": is_labelled,
+                        "is_regression": is_regression,
                         "limit": limit,
                         "reference_ids": reference_ids,
                         "reference_id_substring": reference_id_substring,
                         "sort_order": sort_order,
                         "starting_after": starting_after,
+                        "transformation_ids": transformation_ids,
                         "workflow_ids": workflow_ids,
                         "workflow_names": workflow_names,
                     },
                     output_list_params.OutputListParams,
                 ),
             ),
-            model=cast(Any, Event),  # Union types cannot be passed in as arguments in the type system
+            model=cast(Any, OutputListResponse),  # Union types cannot be passed in as arguments in the type system
         )
 
 

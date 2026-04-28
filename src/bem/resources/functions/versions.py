@@ -69,7 +69,11 @@ class VersionsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> VersionRetrieveResponse:
         """
-        Get a Function Version
+        **Retrieve a specific historical version of a function.**
+
+        Versions are immutable. Use this endpoint to inspect what a function looked like
+        at the moment a particular call was made — every event and transformation
+        records the function version it ran against.
 
         Args:
           extra_headers: Send extra headers
@@ -106,7 +110,12 @@ class VersionsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ListFunctionVersionsResponse:
         """
-        List Function Versions
+        **List every version of a function.**
+
+        Returns the full version history, newest-first. Each row captures the
+        configuration the function had between updates. Useful for audits ("when did
+        this schema change?") and for diffing two versions before promoting an update to
+        production.
 
         Args:
           extra_headers: Send extra headers
@@ -176,7 +185,11 @@ class AsyncVersionsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> VersionRetrieveResponse:
         """
-        Get a Function Version
+        **Retrieve a specific historical version of a function.**
+
+        Versions are immutable. Use this endpoint to inspect what a function looked like
+        at the moment a particular call was made — every event and transformation
+        records the function version it ran against.
 
         Args:
           extra_headers: Send extra headers
@@ -213,7 +226,12 @@ class AsyncVersionsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> ListFunctionVersionsResponse:
         """
-        List Function Versions
+        **List every version of a function.**
+
+        Returns the full version history, newest-first. Each row captures the
+        configuration the function had between updates. Useful for audits ("when did
+        this schema change?") and for diffing two versions before promoting an update to
+        production.
 
         Args:
           extra_headers: Send extra headers
