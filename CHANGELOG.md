@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.16.0 (2026-04-28)
+
+Full Changelog: [v0.15.0...v0.16.0](https://github.com/bem-team/bem-python-sdk/compare/v0.15.0...v0.16.0)
+
+### Features
+
+* **api:** api update ([bb95dde](https://github.com/bem-team/bem-python-sdk/commit/bb95ddefc8240d48e7c6f4376a4f2e1474a4865e))
+* **api:** new filesystem and eval endpoints ([1fe88b3](https://github.com/bem-team/bem-python-sdk/commit/1fe88b3a6efd4e3a1dea50baed5315f2e88346a3))
+
 ## 0.15.0 (2026-04-23)
 
 Full Changelog: [v0.14.0...v0.15.0](https://github.com/bem-team/bem-python-sdk/compare/v0.14.0...v0.15.0)
