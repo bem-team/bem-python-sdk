@@ -33,6 +33,8 @@ from ._base_client import (
 
 if TYPE_CHECKING:
     from .resources import (
+        fs,
+        eval,
         calls,
         errors,
         events,
@@ -43,10 +45,12 @@ if TYPE_CHECKING:
         infer_schema,
         webhook_secret,
     )
+    from .resources.fs import FsResource, AsyncFsResource
     from .resources.calls import CallsResource, AsyncCallsResource
     from .resources.errors import ErrorsResource, AsyncErrorsResource
     from .resources.events import EventsResource, AsyncEventsResource
     from .resources.outputs import OutputsResource, AsyncOutputsResource
+    from .resources.eval.eval import EvalResource, AsyncEvalResource
     from .resources.infer_schema import InferSchemaResource, AsyncInferSchemaResource
     from .resources.webhook_secret import WebhookSecretResource, AsyncWebhookSecretResource
     from .resources.functions.functions import FunctionsResource, AsyncFunctionsResource
@@ -284,6 +288,65 @@ class Bem(SyncAPIClient):
         from .resources.webhook_secret import WebhookSecretResource
 
         return WebhookSecretResource(self)
+
+    @cached_property
+    def eval(self) -> EvalResource:
+        """Trigger and retrieve evaluations for completed transformations.
+
+        Evaluations run asynchronously and score each transformation's output against
+        the function's schema for confidence, per-field hallucination detection, and
+        relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
+        and `join` events.
+
+        ## Lifecycle
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
+           and returns immediately with `queued` / `skipped` counts plus per-ID errors.
+        2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
+           returns the current state of each requested transformation, partitioned
+           into `results` (completed), `pending` (still running), and `failed`
+           (terminal failures or unknown transformation IDs).
+
+        Up to 100 transformation IDs may be submitted per request.
+        """
+        from .resources.eval import EvalResource
+
+        return EvalResource(self)
+
+    @cached_property
+    def fs(self) -> FsResource:
+        """Unix-shell-style nav over parsed documents and the cross-doc memory store.
+
+        `POST /v3/fs` is a single op-driven endpoint designed for LLM agents
+        and programmatic consumers that want to walk a corpus the way they'd
+        walk a filesystem.
+
+        ## Doc-level ops (every parsed document)
+
+        - `ls` — list parsed documents with rich per-doc metadata.
+        - `cat` — read one doc's parse JSON, sliced (`range`) or projected (`select`).
+        - `head` — first N sections of one doc.
+        - `grep` — substring or regex search; `scope`, `path`, `countOnly` available.
+        - `stat` — metadata only (page/section/entity counts, timestamps).
+
+        ## Memory-level ops (require `linkAcrossDocuments: true` on the parse function)
+
+        - `find` — list canonical entities across the corpus.
+        - `open` — entity + mentions.
+        - `xref` — for one entity, sections across docs that mention it (with content).
+
+        Memory ops return an empty list with a `hint` when no docs in this
+        environment have been memory-linked.
+
+        ## Pagination
+
+        List ops paginate by cursor — pass the previous response's `nextCursor`
+        back as `cursor`; `hasMore: false` signals the last page. Same idiom as
+        `/v3/calls` and `/v3/outputs`.
+        """
+        from .resources.fs import FsResource
+
+        return FsResource(self)
 
     @cached_property
     def with_raw_response(self) -> BemWithRawResponse:
@@ -633,6 +696,65 @@ class AsyncBem(AsyncAPIClient):
         return AsyncWebhookSecretResource(self)
 
     @cached_property
+    def eval(self) -> AsyncEvalResource:
+        """Trigger and retrieve evaluations for completed transformations.
+
+        Evaluations run asynchronously and score each transformation's output against
+        the function's schema for confidence, per-field hallucination detection, and
+        relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
+        and `join` events.
+
+        ## Lifecycle
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
+           and returns immediately with `queued` / `skipped` counts plus per-ID errors.
+        2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
+           returns the current state of each requested transformation, partitioned
+           into `results` (completed), `pending` (still running), and `failed`
+           (terminal failures or unknown transformation IDs).
+
+        Up to 100 transformation IDs may be submitted per request.
+        """
+        from .resources.eval import AsyncEvalResource
+
+        return AsyncEvalResource(self)
+
+    @cached_property
+    def fs(self) -> AsyncFsResource:
+        """Unix-shell-style nav over parsed documents and the cross-doc memory store.
+
+        `POST /v3/fs` is a single op-driven endpoint designed for LLM agents
+        and programmatic consumers that want to walk a corpus the way they'd
+        walk a filesystem.
+
+        ## Doc-level ops (every parsed document)
+
+        - `ls` — list parsed documents with rich per-doc metadata.
+        - `cat` — read one doc's parse JSON, sliced (`range`) or projected (`select`).
+        - `head` — first N sections of one doc.
+        - `grep` — substring or regex search; `scope`, `path`, `countOnly` available.
+        - `stat` — metadata only (page/section/entity counts, timestamps).
+
+        ## Memory-level ops (require `linkAcrossDocuments: true` on the parse function)
+
+        - `find` — list canonical entities across the corpus.
+        - `open` — entity + mentions.
+        - `xref` — for one entity, sections across docs that mention it (with content).
+
+        Memory ops return an empty list with a `hint` when no docs in this
+        environment have been memory-linked.
+
+        ## Pagination
+
+        List ops paginate by cursor — pass the previous response's `nextCursor`
+        back as `cursor`; `hasMore: false` signals the last page. Same idiom as
+        `/v3/calls` and `/v3/outputs`.
+        """
+        from .resources.fs import AsyncFsResource
+
+        return AsyncFsResource(self)
+
+    @cached_property
     def with_raw_response(self) -> AsyncBemWithRawResponse:
         return AsyncBemWithRawResponse(self)
 
@@ -930,6 +1052,65 @@ class BemWithRawResponse:
 
         return WebhookSecretResourceWithRawResponse(self._client.webhook_secret)
 
+    @cached_property
+    def eval(self) -> eval.EvalResourceWithRawResponse:
+        """Trigger and retrieve evaluations for completed transformations.
+
+        Evaluations run asynchronously and score each transformation's output against
+        the function's schema for confidence, per-field hallucination detection, and
+        relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
+        and `join` events.
+
+        ## Lifecycle
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
+           and returns immediately with `queued` / `skipped` counts plus per-ID errors.
+        2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
+           returns the current state of each requested transformation, partitioned
+           into `results` (completed), `pending` (still running), and `failed`
+           (terminal failures or unknown transformation IDs).
+
+        Up to 100 transformation IDs may be submitted per request.
+        """
+        from .resources.eval import EvalResourceWithRawResponse
+
+        return EvalResourceWithRawResponse(self._client.eval)
+
+    @cached_property
+    def fs(self) -> fs.FsResourceWithRawResponse:
+        """Unix-shell-style nav over parsed documents and the cross-doc memory store.
+
+        `POST /v3/fs` is a single op-driven endpoint designed for LLM agents
+        and programmatic consumers that want to walk a corpus the way they'd
+        walk a filesystem.
+
+        ## Doc-level ops (every parsed document)
+
+        - `ls` — list parsed documents with rich per-doc metadata.
+        - `cat` — read one doc's parse JSON, sliced (`range`) or projected (`select`).
+        - `head` — first N sections of one doc.
+        - `grep` — substring or regex search; `scope`, `path`, `countOnly` available.
+        - `stat` — metadata only (page/section/entity counts, timestamps).
+
+        ## Memory-level ops (require `linkAcrossDocuments: true` on the parse function)
+
+        - `find` — list canonical entities across the corpus.
+        - `open` — entity + mentions.
+        - `xref` — for one entity, sections across docs that mention it (with content).
+
+        Memory ops return an empty list with a `hint` when no docs in this
+        environment have been memory-linked.
+
+        ## Pagination
+
+        List ops paginate by cursor — pass the previous response's `nextCursor`
+        back as `cursor`; `hasMore: false` signals the last page. Same idiom as
+        `/v3/calls` and `/v3/outputs`.
+        """
+        from .resources.fs import FsResourceWithRawResponse
+
+        return FsResourceWithRawResponse(self._client.fs)
+
 
 class AsyncBemWithRawResponse:
     _client: AsyncBem
@@ -1110,6 +1291,65 @@ class AsyncBemWithRawResponse:
         from .resources.webhook_secret import AsyncWebhookSecretResourceWithRawResponse
 
         return AsyncWebhookSecretResourceWithRawResponse(self._client.webhook_secret)
+
+    @cached_property
+    def eval(self) -> eval.AsyncEvalResourceWithRawResponse:
+        """Trigger and retrieve evaluations for completed transformations.
+
+        Evaluations run asynchronously and score each transformation's output against
+        the function's schema for confidence, per-field hallucination detection, and
+        relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
+        and `join` events.
+
+        ## Lifecycle
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
+           and returns immediately with `queued` / `skipped` counts plus per-ID errors.
+        2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
+           returns the current state of each requested transformation, partitioned
+           into `results` (completed), `pending` (still running), and `failed`
+           (terminal failures or unknown transformation IDs).
+
+        Up to 100 transformation IDs may be submitted per request.
+        """
+        from .resources.eval import AsyncEvalResourceWithRawResponse
+
+        return AsyncEvalResourceWithRawResponse(self._client.eval)
+
+    @cached_property
+    def fs(self) -> fs.AsyncFsResourceWithRawResponse:
+        """Unix-shell-style nav over parsed documents and the cross-doc memory store.
+
+        `POST /v3/fs` is a single op-driven endpoint designed for LLM agents
+        and programmatic consumers that want to walk a corpus the way they'd
+        walk a filesystem.
+
+        ## Doc-level ops (every parsed document)
+
+        - `ls` — list parsed documents with rich per-doc metadata.
+        - `cat` — read one doc's parse JSON, sliced (`range`) or projected (`select`).
+        - `head` — first N sections of one doc.
+        - `grep` — substring or regex search; `scope`, `path`, `countOnly` available.
+        - `stat` — metadata only (page/section/entity counts, timestamps).
+
+        ## Memory-level ops (require `linkAcrossDocuments: true` on the parse function)
+
+        - `find` — list canonical entities across the corpus.
+        - `open` — entity + mentions.
+        - `xref` — for one entity, sections across docs that mention it (with content).
+
+        Memory ops return an empty list with a `hint` when no docs in this
+        environment have been memory-linked.
+
+        ## Pagination
+
+        List ops paginate by cursor — pass the previous response's `nextCursor`
+        back as `cursor`; `hasMore: false` signals the last page. Same idiom as
+        `/v3/calls` and `/v3/outputs`.
+        """
+        from .resources.fs import AsyncFsResourceWithRawResponse
+
+        return AsyncFsResourceWithRawResponse(self._client.fs)
 
 
 class BemWithStreamedResponse:
@@ -1292,6 +1532,65 @@ class BemWithStreamedResponse:
 
         return WebhookSecretResourceWithStreamingResponse(self._client.webhook_secret)
 
+    @cached_property
+    def eval(self) -> eval.EvalResourceWithStreamingResponse:
+        """Trigger and retrieve evaluations for completed transformations.
+
+        Evaluations run asynchronously and score each transformation's output against
+        the function's schema for confidence, per-field hallucination detection, and
+        relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
+        and `join` events.
+
+        ## Lifecycle
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
+           and returns immediately with `queued` / `skipped` counts plus per-ID errors.
+        2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
+           returns the current state of each requested transformation, partitioned
+           into `results` (completed), `pending` (still running), and `failed`
+           (terminal failures or unknown transformation IDs).
+
+        Up to 100 transformation IDs may be submitted per request.
+        """
+        from .resources.eval import EvalResourceWithStreamingResponse
+
+        return EvalResourceWithStreamingResponse(self._client.eval)
+
+    @cached_property
+    def fs(self) -> fs.FsResourceWithStreamingResponse:
+        """Unix-shell-style nav over parsed documents and the cross-doc memory store.
+
+        `POST /v3/fs` is a single op-driven endpoint designed for LLM agents
+        and programmatic consumers that want to walk a corpus the way they'd
+        walk a filesystem.
+
+        ## Doc-level ops (every parsed document)
+
+        - `ls` — list parsed documents with rich per-doc metadata.
+        - `cat` — read one doc's parse JSON, sliced (`range`) or projected (`select`).
+        - `head` — first N sections of one doc.
+        - `grep` — substring or regex search; `scope`, `path`, `countOnly` available.
+        - `stat` — metadata only (page/section/entity counts, timestamps).
+
+        ## Memory-level ops (require `linkAcrossDocuments: true` on the parse function)
+
+        - `find` — list canonical entities across the corpus.
+        - `open` — entity + mentions.
+        - `xref` — for one entity, sections across docs that mention it (with content).
+
+        Memory ops return an empty list with a `hint` when no docs in this
+        environment have been memory-linked.
+
+        ## Pagination
+
+        List ops paginate by cursor — pass the previous response's `nextCursor`
+        back as `cursor`; `hasMore: false` signals the last page. Same idiom as
+        `/v3/calls` and `/v3/outputs`.
+        """
+        from .resources.fs import FsResourceWithStreamingResponse
+
+        return FsResourceWithStreamingResponse(self._client.fs)
+
 
 class AsyncBemWithStreamedResponse:
     _client: AsyncBem
@@ -1472,6 +1771,65 @@ class AsyncBemWithStreamedResponse:
         from .resources.webhook_secret import AsyncWebhookSecretResourceWithStreamingResponse
 
         return AsyncWebhookSecretResourceWithStreamingResponse(self._client.webhook_secret)
+
+    @cached_property
+    def eval(self) -> eval.AsyncEvalResourceWithStreamingResponse:
+        """Trigger and retrieve evaluations for completed transformations.
+
+        Evaluations run asynchronously and score each transformation's output against
+        the function's schema for confidence, per-field hallucination detection, and
+        relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
+        and `join` events.
+
+        ## Lifecycle
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
+           and returns immediately with `queued` / `skipped` counts plus per-ID errors.
+        2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
+           returns the current state of each requested transformation, partitioned
+           into `results` (completed), `pending` (still running), and `failed`
+           (terminal failures or unknown transformation IDs).
+
+        Up to 100 transformation IDs may be submitted per request.
+        """
+        from .resources.eval import AsyncEvalResourceWithStreamingResponse
+
+        return AsyncEvalResourceWithStreamingResponse(self._client.eval)
+
+    @cached_property
+    def fs(self) -> fs.AsyncFsResourceWithStreamingResponse:
+        """Unix-shell-style nav over parsed documents and the cross-doc memory store.
+
+        `POST /v3/fs` is a single op-driven endpoint designed for LLM agents
+        and programmatic consumers that want to walk a corpus the way they'd
+        walk a filesystem.
+
+        ## Doc-level ops (every parsed document)
+
+        - `ls` — list parsed documents with rich per-doc metadata.
+        - `cat` — read one doc's parse JSON, sliced (`range`) or projected (`select`).
+        - `head` — first N sections of one doc.
+        - `grep` — substring or regex search; `scope`, `path`, `countOnly` available.
+        - `stat` — metadata only (page/section/entity counts, timestamps).
+
+        ## Memory-level ops (require `linkAcrossDocuments: true` on the parse function)
+
+        - `find` — list canonical entities across the corpus.
+        - `open` — entity + mentions.
+        - `xref` — for one entity, sections across docs that mention it (with content).
+
+        Memory ops return an empty list with a `hint` when no docs in this
+        environment have been memory-linked.
+
+        ## Pagination
+
+        List ops paginate by cursor — pass the previous response's `nextCursor`
+        back as `cursor`; `hasMore: false` signals the last page. Same idiom as
+        `/v3/calls` and `/v3/outputs`.
+        """
+        from .resources.fs import AsyncFsResourceWithStreamingResponse
+
+        return AsyncFsResourceWithStreamingResponse(self._client.fs)
 
 
 Client = Bem

@@ -71,12 +71,21 @@ class CopyResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Copy a Function
+        """
+        **Copy a function to a new name within the same environment.**
+
+        Forks the source function's current configuration into a brand-new function. The
+        copy starts at `versionNum: 1` regardless of how many versions the source has —
+        version history is not carried over.
+
+        Useful for experimenting with schema or prompt changes against a stable
+        production function without disturbing existing callers.
+
+        The destination name must be unique in the environment. A copy does not migrate
+        workflows: existing workflow nodes continue to reference the original function.
 
         Args:
-          source_function_name: Name of the function to copy from.
-
-        Must be a valid existing function name.
+          source_function_name: Name of the function to copy from. Must be a valid existing function name.
 
           target_function_name: Name for the new copied function. Must be unique within the target environment.
 
@@ -166,12 +175,21 @@ class AsyncCopyResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FunctionResponse:
-        """Copy a Function
+        """
+        **Copy a function to a new name within the same environment.**
+
+        Forks the source function's current configuration into a brand-new function. The
+        copy starts at `versionNum: 1` regardless of how many versions the source has —
+        version history is not carried over.
+
+        Useful for experimenting with schema or prompt changes against a stable
+        production function without disturbing existing callers.
+
+        The destination name must be unique in the environment. A copy does not migrate
+        workflows: existing workflow nodes continue to reference the original function.
 
         Args:
-          source_function_name: Name of the function to copy from.
-
-        Must be a valid existing function name.
+          source_function_name: Name of the function to copy from. Must be a valid existing function name.
 
           target_function_name: Name for the new copied function. Must be unique within the target environment.
 

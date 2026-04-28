@@ -26,6 +26,8 @@ __all__ = [
     "JoinFunction",
     "PayloadShapingFunction",
     "EnrichFunction",
+    "ParseFunction",
+    "ParseFunctionParseConfig",
 ]
 
 
@@ -81,6 +83,14 @@ class ExtractFunction(BaseModel):
     Accepts a wide range of input types including PDFs, images, spreadsheets, emails, and more.
     """
 
+    enable_bounding_boxes: bool = FieldInfo(alias="enableBoundingBoxes")
+    """Whether bounding box extraction is enabled.
+
+    Applies to vision input types (pdf, png, jpeg, heic, heif, webp) that dispatch
+    through the analyze path. When true, the function returns the document regions
+    (page, coordinates) from which each field was extracted.
+    """
+
     function_id: str = FieldInfo(alias="functionID")
     """Unique identifier of function."""
 
@@ -93,11 +103,10 @@ class ExtractFunction(BaseModel):
     output_schema_name: str = FieldInfo(alias="outputSchemaName")
     """Name of output schema object."""
 
-    tabular_chunking_enabled: bool = FieldInfo(alias="tabularChunkingEnabled")
-    """Whether tabular chunking is enabled.
-
-    When true, tables in CSV/Excel files are processed in row batches rather than
-    all at once.
+    pre_count: bool = FieldInfo(alias="preCount")
+    """
+    Reducing the risk of the model stopping early on long documents. Trade-off:
+    Increases total latency.
     """
 
     type: Literal["extract"]
@@ -170,26 +179,10 @@ class AnalyzeFunction(BaseModel):
 
 
 class ClassifyFunction(BaseModel):
-    """V3 read-side shape of a Classify (internally Route) function.
-
-    Mirrors
-    {
-    """
-
     classifications: List[ClassificationListItem]
-    """V3 create/update variants of the shared function payloads.
+    """List of classifications a classify function can produce.
 
-    The V3 Functions API no longer accepts the legacy `transform` or `analyze`
-    function types when creating new functions or updating existing ones — both have
-    been unified under `extract`. Existing functions of those types remain readable
-    and callable via V3, so the V3 read-side unions still include `transform` and
-    `analyze` variants.
-
-    The V3 API also renames the internal `route` function type to `classify` on the
-    wire, and the associated `routes` field to `classifications` (type
-    `ClassificationList`). Platform-internal storage and processing still use
-    `route` / `routes`; the rename is applied only at the V3 API boundary.V3-facing
-    name for the list of classifications a classify function can produce.
+    Shares the underlying route list shape.
     """
 
     description: str
@@ -480,6 +473,78 @@ class EnrichFunction(BaseModel):
     """List of workflows that use this function."""
 
 
+class ParseFunctionParseConfig(BaseModel):
+    """Per-version configuration for a Parse function.
+
+    Parse renders document pages (PDF, image) via vision LLM and emits
+    structured JSON. The two toggles below independently control entity
+    extraction (a per-call output concern) and cross-document memory
+    linking (an environment-wide concern).
+    """
+
+    extract_entities: Optional[bool] = FieldInfo(alias="extractEntities", default=None)
+    """
+    When true, extract named entities (people, organizations, products, studies,
+    identifiers, etc.) and the relationships between them, and dedupe by canonical
+    name within the document. When false, only `sections[]` is extracted;
+    `entities[]` and `relationships[]` come back empty in the parse output. Defaults
+    to true.
+    """
+
+    link_across_documents: Optional[bool] = FieldInfo(alias="linkAcrossDocuments", default=None)
+    """
+    When true, link this document's entities to entities seen in earlier documents
+    in this environment, building one canonical record per real-world thing across
+    the corpus. Visible in the Memory tab and queryable via `POST /v3/fs` (op=find /
+    open / xref). Doesn't change this call's parse output. Requires
+    `extractEntities=true`. Defaults to true.
+    """
+
+    schema_: Optional[object] = FieldInfo(alias="schema", default=None)
+    """Optional JSONSchema.
+
+    When provided, each chunk performs schema-guided extraction. When absent, chunks
+    perform open-ended discovery and return sections, entities, and relationships
+    per the discovery schema.
+    """
+
+
+class ParseFunction(BaseModel):
+    function_id: str = FieldInfo(alias="functionID")
+    """Unique identifier of function."""
+
+    function_name: str = FieldInfo(alias="functionName")
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
+    type: Literal["parse"]
+
+    version_num: int = FieldInfo(alias="versionNum")
+    """Version number of function."""
+
+    audit: Optional[FunctionAudit] = None
+    """Audit trail information for the function."""
+
+    display_name: Optional[str] = FieldInfo(alias="displayName", default=None)
+    """Display name of function.
+
+    Human-readable name to help you identify the function.
+    """
+
+    parse_config: Optional[ParseFunctionParseConfig] = FieldInfo(alias="parseConfig", default=None)
+    """Per-version configuration for a Parse function.
+
+    Parse renders document pages (PDF, image) via vision LLM and emits structured
+    JSON. The two toggles below independently control entity extraction (a per-call
+    output concern) and cross-document memory linking (an environment-wide concern).
+    """
+
+    tags: Optional[List[str]] = None
+    """Array of tags to categorize and organize functions."""
+
+    used_in_workflows: Optional[List[WorkflowUsageInfo]] = FieldInfo(alias="usedInWorkflows", default=None)
+    """List of workflows that use this function."""
+
+
 Function: TypeAlias = Annotated[
     Union[
         TransformFunction,
@@ -491,6 +556,7 @@ Function: TypeAlias = Annotated[
         JoinFunction,
         PayloadShapingFunction,
         EnrichFunction,
+        ParseFunction,
     ],
     PropertyInfo(discriminator="type"),
 ]
