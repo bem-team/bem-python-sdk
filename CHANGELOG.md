@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.17.0 (2026-04-28)
+
+Full Changelog: [v0.16.0...v0.17.0](https://github.com/bem-team/bem-python-sdk/compare/v0.16.0...v0.17.0)
+
+### Features
+
+* support setting headers via env ([a3413aa](https://github.com/bem-team/bem-python-sdk/commit/a3413aa3ca4a86b4183803cefb9ddc09af1a3ca1))
+
+
+### Bug Fixes
+
+* use correct field name format for multipart file arrays ([4c3706a](https://github.com/bem-team/bem-python-sdk/commit/4c3706a7e9a9ca12475a029e1610bd5bb76add2e))
+
 ## 0.16.0 (2026-04-28)
 
 Full Changelog: [v0.15.0...v0.16.0](https://github.com/bem-team/bem-python-sdk/compare/v0.15.0...v0.16.0)
