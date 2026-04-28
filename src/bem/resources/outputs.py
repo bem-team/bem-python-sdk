@@ -19,8 +19,8 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from ..pagination import SyncOutputsPage, AsyncOutputsPage
+from ..types.event import Event
 from .._base_client import AsyncPaginator, make_request_options
-from ..types.output_list_response import OutputListResponse
 from ..types.output_retrieve_response import OutputRetrieveResponse
 
 __all__ = ["OutputsResource", "AsyncOutputsResource"]
@@ -121,7 +121,7 @@ class OutputsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SyncOutputsPage[OutputListResponse]:
+    ) -> SyncOutputsPage[Event]:
         """
         **List terminal non-error output events.**
 
@@ -175,7 +175,7 @@ class OutputsResource(SyncAPIResource):
         """
         return self._get_api_list(
             "/v3/outputs",
-            page=SyncOutputsPage[OutputListResponse],
+            page=SyncOutputsPage[Event],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -204,7 +204,7 @@ class OutputsResource(SyncAPIResource):
                     output_list_params.OutputListParams,
                 ),
             ),
-            model=cast(Any, OutputListResponse),  # Union types cannot be passed in as arguments in the type system
+            model=cast(Any, Event),  # Union types cannot be passed in as arguments in the type system
         )
 
 
@@ -303,7 +303,7 @@ class AsyncOutputsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AsyncPaginator[OutputListResponse, AsyncOutputsPage[OutputListResponse]]:
+    ) -> AsyncPaginator[Event, AsyncOutputsPage[Event]]:
         """
         **List terminal non-error output events.**
 
@@ -357,7 +357,7 @@ class AsyncOutputsResource(AsyncAPIResource):
         """
         return self._get_api_list(
             "/v3/outputs",
-            page=AsyncOutputsPage[OutputListResponse],
+            page=AsyncOutputsPage[Event],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -386,7 +386,7 @@ class AsyncOutputsResource(AsyncAPIResource):
                     output_list_params.OutputListParams,
                 ),
             ),
-            model=cast(Any, OutputListResponse),  # Union types cannot be passed in as arguments in the type system
+            model=cast(Any, Event),  # Union types cannot be passed in as arguments in the type system
         )
 
 

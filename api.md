@@ -89,13 +89,13 @@ Methods:
 Types:
 
 ```python
-from bem.types import AnyType, OutputRetrieveResponse, OutputListResponse
+from bem.types import AnyType, Event, OutputRetrieveResponse
 ```
 
 Methods:
 
 - <code title="get /v3/outputs/{eventID}">client.outputs.<a href="./src/bem/resources/outputs.py">retrieve</a>(event_id) -> <a href="./src/bem/types/output_retrieve_response.py">OutputRetrieveResponse</a></code>
-- <code title="get /v3/outputs">client.outputs.<a href="./src/bem/resources/outputs.py">list</a>(\*\*<a href="src/bem/types/output_list_params.py">params</a>) -> <a href="./src/bem/types/output_list_response.py">SyncOutputsPage[OutputListResponse]</a></code>
+- <code title="get /v3/outputs">client.outputs.<a href="./src/bem/resources/outputs.py">list</a>(\*\*<a href="src/bem/types/output_list_params.py">params</a>) -> <a href="./src/bem/types/event.py">SyncOutputsPage[Event]</a></code>
 
 # Workflows
 
@@ -208,3 +208,40 @@ Methods:
 - <code title="post /v3/webhook-secret">client.webhook_secret.<a href="./src/bem/resources/webhook_secret.py">create</a>() -> <a href="./src/bem/types/webhook_secret_create_response.py">WebhookSecretCreateResponse</a></code>
 - <code title="get /v3/webhook-secret">client.webhook_secret.<a href="./src/bem/resources/webhook_secret.py">retrieve</a>() -> <a href="./src/bem/types/webhook_secret_retrieve_response.py">WebhookSecretRetrieveResponse</a></code>
 - <code title="delete /v3/webhook-secret">client.webhook_secret.<a href="./src/bem/resources/webhook_secret.py">revoke</a>() -> None</code>
+
+# Eval
+
+Types:
+
+```python
+from bem.types import EvalTriggerEvaluationResponse
+```
+
+Methods:
+
+- <code title="post /v3/eval">client.eval.<a href="./src/bem/resources/eval/eval.py">trigger_evaluation</a>(\*\*<a href="src/bem/types/eval_trigger_evaluation_params.py">params</a>) -> <a href="./src/bem/types/eval_trigger_evaluation_response.py">EvalTriggerEvaluationResponse</a></code>
+
+## Results
+
+Types:
+
+```python
+from bem.types.eval import ResultFetchResultsResponse, ResultRetrieveResultsResponse
+```
+
+Methods:
+
+- <code title="post /v3/eval/results">client.eval.results.<a href="./src/bem/resources/eval/results.py">fetch_results</a>(\*\*<a href="src/bem/types/eval/result_fetch_results_params.py">params</a>) -> <a href="./src/bem/types/eval/result_fetch_results_response.py">ResultFetchResultsResponse</a></code>
+- <code title="get /v3/eval/results">client.eval.results.<a href="./src/bem/resources/eval/results.py">retrieve_results</a>(\*\*<a href="src/bem/types/eval/result_retrieve_results_params.py">params</a>) -> <a href="./src/bem/types/eval/result_retrieve_results_response.py">ResultRetrieveResultsResponse</a></code>
+
+# Fs
+
+Types:
+
+```python
+from bem.types import FNavigateResponse
+```
+
+Methods:
+
+- <code title="post /v3/fs">client.fs.<a href="./src/bem/resources/fs.py">navigate</a>(\*\*<a href="src/bem/types/f_navigate_params.py">params</a>) -> <a href="./src/bem/types/f_navigate_response.py">FNavigateResponse</a></code>

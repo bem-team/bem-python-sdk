@@ -13,7 +13,7 @@ from .error_event import ErrorEvent
 from .inbound_email_event import InboundEmailEvent
 
 __all__ = [
-    "OutputListResponse",
+    "Event",
     "TransformEvent",
     "TransformEventCorrectedContent",
     "TransformEventCorrectedContentOutput",
@@ -1048,7 +1048,7 @@ class SendEvent(BaseModel):
     """Version number of workflow that this event is associated with."""
 
 
-OutputListResponse: TypeAlias = Annotated[
+Event: TypeAlias = Annotated[
     Union[
         TransformEvent,
         ExtractEvent,
