@@ -52,13 +52,14 @@ class EnrichStep(BaseModel):
     regardless of topK value.
     """
 
-    include_cosine_distance: Optional[bool] = FieldInfo(alias="includeCosineDistance", default=None)
+    include_score: Optional[bool] = FieldInfo(alias="includeScore", default=None)
     """
     Whether to include cosine distance scores in results. Cosine distance ranges
     from 0.0 (perfect match) to 2.0 (completely dissimilar). Lower scores indicate
     better semantic similarity.
 
-    When enabled, each result includes a `cosineDistance` field.
+    When enabled, each result includes a `cosine_distance` field (semantic mode) or
+    a `hybrid_score` field (hybrid mode).
     """
 
     include_subcollections: Optional[bool] = FieldInfo(alias="includeSubcollections", default=None)

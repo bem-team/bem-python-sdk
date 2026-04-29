@@ -340,6 +340,14 @@ class ExtractEvent(BaseModel):
 
     event_type: Optional[Literal["extract"]] = FieldInfo(alias="eventType", default=None)
 
+    field_bounding_boxes: Optional[object] = FieldInfo(alias="fieldBoundingBoxes", default=None)
+    """Per-field bounding boxes.
+
+    A JSON object mapping RFC 6901 JSON Pointer paths (e.g. `"/invoiceNumber"`,
+    `"/items/0/price"`) to the document regions from which each extracted value was
+    sourced.
+    """
+
     field_confidences: Optional[object] = FieldInfo(alias="fieldConfidences", default=None)
     """Per-field confidence scores.
 
