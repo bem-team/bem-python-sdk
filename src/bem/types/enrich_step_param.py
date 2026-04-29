@@ -51,13 +51,14 @@ class EnrichStepParam(TypedDict, total=False):
     regardless of topK value.
     """
 
-    include_cosine_distance: Annotated[bool, PropertyInfo(alias="includeCosineDistance")]
+    include_score: Annotated[bool, PropertyInfo(alias="includeScore")]
     """
     Whether to include cosine distance scores in results. Cosine distance ranges
     from 0.0 (perfect match) to 2.0 (completely dissimilar). Lower scores indicate
     better semantic similarity.
 
-    When enabled, each result includes a `cosineDistance` field.
+    When enabled, each result includes a `cosine_distance` field (semantic mode) or
+    a `hybrid_score` field (hybrid mode).
     """
 
     include_subcollections: Annotated[bool, PropertyInfo(alias="includeSubcollections")]
