@@ -20,6 +20,9 @@ class OutputListParams(TypedDict, total=False):
     event_ids: Annotated[SequenceNotStr[str], PropertyInfo(alias="eventIDs")]
     """Filter to specific output events by their event IDs (KSUIDs)."""
 
+    event_types: Annotated[SequenceNotStr[str], PropertyInfo(alias="eventTypes")]
+    """Filter to specific non-error output event types, e.g. `classify` or `extract`."""
+
     function_ids: Annotated[SequenceNotStr[str], PropertyInfo(alias="functionIDs")]
 
     function_names: Annotated[SequenceNotStr[str], PropertyInfo(alias="functionNames")]

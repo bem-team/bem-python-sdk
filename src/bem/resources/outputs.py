@@ -101,6 +101,7 @@ class OutputsResource(SyncAPIResource):
         call_ids: SequenceNotStr[str] | Omit = omit,
         ending_before: str | Omit = omit,
         event_ids: SequenceNotStr[str] | Omit = omit,
+        event_types: SequenceNotStr[str] | Omit = omit,
         function_ids: SequenceNotStr[str] | Omit = omit,
         function_names: SequenceNotStr[str] | Omit = omit,
         function_version_nums: Iterable[int] | Omit = omit,
@@ -145,6 +146,8 @@ class OutputsResource(SyncAPIResource):
 
           event_ids: Filter to specific output events by their event IDs (KSUIDs).
 
+          event_types: Filter to specific non-error output event types, e.g. `classify` or `extract`.
+
           function_version_nums: Filter to specific function version numbers.
 
           include_intermediate: When `true`, includes intermediate events (those that spawned a downstream
@@ -186,6 +189,7 @@ class OutputsResource(SyncAPIResource):
                         "call_ids": call_ids,
                         "ending_before": ending_before,
                         "event_ids": event_ids,
+                        "event_types": event_types,
                         "function_ids": function_ids,
                         "function_names": function_names,
                         "function_version_nums": function_version_nums,
@@ -283,6 +287,7 @@ class AsyncOutputsResource(AsyncAPIResource):
         call_ids: SequenceNotStr[str] | Omit = omit,
         ending_before: str | Omit = omit,
         event_ids: SequenceNotStr[str] | Omit = omit,
+        event_types: SequenceNotStr[str] | Omit = omit,
         function_ids: SequenceNotStr[str] | Omit = omit,
         function_names: SequenceNotStr[str] | Omit = omit,
         function_version_nums: Iterable[int] | Omit = omit,
@@ -327,6 +332,8 @@ class AsyncOutputsResource(AsyncAPIResource):
 
           event_ids: Filter to specific output events by their event IDs (KSUIDs).
 
+          event_types: Filter to specific non-error output event types, e.g. `classify` or `extract`.
+
           function_version_nums: Filter to specific function version numbers.
 
           include_intermediate: When `true`, includes intermediate events (those that spawned a downstream
@@ -368,6 +375,7 @@ class AsyncOutputsResource(AsyncAPIResource):
                         "call_ids": call_ids,
                         "ending_before": ending_before,
                         "event_ids": event_ids,
+                        "event_types": event_types,
                         "function_ids": function_ids,
                         "function_names": function_names,
                         "function_version_nums": function_version_nums,

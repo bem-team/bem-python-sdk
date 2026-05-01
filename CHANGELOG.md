@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.19.0 (2026-05-01)
+
+Full Changelog: [v0.18.0...v0.19.0](https://github.com/bem-team/bem-python-sdk/compare/v0.18.0...v0.19.0)
+
+### Features
+
+* **api:** api update ([a600da5](https://github.com/bem-team/bem-python-sdk/commit/a600da57abeabfc024aa1cd49b8417ae632d361a))
+
+
+### Chores
+
+* **internal:** reformat pyproject.toml ([46b9c9a](https://github.com/bem-team/bem-python-sdk/commit/46b9c9af568783220ded5f78cd87170cb45b347c))
+
 ## 0.18.0 (2026-04-29)
 
 Full Changelog: [v0.17.0...v0.18.0](https://github.com/bem-team/bem-python-sdk/compare/v0.17.0...v0.18.0)
