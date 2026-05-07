@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 from typing import Iterable
-from typing_extensions import Literal, Required, Annotated, TypedDict
+from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
+from .input_type import InputType
 
 __all__ = ["WorkflowCallParams", "Input", "InputBatchFiles", "InputBatchFilesInput", "InputSingleFile"]
 
@@ -45,31 +46,7 @@ class InputBatchFilesInput(TypedDict, total=False):
     In the Bem CLI, use `@path/to/file` to embed file contents automatically.
     """
 
-    input_type: Required[
-        Annotated[
-            Literal[
-                "csv",
-                "docx",
-                "email",
-                "heic",
-                "html",
-                "jpeg",
-                "json",
-                "heif",
-                "m4a",
-                "mp3",
-                "pdf",
-                "png",
-                "text",
-                "wav",
-                "webp",
-                "xls",
-                "xlsx",
-                "xml",
-            ],
-            PropertyInfo(alias="inputType"),
-        ]
-    ]
+    input_type: Required[Annotated[InputType, PropertyInfo(alias="inputType")]]
     """The input type of the content you're sending for transformation."""
 
     item_reference_id: Annotated[str, PropertyInfo(alias="itemReferenceID")]
@@ -98,31 +75,7 @@ class InputSingleFile(TypedDict, total=False):
     In the Bem CLI, use `@path/to/file` to embed file contents automatically.
     """
 
-    input_type: Required[
-        Annotated[
-            Literal[
-                "csv",
-                "docx",
-                "email",
-                "heic",
-                "html",
-                "jpeg",
-                "json",
-                "heif",
-                "m4a",
-                "mp3",
-                "pdf",
-                "png",
-                "text",
-                "wav",
-                "webp",
-                "xls",
-                "xlsx",
-                "xml",
-            ],
-            PropertyInfo(alias="inputType"),
-        ]
-    ]
+    input_type: Required[Annotated[InputType, PropertyInfo(alias="inputType")]]
     """The input type of the content you're sending for transformation."""
 
 

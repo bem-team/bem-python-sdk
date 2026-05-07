@@ -14,8 +14,7 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.webhook_secret_create_response import WebhookSecretCreateResponse
-from ..types.webhook_secret_retrieve_response import WebhookSecretRetrieveResponse
+from ..types.webhook_secret import WebhookSecret
 
 __all__ = ["WebhookSecretResource", "AsyncWebhookSecretResource"]
 
@@ -95,7 +94,7 @@ class WebhookSecretResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookSecretCreateResponse:
+    ) -> WebhookSecret:
         """
         **Generate a new webhook signing secret.**
 
@@ -111,7 +110,7 @@ class WebhookSecretResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookSecretCreateResponse,
+            cast_to=WebhookSecret,
         )
 
     def retrieve(
@@ -123,7 +122,7 @@ class WebhookSecretResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookSecretRetrieveResponse:
+    ) -> WebhookSecret:
         """
         **Get the current webhook signing secret.**
 
@@ -144,7 +143,7 @@ class WebhookSecretResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookSecretRetrieveResponse,
+            cast_to=WebhookSecret,
         )
 
     def revoke(
@@ -248,7 +247,7 @@ class AsyncWebhookSecretResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookSecretCreateResponse:
+    ) -> WebhookSecret:
         """
         **Generate a new webhook signing secret.**
 
@@ -264,7 +263,7 @@ class AsyncWebhookSecretResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookSecretCreateResponse,
+            cast_to=WebhookSecret,
         )
 
     async def retrieve(
@@ -276,7 +275,7 @@ class AsyncWebhookSecretResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> WebhookSecretRetrieveResponse:
+    ) -> WebhookSecret:
         """
         **Get the current webhook signing secret.**
 
@@ -297,7 +296,7 @@ class AsyncWebhookSecretResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=WebhookSecretRetrieveResponse,
+            cast_to=WebhookSecret,
         )
 
     async def revoke(

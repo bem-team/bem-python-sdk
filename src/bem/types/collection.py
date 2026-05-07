@@ -1,32 +1,17 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Union, Optional
+from typing import List, Optional
 from datetime import datetime
 
 from pydantic import Field as FieldInfo
 
-from ..._models import BaseModel
+from .._models import BaseModel
+from .collection_item import CollectionItem
 
-__all__ = ["ItemRetrieveResponse", "Item"]
-
-
-class Item(BaseModel):
-    """A single item in a collection"""
-
-    collection_item_id: str = FieldInfo(alias="collectionItemID")
-    """Unique identifier for the item"""
-
-    created_at: datetime = FieldInfo(alias="createdAt")
-    """When the item was created"""
-
-    data: Union[str, object]
-    """The data stored in this item"""
-
-    updated_at: datetime = FieldInfo(alias="updatedAt")
-    """When the item was last updated"""
+__all__ = ["Collection"]
 
 
-class ItemRetrieveResponse(BaseModel):
+class Collection(BaseModel):
     """Collection details"""
 
     collection_id: str = FieldInfo(alias="collectionID")
@@ -44,7 +29,7 @@ class ItemRetrieveResponse(BaseModel):
     item_count: int = FieldInfo(alias="itemCount")
     """Number of items in the collection"""
 
-    items: Optional[List[Item]] = None
+    items: Optional[List[CollectionItem]] = None
     """List of items in the collection (when fetching collection details)"""
 
     limit: Optional[int] = None

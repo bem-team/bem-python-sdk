@@ -7,9 +7,11 @@ from pydantic import Field as FieldInfo
 
 from .._utils import PropertyInfo
 from .._models import BaseModel
+from .parse_config import ParseConfig
 from .enrich_config import EnrichConfig
 from .function_audit import FunctionAudit
 from .workflow_usage_info import WorkflowUsageInfo
+from .send_destination_type import SendDestinationType
 from .classification_list_item import ClassificationListItem
 from .split_function_semantic_page_item_class import SplitFunctionSemanticPageItemClass
 
@@ -27,7 +29,6 @@ __all__ = [
     "PayloadShapingFunction",
     "EnrichFunction",
     "ParseFunction",
-    "ParseFunctionParseConfig",
 ]
 
 
@@ -232,7 +233,7 @@ class SendFunction(BaseModel):
     to a webhook, S3 bucket, or Google Drive folder.
     """
 
-    destination_type: Literal["webhook", "s3", "google_drive"] = FieldInfo(alias="destinationType")
+    destination_type: SendDestinationType = FieldInfo(alias="destinationType")
     """Destination type for a Send function."""
 
     function_id: str = FieldInfo(alias="functionID")
@@ -473,42 +474,6 @@ class EnrichFunction(BaseModel):
     """List of workflows that use this function."""
 
 
-class ParseFunctionParseConfig(BaseModel):
-    """Per-version configuration for a Parse function.
-
-    Parse renders document pages (PDF, image) via vision LLM and emits
-    structured JSON. The two toggles below independently control entity
-    extraction (a per-call output concern) and cross-document memory
-    linking (an environment-wide concern).
-    """
-
-    extract_entities: Optional[bool] = FieldInfo(alias="extractEntities", default=None)
-    """
-    When true, extract named entities (people, organizations, products, studies,
-    identifiers, etc.) and the relationships between them, and dedupe by canonical
-    name within the document. When false, only `sections[]` is extracted;
-    `entities[]` and `relationships[]` come back empty in the parse output. Defaults
-    to true.
-    """
-
-    link_across_documents: Optional[bool] = FieldInfo(alias="linkAcrossDocuments", default=None)
-    """
-    When true, link this document's entities to entities seen in earlier documents
-    in this environment, building one canonical record per real-world thing across
-    the corpus. Visible in the Memory tab and queryable via `POST /v3/fs` (op=find /
-    open / xref). Doesn't change this call's parse output. Requires
-    `extractEntities=true`. Defaults to true.
-    """
-
-    schema_: Optional[object] = FieldInfo(alias="schema", default=None)
-    """Optional JSONSchema.
-
-    When provided, each chunk performs schema-guided extraction. When absent, chunks
-    perform open-ended discovery and return sections, entities, and relationships
-    per the discovery schema.
-    """
-
-
 class ParseFunction(BaseModel):
     function_id: str = FieldInfo(alias="functionID")
     """Unique identifier of function."""
@@ -530,7 +495,7 @@ class ParseFunction(BaseModel):
     Human-readable name to help you identify the function.
     """
 
-    parse_config: Optional[ParseFunctionParseConfig] = FieldInfo(alias="parseConfig", default=None)
+    parse_config: Optional[ParseConfig] = FieldInfo(alias="parseConfig", default=None)
     """Per-version configuration for a Parse function.
 
     Parse renders document pages (PDF, image) via vision LLM and emits structured

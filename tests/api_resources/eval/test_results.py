@@ -9,10 +9,7 @@ import pytest
 
 from bem import Bem, AsyncBem
 from tests.utils import assert_matches_type
-from bem.types.eval import (
-    ResultFetchResultsResponse,
-    ResultRetrieveResultsResponse,
-)
+from bem.types.eval import EvaluationResults
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -26,7 +23,7 @@ class TestResults:
         result = client.eval.results.fetch_results(
             transformation_ids=["tr_01HXAB...", "tr_01HXCD..."],
         )
-        assert_matches_type(ResultFetchResultsResponse, result, path=["response"])
+        assert_matches_type(EvaluationResults, result, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -35,7 +32,7 @@ class TestResults:
             transformation_ids=["tr_01HXAB...", "tr_01HXCD..."],
             evaluation_version="0.1.0-gemini",
         )
-        assert_matches_type(ResultFetchResultsResponse, result, path=["response"])
+        assert_matches_type(EvaluationResults, result, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -47,7 +44,7 @@ class TestResults:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         result = response.parse()
-        assert_matches_type(ResultFetchResultsResponse, result, path=["response"])
+        assert_matches_type(EvaluationResults, result, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -59,7 +56,7 @@ class TestResults:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             result = response.parse()
-            assert_matches_type(ResultFetchResultsResponse, result, path=["response"])
+            assert_matches_type(EvaluationResults, result, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -69,7 +66,7 @@ class TestResults:
         result = client.eval.results.retrieve_results(
             transformation_ids="transformationIDs",
         )
-        assert_matches_type(ResultRetrieveResultsResponse, result, path=["response"])
+        assert_matches_type(EvaluationResults, result, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -78,7 +75,7 @@ class TestResults:
             transformation_ids="transformationIDs",
             evaluation_version="evaluationVersion",
         )
-        assert_matches_type(ResultRetrieveResultsResponse, result, path=["response"])
+        assert_matches_type(EvaluationResults, result, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -90,7 +87,7 @@ class TestResults:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         result = response.parse()
-        assert_matches_type(ResultRetrieveResultsResponse, result, path=["response"])
+        assert_matches_type(EvaluationResults, result, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -102,7 +99,7 @@ class TestResults:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             result = response.parse()
-            assert_matches_type(ResultRetrieveResultsResponse, result, path=["response"])
+            assert_matches_type(EvaluationResults, result, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -118,7 +115,7 @@ class TestAsyncResults:
         result = await async_client.eval.results.fetch_results(
             transformation_ids=["tr_01HXAB...", "tr_01HXCD..."],
         )
-        assert_matches_type(ResultFetchResultsResponse, result, path=["response"])
+        assert_matches_type(EvaluationResults, result, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -127,7 +124,7 @@ class TestAsyncResults:
             transformation_ids=["tr_01HXAB...", "tr_01HXCD..."],
             evaluation_version="0.1.0-gemini",
         )
-        assert_matches_type(ResultFetchResultsResponse, result, path=["response"])
+        assert_matches_type(EvaluationResults, result, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -139,7 +136,7 @@ class TestAsyncResults:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         result = await response.parse()
-        assert_matches_type(ResultFetchResultsResponse, result, path=["response"])
+        assert_matches_type(EvaluationResults, result, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -151,7 +148,7 @@ class TestAsyncResults:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             result = await response.parse()
-            assert_matches_type(ResultFetchResultsResponse, result, path=["response"])
+            assert_matches_type(EvaluationResults, result, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -161,7 +158,7 @@ class TestAsyncResults:
         result = await async_client.eval.results.retrieve_results(
             transformation_ids="transformationIDs",
         )
-        assert_matches_type(ResultRetrieveResultsResponse, result, path=["response"])
+        assert_matches_type(EvaluationResults, result, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -170,7 +167,7 @@ class TestAsyncResults:
             transformation_ids="transformationIDs",
             evaluation_version="evaluationVersion",
         )
-        assert_matches_type(ResultRetrieveResultsResponse, result, path=["response"])
+        assert_matches_type(EvaluationResults, result, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -182,7 +179,7 @@ class TestAsyncResults:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         result = await response.parse()
-        assert_matches_type(ResultRetrieveResultsResponse, result, path=["response"])
+        assert_matches_type(EvaluationResults, result, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -194,6 +191,6 @@ class TestAsyncResults:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             result = await response.parse()
-            assert_matches_type(ResultRetrieveResultsResponse, result, path=["response"])
+            assert_matches_type(EvaluationResults, result, path=["response"])
 
         assert cast(Any, response.is_closed) is True

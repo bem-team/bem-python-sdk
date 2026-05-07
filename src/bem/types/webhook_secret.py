@@ -2,10 +2,10 @@
 
 from .._models import BaseModel
 
-__all__ = ["WebhookSecretCreateResponse"]
+__all__ = ["WebhookSecret"]
 
 
-class WebhookSecretCreateResponse(BaseModel):
+class WebhookSecret(BaseModel):
     """
     Webhook signing secret used to verify `bem-signature` headers on delivered webhooks.
     """

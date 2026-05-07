@@ -2,7 +2,6 @@
 
 from typing import List, Optional
 from datetime import datetime
-from typing_extensions import Literal
 
 from pydantic import Field as FieldInfo
 
@@ -10,6 +9,7 @@ from .._models import BaseModel
 from .workflow_audit import WorkflowAudit
 from .workflow_edge_response import WorkflowEdgeResponse
 from .workflow_node_response import WorkflowNodeResponse
+from .workflow_connector_type import WorkflowConnectorType
 
 __all__ = ["Workflow", "Connector", "ConnectorParagon"]
 
@@ -36,7 +36,7 @@ class Connector(BaseModel):
     name: str
     """Human-friendly connector name."""
 
-    type: Literal["paragon"]
+    type: WorkflowConnectorType
     """Discriminator for a workflow connector. V3 supports `paragon` only."""
 
     paragon: Optional[ConnectorParagon] = None

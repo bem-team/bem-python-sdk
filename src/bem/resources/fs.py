@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-from typing_extensions import Literal
-
 import httpx
 
-from ..types import f_navigate_params
+from ..types import FsOp, f_navigate_params
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
@@ -17,6 +15,7 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
+from ..types.fs_op import FsOp
 from .._base_client import make_request_options
 from ..types.f_navigate_response import FNavigateResponse
 
@@ -76,7 +75,7 @@ class FsResource(SyncAPIResource):
     def navigate(
         self,
         *,
-        op: Literal["ls", "find", "open", "cat", "grep", "xref", "stat", "head"],
+        op: FsOp,
         count_only: bool | Omit = omit,
         cursor: str | Omit = omit,
         filter: f_navigate_params.Filter | Omit = omit,
@@ -314,7 +313,7 @@ class AsyncFsResource(AsyncAPIResource):
     async def navigate(
         self,
         *,
-        op: Literal["ls", "find", "open", "cat", "grep", "xref", "stat", "head"],
+        op: FsOp,
         count_only: bool | Omit = omit,
         cursor: str | Omit = omit,
         filter: f_navigate_params.Filter | Omit = omit,

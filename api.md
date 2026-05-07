@@ -13,6 +13,8 @@ from bem.types import (
     FunctionResponse,
     FunctionType,
     ListFunctionsResponse,
+    ParseConfig,
+    SendDestinationType,
     SplitFunctionSemanticPageItemClass,
     UpdateFunction,
     UserActionSummary,
@@ -89,7 +91,7 @@ Methods:
 Types:
 
 ```python
-from bem.types import AnyType, Event, OutputRetrieveResponse
+from bem.types import AnyType, Event, InputType, OutputRetrieveResponse
 ```
 
 Methods:
@@ -106,7 +108,12 @@ from bem.types import (
     FunctionVersionIdentifier,
     Workflow,
     WorkflowAudit,
+    WorkflowConnector,
+    WorkflowConnectorError,
+    WorkflowConnectorType,
+    WorkflowEdge,
     WorkflowEdgeResponse,
+    WorkflowNode,
     WorkflowNodeResponse,
     WorkflowRetrieveResponse,
     WorkflowUpdateResponse,
@@ -155,7 +162,8 @@ Types:
 
 ```python
 from bem.types import (
-    CollectionCreateResponse,
+    Collection,
+    CollectionItem,
     CollectionListResponse,
     CollectionCountTokensResponse,
 )
@@ -163,7 +171,7 @@ from bem.types import (
 
 Methods:
 
-- <code title="post /v3/collections">client.collections.<a href="./src/bem/resources/collections/collections.py">create</a>(\*\*<a href="src/bem/types/collection_create_params.py">params</a>) -> <a href="./src/bem/types/collection_create_response.py">CollectionCreateResponse</a></code>
+- <code title="post /v3/collections">client.collections.<a href="./src/bem/resources/collections/collections.py">create</a>(\*\*<a href="src/bem/types/collection_create_params.py">params</a>) -> <a href="./src/bem/types/collection.py">Collection</a></code>
 - <code title="get /v3/collections">client.collections.<a href="./src/bem/resources/collections/collections.py">list</a>(\*\*<a href="src/bem/types/collection_list_params.py">params</a>) -> <a href="./src/bem/types/collection_list_response.py">CollectionListResponse</a></code>
 - <code title="delete /v3/collections">client.collections.<a href="./src/bem/resources/collections/collections.py">delete</a>(\*\*<a href="src/bem/types/collection_delete_params.py">params</a>) -> None</code>
 - <code title="post /v3/collections/token-count">client.collections.<a href="./src/bem/resources/collections/collections.py">count_tokens</a>(\*\*<a href="src/bem/types/collection_count_tokens_params.py">params</a>) -> <a href="./src/bem/types/collection_count_tokens_response.py">CollectionCountTokensResponse</a></code>
@@ -173,12 +181,12 @@ Methods:
 Types:
 
 ```python
-from bem.types.collections import ItemRetrieveResponse, ItemUpdateResponse, ItemAddResponse
+from bem.types.collections import ItemUpdateResponse, ItemAddResponse
 ```
 
 Methods:
 
-- <code title="get /v3/collections/items">client.collections.items.<a href="./src/bem/resources/collections/items.py">retrieve</a>(\*\*<a href="src/bem/types/collections/item_retrieve_params.py">params</a>) -> <a href="./src/bem/types/collections/item_retrieve_response.py">ItemRetrieveResponse</a></code>
+- <code title="get /v3/collections/items">client.collections.items.<a href="./src/bem/resources/collections/items.py">retrieve</a>(\*\*<a href="src/bem/types/collections/item_retrieve_params.py">params</a>) -> <a href="./src/bem/types/collection.py">Collection</a></code>
 - <code title="put /v3/collections/items">client.collections.items.<a href="./src/bem/resources/collections/items.py">update</a>(\*\*<a href="src/bem/types/collections/item_update_params.py">params</a>) -> <a href="./src/bem/types/collections/item_update_response.py">ItemUpdateResponse</a></code>
 - <code title="delete /v3/collections/items">client.collections.items.<a href="./src/bem/resources/collections/items.py">delete</a>(\*\*<a href="src/bem/types/collections/item_delete_params.py">params</a>) -> None</code>
 - <code title="post /v3/collections/items">client.collections.items.<a href="./src/bem/resources/collections/items.py">add</a>(\*\*<a href="src/bem/types/collections/item_add_params.py">params</a>) -> <a href="./src/bem/types/collections/item_add_response.py">ItemAddResponse</a></code>
@@ -195,18 +203,39 @@ Methods:
 
 - <code title="post /v3/events/{eventID}/feedback">client.events.<a href="./src/bem/resources/events.py">submit_feedback</a>(event_id, \*\*<a href="src/bem/types/event_submit_feedback_params.py">params</a>) -> <a href="./src/bem/types/event_submit_feedback_response.py">EventSubmitFeedbackResponse</a></code>
 
+# Webhooks
+
+Types:
+
+```python
+from bem.types import (
+    ExtractWebhookEvent,
+    ClassifyWebhookEvent,
+    ParseWebhookEvent,
+    SplitCollectionWebhookEvent,
+    SplitItemWebhookEvent,
+    JoinWebhookEvent,
+    EnrichWebhookEvent,
+    PayloadShapingWebhookEvent,
+    SendWebhookEvent,
+    EvaluationWebhookEvent,
+    CollectionProcessingWebhookEvent,
+    UnwrapWebhookEvent,
+)
+```
+
 # WebhookSecret
 
 Types:
 
 ```python
-from bem.types import WebhookSecretCreateResponse, WebhookSecretRetrieveResponse
+from bem.types import WebhookSecret
 ```
 
 Methods:
 
-- <code title="post /v3/webhook-secret">client.webhook_secret.<a href="./src/bem/resources/webhook_secret.py">create</a>() -> <a href="./src/bem/types/webhook_secret_create_response.py">WebhookSecretCreateResponse</a></code>
-- <code title="get /v3/webhook-secret">client.webhook_secret.<a href="./src/bem/resources/webhook_secret.py">retrieve</a>() -> <a href="./src/bem/types/webhook_secret_retrieve_response.py">WebhookSecretRetrieveResponse</a></code>
+- <code title="post /v3/webhook-secret">client.webhook_secret.<a href="./src/bem/resources/webhook_secret.py">create</a>() -> <a href="./src/bem/types/webhook_secret.py">WebhookSecret</a></code>
+- <code title="get /v3/webhook-secret">client.webhook_secret.<a href="./src/bem/resources/webhook_secret.py">retrieve</a>() -> <a href="./src/bem/types/webhook_secret.py">WebhookSecret</a></code>
 - <code title="delete /v3/webhook-secret">client.webhook_secret.<a href="./src/bem/resources/webhook_secret.py">revoke</a>() -> None</code>
 
 # Eval
@@ -226,22 +255,52 @@ Methods:
 Types:
 
 ```python
-from bem.types.eval import ResultFetchResultsResponse, ResultRetrieveResultsResponse
+from bem.types.eval import EvaluationResults
 ```
 
 Methods:
 
-- <code title="post /v3/eval/results">client.eval.results.<a href="./src/bem/resources/eval/results.py">fetch_results</a>(\*\*<a href="src/bem/types/eval/result_fetch_results_params.py">params</a>) -> <a href="./src/bem/types/eval/result_fetch_results_response.py">ResultFetchResultsResponse</a></code>
-- <code title="get /v3/eval/results">client.eval.results.<a href="./src/bem/resources/eval/results.py">retrieve_results</a>(\*\*<a href="src/bem/types/eval/result_retrieve_results_params.py">params</a>) -> <a href="./src/bem/types/eval/result_retrieve_results_response.py">ResultRetrieveResultsResponse</a></code>
+- <code title="post /v3/eval/results">client.eval.results.<a href="./src/bem/resources/eval/results.py">fetch_results</a>(\*\*<a href="src/bem/types/eval/result_fetch_results_params.py">params</a>) -> <a href="./src/bem/types/eval/evaluation_results.py">EvaluationResults</a></code>
+- <code title="get /v3/eval/results">client.eval.results.<a href="./src/bem/resources/eval/results.py">retrieve_results</a>(\*\*<a href="src/bem/types/eval/result_retrieve_results_params.py">params</a>) -> <a href="./src/bem/types/eval/evaluation_results.py">EvaluationResults</a></code>
 
 # Fs
 
 Types:
 
 ```python
-from bem.types import FNavigateResponse
+from bem.types import FsOp, FNavigateResponse
 ```
 
 Methods:
 
 - <code title="post /v3/fs">client.fs.<a href="./src/bem/resources/fs.py">navigate</a>(\*\*<a href="src/bem/types/f_navigate_params.py">params</a>) -> <a href="./src/bem/types/f_navigate_response.py">FNavigateResponse</a></code>
+
+# Connectors
+
+Types:
+
+```python
+from bem.types import Connector, ConnectorType, ConnectorListResponse, ConnectorDeleteResponse
+```
+
+Methods:
+
+- <code title="post /v3/connectors">client.connectors.<a href="./src/bem/resources/connectors.py">create</a>(\*\*<a href="src/bem/types/connector_create_params.py">params</a>) -> <a href="./src/bem/types/connector.py">Connector</a></code>
+- <code title="get /v3/connectors">client.connectors.<a href="./src/bem/resources/connectors.py">list</a>(\*\*<a href="src/bem/types/connector_list_params.py">params</a>) -> <a href="./src/bem/types/connector_list_response.py">ConnectorListResponse</a></code>
+- <code title="delete /v3/connectors/{connectorID}">client.connectors.<a href="./src/bem/resources/connectors.py">delete</a>(connector_id) -> str</code>
+
+# Subscriptions
+
+Types:
+
+```python
+from bem.types import SubscriptionV3, SubscriptionListResponse
+```
+
+Methods:
+
+- <code title="post /v3/subscriptions">client.subscriptions.<a href="./src/bem/resources/subscriptions.py">create</a>(\*\*<a href="src/bem/types/subscription_create_params.py">params</a>) -> <a href="./src/bem/types/subscription_v3.py">SubscriptionV3</a></code>
+- <code title="get /v3/subscriptions/{subscriptionID}">client.subscriptions.<a href="./src/bem/resources/subscriptions.py">retrieve</a>(subscription_id) -> <a href="./src/bem/types/subscription_v3.py">SubscriptionV3</a></code>
+- <code title="patch /v3/subscriptions/{subscriptionID}">client.subscriptions.<a href="./src/bem/resources/subscriptions.py">update</a>(subscription_id, \*\*<a href="src/bem/types/subscription_update_params.py">params</a>) -> <a href="./src/bem/types/subscription_v3.py">SubscriptionV3</a></code>
+- <code title="get /v3/subscriptions">client.subscriptions.<a href="./src/bem/resources/subscriptions.py">list</a>(\*\*<a href="src/bem/types/subscription_list_params.py">params</a>) -> <a href="./src/bem/types/subscription_list_response.py">SubscriptionListResponse</a></code>
+- <code title="delete /v3/subscriptions/{subscriptionID}">client.subscriptions.<a href="./src/bem/resources/subscriptions.py">delete</a>(subscription_id) -> None</code>

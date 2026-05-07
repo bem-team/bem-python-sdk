@@ -9,8 +9,8 @@ import pytest
 
 from bem import Bem, AsyncBem
 from bem.types import (
+    Collection,
     CollectionListResponse,
-    CollectionCreateResponse,
     CollectionCountTokensResponse,
 )
 from tests.utils import assert_matches_type
@@ -27,7 +27,7 @@ class TestCollections:
         collection = client.collections.create(
             collection_name="product_catalog",
         )
-        assert_matches_type(CollectionCreateResponse, collection, path=["response"])
+        assert_matches_type(Collection, collection, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -39,7 +39,7 @@ class TestCollections:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         collection = response.parse()
-        assert_matches_type(CollectionCreateResponse, collection, path=["response"])
+        assert_matches_type(Collection, collection, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -51,7 +51,7 @@ class TestCollections:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             collection = response.parse()
-            assert_matches_type(CollectionCreateResponse, collection, path=["response"])
+            assert_matches_type(Collection, collection, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -174,7 +174,7 @@ class TestAsyncCollections:
         collection = await async_client.collections.create(
             collection_name="product_catalog",
         )
-        assert_matches_type(CollectionCreateResponse, collection, path=["response"])
+        assert_matches_type(Collection, collection, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -186,7 +186,7 @@ class TestAsyncCollections:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         collection = await response.parse()
-        assert_matches_type(CollectionCreateResponse, collection, path=["response"])
+        assert_matches_type(Collection, collection, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -198,7 +198,7 @@ class TestAsyncCollections:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             collection = await response.parse()
-            assert_matches_type(CollectionCreateResponse, collection, path=["response"])
+            assert_matches_type(Collection, collection, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

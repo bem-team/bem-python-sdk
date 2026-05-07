@@ -48,6 +48,7 @@ from .outputs import (
     OutputsResourceWithStreamingResponse,
     AsyncOutputsResourceWithStreamingResponse,
 )
+from .webhooks import WebhooksResource, AsyncWebhooksResource
 from .functions import (
     FunctionsResource,
     AsyncFunctionsResource,
@@ -64,6 +65,14 @@ from .workflows import (
     WorkflowsResourceWithStreamingResponse,
     AsyncWorkflowsResourceWithStreamingResponse,
 )
+from .connectors import (
+    ConnectorsResource,
+    AsyncConnectorsResource,
+    ConnectorsResourceWithRawResponse,
+    AsyncConnectorsResourceWithRawResponse,
+    ConnectorsResourceWithStreamingResponse,
+    AsyncConnectorsResourceWithStreamingResponse,
+)
 from .collections import (
     CollectionsResource,
     AsyncCollectionsResource,
@@ -79,6 +88,14 @@ from .infer_schema import (
     AsyncInferSchemaResourceWithRawResponse,
     InferSchemaResourceWithStreamingResponse,
     AsyncInferSchemaResourceWithStreamingResponse,
+)
+from .subscriptions import (
+    SubscriptionsResource,
+    AsyncSubscriptionsResource,
+    SubscriptionsResourceWithRawResponse,
+    AsyncSubscriptionsResourceWithRawResponse,
+    SubscriptionsResourceWithStreamingResponse,
+    AsyncSubscriptionsResourceWithStreamingResponse,
 )
 from .webhook_secret import (
     WebhookSecretResource,
@@ -138,6 +155,8 @@ __all__ = [
     "AsyncEventsResourceWithRawResponse",
     "EventsResourceWithStreamingResponse",
     "AsyncEventsResourceWithStreamingResponse",
+    "WebhooksResource",
+    "AsyncWebhooksResource",
     "WebhookSecretResource",
     "AsyncWebhookSecretResource",
     "WebhookSecretResourceWithRawResponse",
@@ -156,4 +175,16 @@ __all__ = [
     "AsyncFsResourceWithRawResponse",
     "FsResourceWithStreamingResponse",
     "AsyncFsResourceWithStreamingResponse",
+    "ConnectorsResource",
+    "AsyncConnectorsResource",
+    "ConnectorsResourceWithRawResponse",
+    "AsyncConnectorsResourceWithRawResponse",
+    "ConnectorsResourceWithStreamingResponse",
+    "AsyncConnectorsResourceWithStreamingResponse",
+    "SubscriptionsResource",
+    "AsyncSubscriptionsResource",
+    "SubscriptionsResourceWithRawResponse",
+    "AsyncSubscriptionsResourceWithRawResponse",
+    "SubscriptionsResourceWithStreamingResponse",
+    "AsyncSubscriptionsResourceWithStreamingResponse",
 ]
