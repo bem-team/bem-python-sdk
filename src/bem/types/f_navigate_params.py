@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from typing import Union, Iterable
 from datetime import datetime
-from typing_extensions import Literal, Required, Annotated, TypedDict
+from typing_extensions import Required, Annotated, TypedDict
 
+from .fs_op import FsOp
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 
@@ -13,7 +14,7 @@ __all__ = ["FNavigateParams", "Filter", "Range"]
 
 
 class FNavigateParams(TypedDict, total=False):
-    op: Required[Literal["ls", "find", "open", "cat", "grep", "xref", "stat", "head"]]
+    op: Required[FsOp]
     """Operations exposed by `POST /v3/fs`.
 
     The verbs and their flag names mirror Unix tools so an LLM agent's existing

@@ -8,4 +8,3 @@ from .item_delete_params import ItemDeleteParams as ItemDeleteParams
 from .item_update_params import ItemUpdateParams as ItemUpdateParams
 from .item_retrieve_params import ItemRetrieveParams as ItemRetrieveParams
 from .item_update_response import ItemUpdateResponse as ItemUpdateResponse
-from .item_retrieve_response import ItemRetrieveResponse as ItemRetrieveResponse

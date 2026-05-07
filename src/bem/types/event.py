@@ -9,8 +9,10 @@ from pydantic import Field as FieldInfo
 from .._utils import PropertyInfo
 from .._models import BaseModel
 from .any_type import AnyType
+from .input_type import InputType
 from .error_event import ErrorEvent
 from .inbound_email_event import InboundEmailEvent
+from .send_destination_type import SendDestinationType
 
 __all__ = [
     "Event",
@@ -192,28 +194,7 @@ class TransformEvent(BaseModel):
     inputs: Optional[List[TransformEventInput]] = None
     """Array of transformation inputs with their types and S3 URLs."""
 
-    input_type: Optional[
-        Literal[
-            "csv",
-            "docx",
-            "email",
-            "heic",
-            "html",
-            "jpeg",
-            "json",
-            "heif",
-            "m4a",
-            "mp3",
-            "pdf",
-            "png",
-            "text",
-            "wav",
-            "webp",
-            "xls",
-            "xlsx",
-            "xml",
-        ]
-    ] = FieldInfo(alias="inputType", default=None)
+    input_type: Optional[InputType] = FieldInfo(alias="inputType", default=None)
     """The input type of the content you're sending for transformation."""
 
     invalid_properties: Optional[List[str]] = FieldInfo(alias="invalidProperties", default=None)
@@ -382,28 +363,7 @@ class ExtractEvent(BaseModel):
     inputs: Optional[List[ExtractEventInput]] = None
     """Array of transformation inputs with their types and S3 URLs."""
 
-    input_type: Optional[
-        Literal[
-            "csv",
-            "docx",
-            "email",
-            "heic",
-            "html",
-            "jpeg",
-            "json",
-            "heif",
-            "m4a",
-            "mp3",
-            "pdf",
-            "png",
-            "text",
-            "wav",
-            "webp",
-            "xls",
-            "xlsx",
-            "xml",
-        ]
-    ] = FieldInfo(alias="inputType", default=None)
+    input_type: Optional[InputType] = FieldInfo(alias="inputType", default=None)
     """The input type of the content you're sending for transformation."""
 
     invalid_properties: Optional[List[str]] = FieldInfo(alias="invalidProperties", default=None)
@@ -543,28 +503,7 @@ class ParseEvent(BaseModel):
     inputs: Optional[List[ParseEventInput]] = None
     """Array of parse inputs with their types and S3 URLs."""
 
-    input_type: Optional[
-        Literal[
-            "csv",
-            "docx",
-            "email",
-            "heic",
-            "html",
-            "jpeg",
-            "json",
-            "heif",
-            "m4a",
-            "mp3",
-            "pdf",
-            "png",
-            "text",
-            "wav",
-            "webp",
-            "xls",
-            "xlsx",
-            "xml",
-        ]
-    ] = FieldInfo(alias="inputType", default=None)
+    input_type: Optional[InputType] = FieldInfo(alias="inputType", default=None)
     """The input type of the content you're sending for transformation."""
 
     invalid_properties: Optional[List[str]] = FieldInfo(alias="invalidProperties", default=None)
@@ -1402,7 +1341,7 @@ class SendEvent(BaseModel):
     delivery_status: Literal["success", "skip"] = FieldInfo(alias="deliveryStatus")
     """Outcome of a Send function's delivery attempt."""
 
-    destination_type: Literal["webhook", "s3", "google_drive"] = FieldInfo(alias="destinationType")
+    destination_type: SendDestinationType = FieldInfo(alias="destinationType")
     """Destination type for a Send function."""
 
     event_id: str = FieldInfo(alias="eventID")

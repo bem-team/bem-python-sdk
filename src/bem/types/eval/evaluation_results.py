@@ -7,7 +7,7 @@ from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
 
-__all__ = ["ResultFetchResultsResponse", "Failed", "Pending"]
+__all__ = ["EvaluationResults", "Failed", "Pending"]
 
 
 class Failed(BaseModel):
@@ -31,7 +31,7 @@ class Pending(BaseModel):
     transformation_id: str = FieldInfo(alias="transformationId")
 
 
-class ResultFetchResultsResponse(BaseModel):
+class EvaluationResults(BaseModel):
     """
     Batched response containing the evaluation state for every requested
     transformation ID, partitioned into completed `results`, still-running

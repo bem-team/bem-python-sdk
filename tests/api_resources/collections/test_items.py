@@ -8,11 +8,11 @@ from typing import Any, cast
 import pytest
 
 from bem import Bem, AsyncBem
+from bem.types import Collection
 from tests.utils import assert_matches_type
 from bem.types.collections import (
     ItemAddResponse,
     ItemUpdateResponse,
-    ItemRetrieveResponse,
 )
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
@@ -27,7 +27,7 @@ class TestItems:
         item = client.collections.items.retrieve(
             collection_name="collectionName",
         )
-        assert_matches_type(ItemRetrieveResponse, item, path=["response"])
+        assert_matches_type(Collection, item, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -38,7 +38,7 @@ class TestItems:
             limit=1,
             page=1,
         )
-        assert_matches_type(ItemRetrieveResponse, item, path=["response"])
+        assert_matches_type(Collection, item, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -50,7 +50,7 @@ class TestItems:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         item = response.parse()
-        assert_matches_type(ItemRetrieveResponse, item, path=["response"])
+        assert_matches_type(Collection, item, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -62,7 +62,7 @@ class TestItems:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             item = response.parse()
-            assert_matches_type(ItemRetrieveResponse, item, path=["response"])
+            assert_matches_type(Collection, item, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -282,7 +282,7 @@ class TestAsyncItems:
         item = await async_client.collections.items.retrieve(
             collection_name="collectionName",
         )
-        assert_matches_type(ItemRetrieveResponse, item, path=["response"])
+        assert_matches_type(Collection, item, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -293,7 +293,7 @@ class TestAsyncItems:
             limit=1,
             page=1,
         )
-        assert_matches_type(ItemRetrieveResponse, item, path=["response"])
+        assert_matches_type(Collection, item, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -305,7 +305,7 @@ class TestAsyncItems:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         item = await response.parse()
-        assert_matches_type(ItemRetrieveResponse, item, path=["response"])
+        assert_matches_type(Collection, item, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -317,7 +317,7 @@ class TestAsyncItems:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             item = await response.parse()
-            assert_matches_type(ItemRetrieveResponse, item, path=["response"])
+            assert_matches_type(Collection, item, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

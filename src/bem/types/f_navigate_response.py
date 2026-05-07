@@ -1,10 +1,10 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 from typing import Optional
-from typing_extensions import Literal
 
 from pydantic import Field as FieldInfo
 
+from .fs_op import FsOp
 from .._models import BaseModel
 
 __all__ = ["FNavigateResponse"]
@@ -21,7 +21,7 @@ class FNavigateResponse(BaseModel):
     data: object
     """Op-specific payload. See per-op shapes below."""
 
-    op: Literal["ls", "find", "open", "cat", "grep", "xref", "stat", "head"]
+    op: FsOp
     """Operations exposed by `POST /v3/fs`.
 
     The verbs and their flag names mirror Unix tools so an LLM agent's existing

@@ -29,8 +29,8 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
+from ...types.collection import Collection
 from ...types.collection_list_response import CollectionListResponse
-from ...types.collection_create_response import CollectionCreateResponse
 from ...types.collection_count_tokens_response import CollectionCountTokensResponse
 
 __all__ = ["CollectionsResource", "AsyncCollectionsResource"]
@@ -123,7 +123,7 @@ class CollectionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CollectionCreateResponse:
+    ) -> Collection:
         """
         Create a Collection
 
@@ -168,7 +168,7 @@ class CollectionsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=CollectionCreateResponse,
+            cast_to=Collection,
         )
 
     def list(
@@ -393,7 +393,7 @@ class AsyncCollectionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CollectionCreateResponse:
+    ) -> Collection:
         """
         Create a Collection
 
@@ -440,7 +440,7 @@ class AsyncCollectionsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=CollectionCreateResponse,
+            cast_to=Collection,
         )
 
     async def list(

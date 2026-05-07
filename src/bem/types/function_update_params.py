@@ -7,7 +7,9 @@ from typing_extensions import Literal, Required, Annotated, TypeAlias, TypedDict
 
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
+from .parse_config_param import ParseConfigParam
 from .enrich_config_param import EnrichConfigParam
+from .send_destination_type import SendDestinationType
 from .classification_list_item_param import ClassificationListItemParam
 from .split_function_semantic_page_item_class_param import SplitFunctionSemanticPageItemClassParam
 
@@ -23,7 +25,6 @@ __all__ = [
     "UpsertPayloadShapingFunction",
     "UpsertEnrichFunction",
     "UpsertParseFunction",
-    "UpsertParseFunctionParseConfig",
 ]
 
 
@@ -104,7 +105,7 @@ class UpsertClassifyFunction(TypedDict, total=False):
 class UpsertSendFunction(TypedDict, total=False):
     type: Required[Literal["send"]]
 
-    destination_type: Annotated[Literal["webhook", "s3", "google_drive"], PropertyInfo(alias="destinationType")]
+    destination_type: Annotated[SendDestinationType, PropertyInfo(alias="destinationType")]
     """Destination type for a Send function."""
 
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
@@ -275,7 +276,7 @@ class UpsertParseFunction(TypedDict, total=False):
     function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
-    parse_config: Annotated[UpsertParseFunctionParseConfig, PropertyInfo(alias="parseConfig")]
+    parse_config: Annotated[ParseConfigParam, PropertyInfo(alias="parseConfig")]
     """Per-version configuration for a Parse function.
 
     Parse renders document pages (PDF, image) via vision LLM and emits structured
@@ -285,42 +286,6 @@ class UpsertParseFunction(TypedDict, total=False):
 
     tags: SequenceNotStr[str]
     """Array of tags to categorize and organize functions."""
-
-
-class UpsertParseFunctionParseConfig(TypedDict, total=False):
-    """Per-version configuration for a Parse function.
-
-    Parse renders document pages (PDF, image) via vision LLM and emits
-    structured JSON. The two toggles below independently control entity
-    extraction (a per-call output concern) and cross-document memory
-    linking (an environment-wide concern).
-    """
-
-    extract_entities: Annotated[bool, PropertyInfo(alias="extractEntities")]
-    """
-    When true, extract named entities (people, organizations, products, studies,
-    identifiers, etc.) and the relationships between them, and dedupe by canonical
-    name within the document. When false, only `sections[]` is extracted;
-    `entities[]` and `relationships[]` come back empty in the parse output. Defaults
-    to true.
-    """
-
-    link_across_documents: Annotated[bool, PropertyInfo(alias="linkAcrossDocuments")]
-    """
-    When true, link this document's entities to entities seen in earlier documents
-    in this environment, building one canonical record per real-world thing across
-    the corpus. Visible in the Memory tab and queryable via `POST /v3/fs` (op=find /
-    open / xref). Doesn't change this call's parse output. Requires
-    `extractEntities=true`. Defaults to true.
-    """
-
-    schema: object
-    """Optional JSONSchema.
-
-    When provided, each chunk performs schema-guided extraction. When absent, chunks
-    perform open-ended discovery and return sections, entities, and relationships
-    per the discovery schema.
-    """
 
 
 FunctionUpdateParams: TypeAlias = Union[
