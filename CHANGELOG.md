@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.20.0 (2026-05-07)
+
+Full Changelog: [v0.19.0...v0.20.0](https://github.com/bem-team/bem-python-sdk/compare/v0.19.0...v0.20.0)
+
+### Features
+
+* **api:** add new resources and webhook support ([2b3e17d](https://github.com/bem-team/bem-python-sdk/commit/2b3e17da788e21119d667614573281e5a1cc85f9))
+* **api:** api update ([5db316e](https://github.com/bem-team/bem-python-sdk/commit/5db316e8c4fadb6dd237a42999b44f2b44eb1a59))
+
 ## 0.19.0 (2026-05-04)
 
 Full Changelog: [v0.18.0...v0.19.0](https://github.com/bem-team/bem-python-sdk/compare/v0.18.0...v0.19.0)

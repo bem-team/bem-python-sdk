@@ -37,7 +37,10 @@ from ...pagination import SyncWorkflowsPage, AsyncWorkflowsPage
 from ..._base_client import AsyncPaginator, make_request_options
 from ...types.workflow import Workflow
 from ...types.call_get_response import CallGetResponse
+from ...types.workflow_edge_param import WorkflowEdgeParam
+from ...types.workflow_node_param import WorkflowNodeParam
 from ...types.workflow_copy_response import WorkflowCopyResponse
+from ...types.workflow_connector_param import WorkflowConnectorParam
 from ...types.workflow_update_response import WorkflowUpdateResponse
 from ...types.workflow_retrieve_response import WorkflowRetrieveResponse
 
@@ -106,10 +109,10 @@ class WorkflowsResource(SyncAPIResource):
         *,
         main_node_name: str,
         name: str,
-        nodes: Iterable[workflow_create_params.Node],
-        connectors: Iterable[workflow_create_params.Connector] | Omit = omit,
+        nodes: Iterable[WorkflowNodeParam],
+        connectors: Iterable[WorkflowConnectorParam] | Omit = omit,
         display_name: str | Omit = omit,
-        edges: Iterable[workflow_create_params.Edge] | Omit = omit,
+        edges: Iterable[WorkflowEdgeParam] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -241,12 +244,12 @@ class WorkflowsResource(SyncAPIResource):
         self,
         workflow_name: str,
         *,
-        connectors: Iterable[workflow_update_params.Connector] | Omit = omit,
+        connectors: Iterable[WorkflowConnectorParam] | Omit = omit,
         display_name: str | Omit = omit,
-        edges: Iterable[workflow_update_params.Edge] | Omit = omit,
+        edges: Iterable[WorkflowEdgeParam] | Omit = omit,
         main_node_name: str | Omit = omit,
         name: str | Omit = omit,
-        nodes: Iterable[workflow_update_params.Node] | Omit = omit,
+        nodes: Iterable[WorkflowNodeParam] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -720,10 +723,10 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         *,
         main_node_name: str,
         name: str,
-        nodes: Iterable[workflow_create_params.Node],
-        connectors: Iterable[workflow_create_params.Connector] | Omit = omit,
+        nodes: Iterable[WorkflowNodeParam],
+        connectors: Iterable[WorkflowConnectorParam] | Omit = omit,
         display_name: str | Omit = omit,
-        edges: Iterable[workflow_create_params.Edge] | Omit = omit,
+        edges: Iterable[WorkflowEdgeParam] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -855,12 +858,12 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         self,
         workflow_name: str,
         *,
-        connectors: Iterable[workflow_update_params.Connector] | Omit = omit,
+        connectors: Iterable[WorkflowConnectorParam] | Omit = omit,
         display_name: str | Omit = omit,
-        edges: Iterable[workflow_update_params.Edge] | Omit = omit,
+        edges: Iterable[WorkflowEdgeParam] | Omit = omit,
         main_node_name: str | Omit = omit,
         name: str | Omit = omit,
-        nodes: Iterable[workflow_update_params.Node] | Omit = omit,
+        nodes: Iterable[WorkflowNodeParam] | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.

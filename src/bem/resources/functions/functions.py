@@ -15,7 +15,12 @@ from .copy import (
     CopyResourceWithStreamingResponse,
     AsyncCopyResourceWithStreamingResponse,
 )
-from ...types import function_list_params, function_create_params, function_update_params
+from ...types import (
+    SendDestinationType,
+    function_list_params,
+    function_create_params,
+    function_update_params,
+)
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import path_template, required_args, maybe_transform, async_maybe_transform
 from .versions import (
@@ -39,7 +44,9 @@ from ..._base_client import AsyncPaginator, make_request_options
 from ...types.function import Function
 from ...types.function_type import FunctionType
 from ...types.function_response import FunctionResponse
+from ...types.parse_config_param import ParseConfigParam
 from ...types.enrich_config_param import EnrichConfigParam
+from ...types.send_destination_type import SendDestinationType
 from ...types.classification_list_item_param import ClassificationListItemParam
 
 __all__ = ["FunctionsResource", "AsyncFunctionsResource"]
@@ -265,7 +272,7 @@ class FunctionsResource(SyncAPIResource):
         *,
         function_name: str,
         type: Literal["send"],
-        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        destination_type: SendDestinationType | Omit = omit,
         display_name: str | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
@@ -611,7 +618,7 @@ class FunctionsResource(SyncAPIResource):
         function_name: str,
         type: Literal["parse"],
         display_name: str | Omit = omit,
-        parse_config: function_create_params.CreateParseFunctionParseConfig | Omit = omit,
+        parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -688,7 +695,7 @@ class FunctionsResource(SyncAPIResource):
         tags: SequenceNotStr[str] | Omit = omit,
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
-        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        destination_type: SendDestinationType | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
         s3_prefix: str | Omit = omit,
@@ -700,7 +707,7 @@ class FunctionsResource(SyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
-        parse_config: function_create_params.CreateParseFunctionParseConfig | Omit = omit,
+        parse_config: ParseConfigParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -930,7 +937,7 @@ class FunctionsResource(SyncAPIResource):
         path_function_name: str,
         *,
         type: Literal["send"],
-        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        destination_type: SendDestinationType | Omit = omit,
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
@@ -1273,7 +1280,7 @@ class FunctionsResource(SyncAPIResource):
         type: Literal["parse"],
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
-        parse_config: function_update_params.UpsertParseFunctionParseConfig | Omit = omit,
+        parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1351,7 +1358,7 @@ class FunctionsResource(SyncAPIResource):
         tags: SequenceNotStr[str] | Omit = omit,
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
-        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        destination_type: SendDestinationType | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
         s3_prefix: str | Omit = omit,
@@ -1363,7 +1370,7 @@ class FunctionsResource(SyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
-        parse_config: function_update_params.UpsertParseFunctionParseConfig | Omit = omit,
+        parse_config: ParseConfigParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1763,7 +1770,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         function_name: str,
         type: Literal["send"],
-        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        destination_type: SendDestinationType | Omit = omit,
         display_name: str | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
@@ -2109,7 +2116,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         function_name: str,
         type: Literal["parse"],
         display_name: str | Omit = omit,
-        parse_config: function_create_params.CreateParseFunctionParseConfig | Omit = omit,
+        parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -2186,7 +2193,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         tags: SequenceNotStr[str] | Omit = omit,
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
-        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        destination_type: SendDestinationType | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
         s3_prefix: str | Omit = omit,
@@ -2198,7 +2205,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
-        parse_config: function_create_params.CreateParseFunctionParseConfig | Omit = omit,
+        parse_config: ParseConfigParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -2428,7 +2435,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         path_function_name: str,
         *,
         type: Literal["send"],
-        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        destination_type: SendDestinationType | Omit = omit,
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
@@ -2771,7 +2778,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         type: Literal["parse"],
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
-        parse_config: function_update_params.UpsertParseFunctionParseConfig | Omit = omit,
+        parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -2849,7 +2856,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         tags: SequenceNotStr[str] | Omit = omit,
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
-        destination_type: Literal["webhook", "s3", "google_drive"] | Omit = omit,
+        destination_type: SendDestinationType | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
         s3_prefix: str | Omit = omit,
@@ -2861,7 +2868,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
-        parse_config: function_update_params.UpsertParseFunctionParseConfig | Omit = omit,
+        parse_config: ParseConfigParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,

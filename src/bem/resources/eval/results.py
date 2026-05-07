@@ -16,8 +16,7 @@ from ..._response import (
 )
 from ...types.eval import result_fetch_results_params, result_retrieve_results_params
 from ..._base_client import make_request_options
-from ...types.eval.result_fetch_results_response import ResultFetchResultsResponse
-from ...types.eval.result_retrieve_results_response import ResultRetrieveResultsResponse
+from ...types.eval.evaluation_results import EvaluationResults
 
 __all__ = ["ResultsResource", "AsyncResultsResource"]
 
@@ -72,7 +71,7 @@ class ResultsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ResultFetchResultsResponse:
+    ) -> EvaluationResults:
         """
         **Fetch evaluation results for a batch of transformations (POST).**
 
@@ -106,7 +105,7 @@ class ResultsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ResultFetchResultsResponse,
+            cast_to=EvaluationResults,
         )
 
     def retrieve_results(
@@ -120,7 +119,7 @@ class ResultsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ResultRetrieveResultsResponse:
+    ) -> EvaluationResults:
         """
         **Fetch evaluation results for a batch of transformations.**
 
@@ -157,7 +156,7 @@ class ResultsResource(SyncAPIResource):
                     result_retrieve_results_params.ResultRetrieveResultsParams,
                 ),
             ),
-            cast_to=ResultRetrieveResultsResponse,
+            cast_to=EvaluationResults,
         )
 
 
@@ -211,7 +210,7 @@ class AsyncResultsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ResultFetchResultsResponse:
+    ) -> EvaluationResults:
         """
         **Fetch evaluation results for a batch of transformations (POST).**
 
@@ -245,7 +244,7 @@ class AsyncResultsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ResultFetchResultsResponse,
+            cast_to=EvaluationResults,
         )
 
     async def retrieve_results(
@@ -259,7 +258,7 @@ class AsyncResultsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ResultRetrieveResultsResponse:
+    ) -> EvaluationResults:
         """
         **Fetch evaluation results for a batch of transformations.**
 
@@ -296,7 +295,7 @@ class AsyncResultsResource(AsyncAPIResource):
                     result_retrieve_results_params.ResultRetrieveResultsParams,
                 ),
             ),
-            cast_to=ResultRetrieveResultsResponse,
+            cast_to=EvaluationResults,
         )
 
 

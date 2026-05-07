@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
+from .evaluation_results import EvaluationResults as EvaluationResults
 from .result_fetch_results_params import ResultFetchResultsParams as ResultFetchResultsParams
-from .result_fetch_results_response import ResultFetchResultsResponse as ResultFetchResultsResponse
 from .result_retrieve_results_params import ResultRetrieveResultsParams as ResultRetrieveResultsParams
-from .result_retrieve_results_response import ResultRetrieveResultsResponse as ResultRetrieveResultsResponse

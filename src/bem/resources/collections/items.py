@@ -17,10 +17,10 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
+from ...types.collection import Collection
 from ...types.collections import item_add_params, item_delete_params, item_update_params, item_retrieve_params
 from ...types.collections.item_add_response import ItemAddResponse
 from ...types.collections.item_update_response import ItemUpdateResponse
-from ...types.collections.item_retrieve_response import ItemRetrieveResponse
 
 __all__ = ["ItemsResource", "AsyncItemsResource"]
 
@@ -85,7 +85,7 @@ class ItemsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ItemRetrieveResponse:
+    ) -> Collection:
         """Get a Collection
 
         Args:
@@ -127,7 +127,7 @@ class ItemsResource(SyncAPIResource):
                     item_retrieve_params.ItemRetrieveParams,
                 ),
             ),
-            cast_to=ItemRetrieveResponse,
+            cast_to=Collection,
         )
 
     def update(
@@ -327,7 +327,7 @@ class AsyncItemsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ItemRetrieveResponse:
+    ) -> Collection:
         """Get a Collection
 
         Args:
@@ -369,7 +369,7 @@ class AsyncItemsResource(AsyncAPIResource):
                     item_retrieve_params.ItemRetrieveParams,
                 ),
             ),
-            cast_to=ItemRetrieveResponse,
+            cast_to=Collection,
         )
 
     async def update(
