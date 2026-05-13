@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.21.0 (2026-05-13)
+
+Full Changelog: [v0.20.0...v0.21.0](https://github.com/bem-team/bem-python-sdk/compare/v0.20.0...v0.21.0)
+
+### Features
+
+* **internal/types:** support eagerly validating pydantic iterators ([d8a0cf7](https://github.com/bem-team/bem-python-sdk/commit/d8a0cf7fcaa0ba1b6278d100a7b0344a2318d6fd))
+
+
+### Bug Fixes
+
+* **client:** add missing f-string prefix in file type error message ([f8fe2a1](https://github.com/bem-team/bem-python-sdk/commit/f8fe2a159eac7dbfd3ca56a256386921c30e6a2c))
+
 ## 0.20.0 (2026-05-07)
 
 Full Changelog: [v0.19.0...v0.20.0](https://github.com/bem-team/bem-python-sdk/compare/v0.19.0...v0.20.0)
