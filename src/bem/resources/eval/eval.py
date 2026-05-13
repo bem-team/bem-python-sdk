@@ -30,44 +30,98 @@ __all__ = ["EvalResource", "AsyncEvalResource"]
 
 
 class EvalResource(SyncAPIResource):
-    """Trigger and retrieve evaluations for completed transformations.
+    """
+    Monitor, evaluate, and iterate on the quality of every function in your
+    environment. Function Accuracy bundles two complementary loops:
 
-    Evaluations run asynchronously and score each transformation's output against
-    the function's schema for confidence, per-field hallucination detection, and
-    relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
-    and `join` events.
+    ## Evaluations (`/v3/eval`)
 
-    ## Lifecycle
+    Trigger and retrieve per-transformation evaluations. Evaluations run
+    asynchronously and score each transformation's output against the
+    function's schema for confidence, per-field hallucination detection,
+    and relevance. Supported for `extract`, `transform`, `analyze`, and
+    `join` events.
 
-    1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
-       and returns immediately with `queued` / `skipped` counts plus per-ID errors.
-    2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
-       returns the current state of each requested transformation, partitioned
-       into `results` (completed), `pending` (still running), and `failed`
-       (terminal failures or unknown transformation IDs).
+    1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+    2. **Poll** — `GET /v3/eval/results` returns the current state of each
+       requested ID, partitioned into `results`, `pending`, and `failed`.
+       Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+       comma-separated query parameter, and always keys the response by
+       event KSUID.
 
-    Up to 100 transformation IDs may be submitted per request.
+    Up to 100 IDs may be submitted per request.
+
+    ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+    Roll evaluation results and user corrections up into actionable
+    function-level signal:
+
+    - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+      recall, F1, and confusion-matrix counts per function.
+    - **`POST /v3/functions/review`** — sample-size estimation,
+      confidence-bucketed distribution, PR-AUC, and per-threshold
+      confidence intervals (Wald or Wilson) for picking review cutoffs.
+    - **`POST /v3/functions/regression`** — replay corrected historical
+      inputs against a new function version, producing a labeled
+      regression dataset.
+    - **`POST /v3/functions/regression/corrections`** — propagate
+      baseline corrections onto the regression dataset so it can be
+      scored.
+    - **`POST /v3/functions/compare`** — compute aggregate and
+      field-level lift between any two versions, optionally scoped to
+      the regression dataset.
+
+    All five endpoints support `extract` end-to-end on both the vision
+    and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+    types.
     """
 
     @cached_property
     def results(self) -> ResultsResource:
-        """Trigger and retrieve evaluations for completed transformations.
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
 
-        Evaluations run asynchronously and score each transformation's output against
-        the function's schema for confidence, per-field hallucination detection, and
-        relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
-        and `join` events.
+        ## Evaluations (`/v3/eval`)
 
-        ## Lifecycle
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
 
-        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
-           and returns immediately with `queued` / `skipped` counts plus per-ID errors.
-        2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
-           returns the current state of each requested transformation, partitioned
-           into `results` (completed), `pending` (still running), and `failed`
-           (terminal failures or unknown transformation IDs).
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
 
-        Up to 100 transformation IDs may be submitted per request.
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
         """
         return ResultsResource(self._client)
 
@@ -111,8 +165,8 @@ class EvalResource(SyncAPIResource):
         `transform`, `analyze`, or `join`.
 
         Returns immediately with a summary of queued vs. skipped transformations and
-        per-transformation errors. Poll `POST /v3/eval/results` or
-        `GET /v3/eval/results` to retrieve results once evaluations complete.
+        per-transformation errors. Poll `GET /v3/eval/results` to retrieve results once
+        evaluations complete.
 
         Args:
           transformation_ids: Transformation IDs to evaluate. Up to 100 per request.
@@ -145,44 +199,98 @@ class EvalResource(SyncAPIResource):
 
 
 class AsyncEvalResource(AsyncAPIResource):
-    """Trigger and retrieve evaluations for completed transformations.
+    """
+    Monitor, evaluate, and iterate on the quality of every function in your
+    environment. Function Accuracy bundles two complementary loops:
 
-    Evaluations run asynchronously and score each transformation's output against
-    the function's schema for confidence, per-field hallucination detection, and
-    relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
-    and `join` events.
+    ## Evaluations (`/v3/eval`)
 
-    ## Lifecycle
+    Trigger and retrieve per-transformation evaluations. Evaluations run
+    asynchronously and score each transformation's output against the
+    function's schema for confidence, per-field hallucination detection,
+    and relevance. Supported for `extract`, `transform`, `analyze`, and
+    `join` events.
 
-    1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
-       and returns immediately with `queued` / `skipped` counts plus per-ID errors.
-    2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
-       returns the current state of each requested transformation, partitioned
-       into `results` (completed), `pending` (still running), and `failed`
-       (terminal failures or unknown transformation IDs).
+    1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+    2. **Poll** — `GET /v3/eval/results` returns the current state of each
+       requested ID, partitioned into `results`, `pending`, and `failed`.
+       Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+       comma-separated query parameter, and always keys the response by
+       event KSUID.
 
-    Up to 100 transformation IDs may be submitted per request.
+    Up to 100 IDs may be submitted per request.
+
+    ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+    Roll evaluation results and user corrections up into actionable
+    function-level signal:
+
+    - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+      recall, F1, and confusion-matrix counts per function.
+    - **`POST /v3/functions/review`** — sample-size estimation,
+      confidence-bucketed distribution, PR-AUC, and per-threshold
+      confidence intervals (Wald or Wilson) for picking review cutoffs.
+    - **`POST /v3/functions/regression`** — replay corrected historical
+      inputs against a new function version, producing a labeled
+      regression dataset.
+    - **`POST /v3/functions/regression/corrections`** — propagate
+      baseline corrections onto the regression dataset so it can be
+      scored.
+    - **`POST /v3/functions/compare`** — compute aggregate and
+      field-level lift between any two versions, optionally scoped to
+      the regression dataset.
+
+    All five endpoints support `extract` end-to-end on both the vision
+    and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+    types.
     """
 
     @cached_property
     def results(self) -> AsyncResultsResource:
-        """Trigger and retrieve evaluations for completed transformations.
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
 
-        Evaluations run asynchronously and score each transformation's output against
-        the function's schema for confidence, per-field hallucination detection, and
-        relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
-        and `join` events.
+        ## Evaluations (`/v3/eval`)
 
-        ## Lifecycle
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
 
-        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
-           and returns immediately with `queued` / `skipped` counts plus per-ID errors.
-        2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
-           returns the current state of each requested transformation, partitioned
-           into `results` (completed), `pending` (still running), and `failed`
-           (terminal failures or unknown transformation IDs).
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
 
-        Up to 100 transformation IDs may be submitted per request.
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
         """
         return AsyncResultsResource(self._client)
 
@@ -226,8 +334,8 @@ class AsyncEvalResource(AsyncAPIResource):
         `transform`, `analyze`, or `join`.
 
         Returns immediately with a summary of queued vs. skipped transformations and
-        per-transformation errors. Poll `POST /v3/eval/results` or
-        `GET /v3/eval/results` to retrieve results once evaluations complete.
+        per-transformation errors. Poll `GET /v3/eval/results` to retrieve results once
+        evaluations complete.
 
         Args:
           transformation_ids: Transformation IDs to evaluate. Up to 100 per request.
@@ -269,23 +377,50 @@ class EvalResourceWithRawResponse:
 
     @cached_property
     def results(self) -> ResultsResourceWithRawResponse:
-        """Trigger and retrieve evaluations for completed transformations.
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
 
-        Evaluations run asynchronously and score each transformation's output against
-        the function's schema for confidence, per-field hallucination detection, and
-        relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
-        and `join` events.
+        ## Evaluations (`/v3/eval`)
 
-        ## Lifecycle
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
 
-        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
-           and returns immediately with `queued` / `skipped` counts plus per-ID errors.
-        2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
-           returns the current state of each requested transformation, partitioned
-           into `results` (completed), `pending` (still running), and `failed`
-           (terminal failures or unknown transformation IDs).
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
 
-        Up to 100 transformation IDs may be submitted per request.
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
         """
         return ResultsResourceWithRawResponse(self._eval.results)
 
@@ -300,23 +435,50 @@ class AsyncEvalResourceWithRawResponse:
 
     @cached_property
     def results(self) -> AsyncResultsResourceWithRawResponse:
-        """Trigger and retrieve evaluations for completed transformations.
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
 
-        Evaluations run asynchronously and score each transformation's output against
-        the function's schema for confidence, per-field hallucination detection, and
-        relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
-        and `join` events.
+        ## Evaluations (`/v3/eval`)
 
-        ## Lifecycle
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
 
-        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
-           and returns immediately with `queued` / `skipped` counts plus per-ID errors.
-        2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
-           returns the current state of each requested transformation, partitioned
-           into `results` (completed), `pending` (still running), and `failed`
-           (terminal failures or unknown transformation IDs).
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
 
-        Up to 100 transformation IDs may be submitted per request.
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
         """
         return AsyncResultsResourceWithRawResponse(self._eval.results)
 
@@ -331,23 +493,50 @@ class EvalResourceWithStreamingResponse:
 
     @cached_property
     def results(self) -> ResultsResourceWithStreamingResponse:
-        """Trigger and retrieve evaluations for completed transformations.
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
 
-        Evaluations run asynchronously and score each transformation's output against
-        the function's schema for confidence, per-field hallucination detection, and
-        relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
-        and `join` events.
+        ## Evaluations (`/v3/eval`)
 
-        ## Lifecycle
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
 
-        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
-           and returns immediately with `queued` / `skipped` counts plus per-ID errors.
-        2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
-           returns the current state of each requested transformation, partitioned
-           into `results` (completed), `pending` (still running), and `failed`
-           (terminal failures or unknown transformation IDs).
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
 
-        Up to 100 transformation IDs may be submitted per request.
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
         """
         return ResultsResourceWithStreamingResponse(self._eval.results)
 
@@ -362,22 +551,49 @@ class AsyncEvalResourceWithStreamingResponse:
 
     @cached_property
     def results(self) -> AsyncResultsResourceWithStreamingResponse:
-        """Trigger and retrieve evaluations for completed transformations.
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
 
-        Evaluations run asynchronously and score each transformation's output against
-        the function's schema for confidence, per-field hallucination detection, and
-        relevance. Evaluations are supported for `extract`, `transform`, `analyze`,
-        and `join` events.
+        ## Evaluations (`/v3/eval`)
 
-        ## Lifecycle
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
 
-        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs
-           and returns immediately with `queued` / `skipped` counts plus per-ID errors.
-        2. **Poll** — `POST /v3/eval/results` (body) or `GET /v3/eval/results` (query)
-           returns the current state of each requested transformation, partitioned
-           into `results` (completed), `pending` (still running), and `failed`
-           (terminal failures or unknown transformation IDs).
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
 
-        Up to 100 transformation IDs may be submitted per request.
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
         """
         return AsyncResultsResourceWithStreamingResponse(self._eval.results)

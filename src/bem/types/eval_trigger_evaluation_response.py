@@ -11,7 +11,7 @@ class EvalTriggerEvaluationResponse(BaseModel):
     """Summary of the trigger call.
 
     Evaluations run asynchronously; use
-    `POST /v3/eval/results` or `GET /v3/eval/results` to poll for results.
+    `GET /v3/eval/results` to poll for results.
     """
 
     queued: int
