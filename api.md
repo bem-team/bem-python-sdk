@@ -260,7 +260,6 @@ from bem.types.eval import EvaluationResults
 
 Methods:
 
-- <code title="post /v3/eval/results">client.eval.results.<a href="./src/bem/resources/eval/results.py">fetch_results</a>(\*\*<a href="src/bem/types/eval/result_fetch_results_params.py">params</a>) -> <a href="./src/bem/types/eval/evaluation_results.py">EvaluationResults</a></code>
 - <code title="get /v3/eval/results">client.eval.results.<a href="./src/bem/resources/eval/results.py">retrieve_results</a>(\*\*<a href="src/bem/types/eval/result_retrieve_results_params.py">params</a>) -> <a href="./src/bem/types/eval/evaluation_results.py">EvaluationResults</a></code>
 
 # Fs
