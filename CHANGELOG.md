@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.23.0 (2026-05-14)
+
+Full Changelog: [v0.22.0...v0.23.0](https://github.com/bem-team/bem-python-sdk/compare/v0.22.0...v0.23.0)
+
+### Features
+
+* **api:** function regression and view endpoint support ([60e28c4](https://github.com/bem-team/bem-python-sdk/commit/60e28c42d3440bbca991761cd359407d8d14469d))
+
 ## 0.22.0 (2026-05-14)
 
 Full Changelog: [v0.21.0...v0.22.0](https://github.com/bem-team/bem-python-sdk/compare/v0.21.0...v0.22.0)
