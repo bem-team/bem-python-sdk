@@ -40,6 +40,7 @@ if TYPE_CHECKING:
         fs,
         eval,
         calls,
+        views,
         errors,
         events,
         outputs,
@@ -53,6 +54,7 @@ if TYPE_CHECKING:
     )
     from .resources.fs import FsResource, AsyncFsResource
     from .resources.calls import CallsResource, AsyncCallsResource
+    from .resources.views import ViewsResource, AsyncViewsResource
     from .resources.errors import ErrorsResource, AsyncErrorsResource
     from .resources.events import EventsResource, AsyncEventsResource
     from .resources.outputs import OutputsResource, AsyncOutputsResource
@@ -135,21 +137,6 @@ class Bem(SyncAPIClient):
 
     @cached_property
     def functions(self) -> FunctionsResource:
-        """Functions are the core building blocks of data transformation in Bem.
-
-        Each function type serves a specific purpose:
-
-        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
-        - **Route**: Direct data to different processing paths based on conditions
-        - **Split**: Break multi-page documents into individual pages for parallel processing
-        - **Join**: Combine outputs from multiple function calls into a single result
-        - **Parse**: Render documents into a navigable structure of page-aware sections, named entities, and relationships — designed to be walked by an LLM agent via the [File System API](/api/v3/file-system) (`POST /v3/fs`). Two toggles, both `true` by default: `extractEntities` controls per-document entity and relationship extraction; `linkAcrossDocuments` merges entities into one canonical record per real-world thing across the environment, populating cross-document memory.
-        - **Payload Shaping**: Transform and restructure data using JMESPath expressions
-        - **Enrich**: Enhance data with semantic search against collections
-        - **Send**: Deliver workflow outputs to downstream destinations
-
-        Use these endpoints to create, update, list, and manage your functions.
-        """
         from .resources.functions import FunctionsResource
 
         return FunctionsResource(self)
@@ -475,6 +462,45 @@ class Bem(SyncAPIClient):
         return SubscriptionsResource(self)
 
     @cached_property
+    def views(self) -> ViewsResource:
+        """
+        Views are tabular projections over the `transformations` your functions
+        produce — a saved query that turns raw extracted JSON into a
+        filterable, paginatable, aggregatable table.
+
+        ## Anatomy
+
+        A view declares:
+        - One or more **functions** to read from (by `functionID` or `functionName`).
+        - A list of **columns**, each pinned to a `valueSchemaPath` (a JSON
+          Pointer into the function's output schema).
+        - Optional **filters** (string equality, numeric comparators,
+          null-checks) and **aggregations** (`count`, `count_distinct`,
+          `sum`, `average`, `min`, `max`).
+
+        Views are versioned: every update produces a new version, and the
+        previous version remains immutable and addressable. Function types
+        that produce transformations with an output schema — `extract`,
+        `transform`, `analyze`, `join` — are all queryable through views;
+        `extract` works uniformly across vision and OCR inputs.
+
+        ## Reading data
+
+        - **`POST /v3/views/table-data`** — paginated rows of column values.
+          Each row reports the underlying event's `eventID` (the
+          externally-stable KSUID used everywhere else in V3) plus the
+          projected column values.
+        - **`POST /v3/views/aggregation-data`** — group-by-able aggregate
+          values across the same query surface.
+
+        Both endpoints take a `timeWindow` to bound the transformation set
+        and require at least one `function` to read from.
+        """
+        from .resources.views import ViewsResource
+
+        return ViewsResource(self)
+
+    @cached_property
     def with_raw_response(self) -> BemWithRawResponse:
         return BemWithRawResponse(self)
 
@@ -658,21 +684,6 @@ class AsyncBem(AsyncAPIClient):
 
     @cached_property
     def functions(self) -> AsyncFunctionsResource:
-        """Functions are the core building blocks of data transformation in Bem.
-
-        Each function type serves a specific purpose:
-
-        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
-        - **Route**: Direct data to different processing paths based on conditions
-        - **Split**: Break multi-page documents into individual pages for parallel processing
-        - **Join**: Combine outputs from multiple function calls into a single result
-        - **Parse**: Render documents into a navigable structure of page-aware sections, named entities, and relationships — designed to be walked by an LLM agent via the [File System API](/api/v3/file-system) (`POST /v3/fs`). Two toggles, both `true` by default: `extractEntities` controls per-document entity and relationship extraction; `linkAcrossDocuments` merges entities into one canonical record per real-world thing across the environment, populating cross-document memory.
-        - **Payload Shaping**: Transform and restructure data using JMESPath expressions
-        - **Enrich**: Enhance data with semantic search against collections
-        - **Send**: Deliver workflow outputs to downstream destinations
-
-        Use these endpoints to create, update, list, and manage your functions.
-        """
         from .resources.functions import AsyncFunctionsResource
 
         return AsyncFunctionsResource(self)
@@ -998,6 +1009,45 @@ class AsyncBem(AsyncAPIClient):
         return AsyncSubscriptionsResource(self)
 
     @cached_property
+    def views(self) -> AsyncViewsResource:
+        """
+        Views are tabular projections over the `transformations` your functions
+        produce — a saved query that turns raw extracted JSON into a
+        filterable, paginatable, aggregatable table.
+
+        ## Anatomy
+
+        A view declares:
+        - One or more **functions** to read from (by `functionID` or `functionName`).
+        - A list of **columns**, each pinned to a `valueSchemaPath` (a JSON
+          Pointer into the function's output schema).
+        - Optional **filters** (string equality, numeric comparators,
+          null-checks) and **aggregations** (`count`, `count_distinct`,
+          `sum`, `average`, `min`, `max`).
+
+        Views are versioned: every update produces a new version, and the
+        previous version remains immutable and addressable. Function types
+        that produce transformations with an output schema — `extract`,
+        `transform`, `analyze`, `join` — are all queryable through views;
+        `extract` works uniformly across vision and OCR inputs.
+
+        ## Reading data
+
+        - **`POST /v3/views/table-data`** — paginated rows of column values.
+          Each row reports the underlying event's `eventID` (the
+          externally-stable KSUID used everywhere else in V3) plus the
+          projected column values.
+        - **`POST /v3/views/aggregation-data`** — group-by-able aggregate
+          values across the same query surface.
+
+        Both endpoints take a `timeWindow` to bound the transformation set
+        and require at least one `function` to read from.
+        """
+        from .resources.views import AsyncViewsResource
+
+        return AsyncViewsResource(self)
+
+    @cached_property
     def with_raw_response(self) -> AsyncBemWithRawResponse:
         return AsyncBemWithRawResponse(self)
 
@@ -1123,21 +1173,6 @@ class BemWithRawResponse:
 
     @cached_property
     def functions(self) -> functions.FunctionsResourceWithRawResponse:
-        """Functions are the core building blocks of data transformation in Bem.
-
-        Each function type serves a specific purpose:
-
-        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
-        - **Route**: Direct data to different processing paths based on conditions
-        - **Split**: Break multi-page documents into individual pages for parallel processing
-        - **Join**: Combine outputs from multiple function calls into a single result
-        - **Parse**: Render documents into a navigable structure of page-aware sections, named entities, and relationships — designed to be walked by an LLM agent via the [File System API](/api/v3/file-system) (`POST /v3/fs`). Two toggles, both `true` by default: `extractEntities` controls per-document entity and relationship extraction; `linkAcrossDocuments` merges entities into one canonical record per real-world thing across the environment, populating cross-document memory.
-        - **Payload Shaping**: Transform and restructure data using JMESPath expressions
-        - **Enrich**: Enhance data with semantic search against collections
-        - **Send**: Deliver workflow outputs to downstream destinations
-
-        Use these endpoints to create, update, list, and manage your functions.
-        """
         from .resources.functions import FunctionsResourceWithRawResponse
 
         return FunctionsResourceWithRawResponse(self._client.functions)
@@ -1456,6 +1491,45 @@ class BemWithRawResponse:
 
         return SubscriptionsResourceWithRawResponse(self._client.subscriptions)
 
+    @cached_property
+    def views(self) -> views.ViewsResourceWithRawResponse:
+        """
+        Views are tabular projections over the `transformations` your functions
+        produce — a saved query that turns raw extracted JSON into a
+        filterable, paginatable, aggregatable table.
+
+        ## Anatomy
+
+        A view declares:
+        - One or more **functions** to read from (by `functionID` or `functionName`).
+        - A list of **columns**, each pinned to a `valueSchemaPath` (a JSON
+          Pointer into the function's output schema).
+        - Optional **filters** (string equality, numeric comparators,
+          null-checks) and **aggregations** (`count`, `count_distinct`,
+          `sum`, `average`, `min`, `max`).
+
+        Views are versioned: every update produces a new version, and the
+        previous version remains immutable and addressable. Function types
+        that produce transformations with an output schema — `extract`,
+        `transform`, `analyze`, `join` — are all queryable through views;
+        `extract` works uniformly across vision and OCR inputs.
+
+        ## Reading data
+
+        - **`POST /v3/views/table-data`** — paginated rows of column values.
+          Each row reports the underlying event's `eventID` (the
+          externally-stable KSUID used everywhere else in V3) plus the
+          projected column values.
+        - **`POST /v3/views/aggregation-data`** — group-by-able aggregate
+          values across the same query surface.
+
+        Both endpoints take a `timeWindow` to bound the transformation set
+        and require at least one `function` to read from.
+        """
+        from .resources.views import ViewsResourceWithRawResponse
+
+        return ViewsResourceWithRawResponse(self._client.views)
+
 
 class AsyncBemWithRawResponse:
     _client: AsyncBem
@@ -1465,21 +1539,6 @@ class AsyncBemWithRawResponse:
 
     @cached_property
     def functions(self) -> functions.AsyncFunctionsResourceWithRawResponse:
-        """Functions are the core building blocks of data transformation in Bem.
-
-        Each function type serves a specific purpose:
-
-        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
-        - **Route**: Direct data to different processing paths based on conditions
-        - **Split**: Break multi-page documents into individual pages for parallel processing
-        - **Join**: Combine outputs from multiple function calls into a single result
-        - **Parse**: Render documents into a navigable structure of page-aware sections, named entities, and relationships — designed to be walked by an LLM agent via the [File System API](/api/v3/file-system) (`POST /v3/fs`). Two toggles, both `true` by default: `extractEntities` controls per-document entity and relationship extraction; `linkAcrossDocuments` merges entities into one canonical record per real-world thing across the environment, populating cross-document memory.
-        - **Payload Shaping**: Transform and restructure data using JMESPath expressions
-        - **Enrich**: Enhance data with semantic search against collections
-        - **Send**: Deliver workflow outputs to downstream destinations
-
-        Use these endpoints to create, update, list, and manage your functions.
-        """
         from .resources.functions import AsyncFunctionsResourceWithRawResponse
 
         return AsyncFunctionsResourceWithRawResponse(self._client.functions)
@@ -1798,6 +1857,45 @@ class AsyncBemWithRawResponse:
 
         return AsyncSubscriptionsResourceWithRawResponse(self._client.subscriptions)
 
+    @cached_property
+    def views(self) -> views.AsyncViewsResourceWithRawResponse:
+        """
+        Views are tabular projections over the `transformations` your functions
+        produce — a saved query that turns raw extracted JSON into a
+        filterable, paginatable, aggregatable table.
+
+        ## Anatomy
+
+        A view declares:
+        - One or more **functions** to read from (by `functionID` or `functionName`).
+        - A list of **columns**, each pinned to a `valueSchemaPath` (a JSON
+          Pointer into the function's output schema).
+        - Optional **filters** (string equality, numeric comparators,
+          null-checks) and **aggregations** (`count`, `count_distinct`,
+          `sum`, `average`, `min`, `max`).
+
+        Views are versioned: every update produces a new version, and the
+        previous version remains immutable and addressable. Function types
+        that produce transformations with an output schema — `extract`,
+        `transform`, `analyze`, `join` — are all queryable through views;
+        `extract` works uniformly across vision and OCR inputs.
+
+        ## Reading data
+
+        - **`POST /v3/views/table-data`** — paginated rows of column values.
+          Each row reports the underlying event's `eventID` (the
+          externally-stable KSUID used everywhere else in V3) plus the
+          projected column values.
+        - **`POST /v3/views/aggregation-data`** — group-by-able aggregate
+          values across the same query surface.
+
+        Both endpoints take a `timeWindow` to bound the transformation set
+        and require at least one `function` to read from.
+        """
+        from .resources.views import AsyncViewsResourceWithRawResponse
+
+        return AsyncViewsResourceWithRawResponse(self._client.views)
+
 
 class BemWithStreamedResponse:
     _client: Bem
@@ -1807,21 +1905,6 @@ class BemWithStreamedResponse:
 
     @cached_property
     def functions(self) -> functions.FunctionsResourceWithStreamingResponse:
-        """Functions are the core building blocks of data transformation in Bem.
-
-        Each function type serves a specific purpose:
-
-        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
-        - **Route**: Direct data to different processing paths based on conditions
-        - **Split**: Break multi-page documents into individual pages for parallel processing
-        - **Join**: Combine outputs from multiple function calls into a single result
-        - **Parse**: Render documents into a navigable structure of page-aware sections, named entities, and relationships — designed to be walked by an LLM agent via the [File System API](/api/v3/file-system) (`POST /v3/fs`). Two toggles, both `true` by default: `extractEntities` controls per-document entity and relationship extraction; `linkAcrossDocuments` merges entities into one canonical record per real-world thing across the environment, populating cross-document memory.
-        - **Payload Shaping**: Transform and restructure data using JMESPath expressions
-        - **Enrich**: Enhance data with semantic search against collections
-        - **Send**: Deliver workflow outputs to downstream destinations
-
-        Use these endpoints to create, update, list, and manage your functions.
-        """
         from .resources.functions import FunctionsResourceWithStreamingResponse
 
         return FunctionsResourceWithStreamingResponse(self._client.functions)
@@ -2140,6 +2223,45 @@ class BemWithStreamedResponse:
 
         return SubscriptionsResourceWithStreamingResponse(self._client.subscriptions)
 
+    @cached_property
+    def views(self) -> views.ViewsResourceWithStreamingResponse:
+        """
+        Views are tabular projections over the `transformations` your functions
+        produce — a saved query that turns raw extracted JSON into a
+        filterable, paginatable, aggregatable table.
+
+        ## Anatomy
+
+        A view declares:
+        - One or more **functions** to read from (by `functionID` or `functionName`).
+        - A list of **columns**, each pinned to a `valueSchemaPath` (a JSON
+          Pointer into the function's output schema).
+        - Optional **filters** (string equality, numeric comparators,
+          null-checks) and **aggregations** (`count`, `count_distinct`,
+          `sum`, `average`, `min`, `max`).
+
+        Views are versioned: every update produces a new version, and the
+        previous version remains immutable and addressable. Function types
+        that produce transformations with an output schema — `extract`,
+        `transform`, `analyze`, `join` — are all queryable through views;
+        `extract` works uniformly across vision and OCR inputs.
+
+        ## Reading data
+
+        - **`POST /v3/views/table-data`** — paginated rows of column values.
+          Each row reports the underlying event's `eventID` (the
+          externally-stable KSUID used everywhere else in V3) plus the
+          projected column values.
+        - **`POST /v3/views/aggregation-data`** — group-by-able aggregate
+          values across the same query surface.
+
+        Both endpoints take a `timeWindow` to bound the transformation set
+        and require at least one `function` to read from.
+        """
+        from .resources.views import ViewsResourceWithStreamingResponse
+
+        return ViewsResourceWithStreamingResponse(self._client.views)
+
 
 class AsyncBemWithStreamedResponse:
     _client: AsyncBem
@@ -2149,21 +2271,6 @@ class AsyncBemWithStreamedResponse:
 
     @cached_property
     def functions(self) -> functions.AsyncFunctionsResourceWithStreamingResponse:
-        """Functions are the core building blocks of data transformation in Bem.
-
-        Each function type serves a specific purpose:
-
-        - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
-        - **Route**: Direct data to different processing paths based on conditions
-        - **Split**: Break multi-page documents into individual pages for parallel processing
-        - **Join**: Combine outputs from multiple function calls into a single result
-        - **Parse**: Render documents into a navigable structure of page-aware sections, named entities, and relationships — designed to be walked by an LLM agent via the [File System API](/api/v3/file-system) (`POST /v3/fs`). Two toggles, both `true` by default: `extractEntities` controls per-document entity and relationship extraction; `linkAcrossDocuments` merges entities into one canonical record per real-world thing across the environment, populating cross-document memory.
-        - **Payload Shaping**: Transform and restructure data using JMESPath expressions
-        - **Enrich**: Enhance data with semantic search against collections
-        - **Send**: Deliver workflow outputs to downstream destinations
-
-        Use these endpoints to create, update, list, and manage your functions.
-        """
         from .resources.functions import AsyncFunctionsResourceWithStreamingResponse
 
         return AsyncFunctionsResourceWithStreamingResponse(self._client.functions)
@@ -2481,6 +2588,45 @@ class AsyncBemWithStreamedResponse:
         from .resources.subscriptions import AsyncSubscriptionsResourceWithStreamingResponse
 
         return AsyncSubscriptionsResourceWithStreamingResponse(self._client.subscriptions)
+
+    @cached_property
+    def views(self) -> views.AsyncViewsResourceWithStreamingResponse:
+        """
+        Views are tabular projections over the `transformations` your functions
+        produce — a saved query that turns raw extracted JSON into a
+        filterable, paginatable, aggregatable table.
+
+        ## Anatomy
+
+        A view declares:
+        - One or more **functions** to read from (by `functionID` or `functionName`).
+        - A list of **columns**, each pinned to a `valueSchemaPath` (a JSON
+          Pointer into the function's output schema).
+        - Optional **filters** (string equality, numeric comparators,
+          null-checks) and **aggregations** (`count`, `count_distinct`,
+          `sum`, `average`, `min`, `max`).
+
+        Views are versioned: every update produces a new version, and the
+        previous version remains immutable and addressable. Function types
+        that produce transformations with an output schema — `extract`,
+        `transform`, `analyze`, `join` — are all queryable through views;
+        `extract` works uniformly across vision and OCR inputs.
+
+        ## Reading data
+
+        - **`POST /v3/views/table-data`** — paginated rows of column values.
+          Each row reports the underlying event's `eventID` (the
+          externally-stable KSUID used everywhere else in V3) plus the
+          projected column values.
+        - **`POST /v3/views/aggregation-data`** — group-by-able aggregate
+          values across the same query surface.
+
+        Both endpoints take a `timeWindow` to bound the transformation set
+        and require at least one `function` to read from.
+        """
+        from .resources.views import AsyncViewsResourceWithStreamingResponse
+
+        return AsyncViewsResourceWithStreamingResponse(self._client.views)
 
 
 Client = Bem

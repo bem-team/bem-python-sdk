@@ -11,6 +11,9 @@ from bem import Bem, AsyncBem
 from bem.types import (
     Function,
     FunctionResponse,
+    FunctionGetMetricsResponse,
+    FunctionCompareMetricsResponse,
+    FunctionEstimateReviewRequirementsResponse,
 )
 from tests.utils import assert_matches_type
 from bem.pagination import SyncFunctionsPage, AsyncFunctionsPage
@@ -1120,6 +1123,144 @@ class TestFunctions:
                 "",
             )
 
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_compare_metrics(self, client: Bem) -> None:
+        function = client.functions.compare_metrics(
+            function_name="invoice-extractor",
+        )
+        assert_matches_type(FunctionCompareMetricsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_compare_metrics_with_all_params(self, client: Bem) -> None:
+        function = client.functions.compare_metrics(
+            function_name="invoice-extractor",
+            baseline_version_num=2,
+            comparison_version_num=3,
+            is_regression=True,
+        )
+        assert_matches_type(FunctionCompareMetricsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_compare_metrics(self, client: Bem) -> None:
+        response = client.functions.with_raw_response.compare_metrics(
+            function_name="invoice-extractor",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        function = response.parse()
+        assert_matches_type(FunctionCompareMetricsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_compare_metrics(self, client: Bem) -> None:
+        with client.functions.with_streaming_response.compare_metrics(
+            function_name="invoice-extractor",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            function = response.parse()
+            assert_matches_type(FunctionCompareMetricsResponse, function, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_estimate_review_requirements(self, client: Bem) -> None:
+        function = client.functions.estimate_review_requirements(
+            function_name="invoice-extractor",
+        )
+        assert_matches_type(FunctionEstimateReviewRequirementsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_estimate_review_requirements_with_all_params(self, client: Bem) -> None:
+        function = client.functions.estimate_review_requirements(
+            function_name="invoice-extractor",
+            confidence_levels=[0],
+            confidence_method="wald",
+            evaluation_version="0.1.0-gemini",
+            function_version_num=2,
+            is_regression=True,
+            margin_of_error=0.05,
+            threshold_max=0,
+            threshold_min=0,
+            threshold_step=0.001,
+        )
+        assert_matches_type(FunctionEstimateReviewRequirementsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_estimate_review_requirements(self, client: Bem) -> None:
+        response = client.functions.with_raw_response.estimate_review_requirements(
+            function_name="invoice-extractor",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        function = response.parse()
+        assert_matches_type(FunctionEstimateReviewRequirementsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_estimate_review_requirements(self, client: Bem) -> None:
+        with client.functions.with_streaming_response.estimate_review_requirements(
+            function_name="invoice-extractor",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            function = response.parse()
+            assert_matches_type(FunctionEstimateReviewRequirementsResponse, function, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_get_metrics(self, client: Bem) -> None:
+        function = client.functions.get_metrics()
+        assert_matches_type(FunctionGetMetricsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_get_metrics_with_all_params(self, client: Bem) -> None:
+        function = client.functions.get_metrics(
+            ending_before="endingBefore",
+            function_ids=["string"],
+            function_names=["string"],
+            limit=1,
+            sort_order="asc",
+            starting_after="startingAfter",
+            types=["transform"],
+        )
+        assert_matches_type(FunctionGetMetricsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_raw_response_get_metrics(self, client: Bem) -> None:
+        response = client.functions.with_raw_response.get_metrics()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        function = response.parse()
+        assert_matches_type(FunctionGetMetricsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_streaming_response_get_metrics(self, client: Bem) -> None:
+        with client.functions.with_streaming_response.get_metrics() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            function = response.parse()
+            assert_matches_type(FunctionGetMetricsResponse, function, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
 
 class TestAsyncFunctions:
     parametrize = pytest.mark.parametrize(
@@ -2224,3 +2365,141 @@ class TestAsyncFunctions:
             await async_client.functions.with_raw_response.delete(
                 "",
             )
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_compare_metrics(self, async_client: AsyncBem) -> None:
+        function = await async_client.functions.compare_metrics(
+            function_name="invoice-extractor",
+        )
+        assert_matches_type(FunctionCompareMetricsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_compare_metrics_with_all_params(self, async_client: AsyncBem) -> None:
+        function = await async_client.functions.compare_metrics(
+            function_name="invoice-extractor",
+            baseline_version_num=2,
+            comparison_version_num=3,
+            is_regression=True,
+        )
+        assert_matches_type(FunctionCompareMetricsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_compare_metrics(self, async_client: AsyncBem) -> None:
+        response = await async_client.functions.with_raw_response.compare_metrics(
+            function_name="invoice-extractor",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        function = await response.parse()
+        assert_matches_type(FunctionCompareMetricsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_compare_metrics(self, async_client: AsyncBem) -> None:
+        async with async_client.functions.with_streaming_response.compare_metrics(
+            function_name="invoice-extractor",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            function = await response.parse()
+            assert_matches_type(FunctionCompareMetricsResponse, function, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_estimate_review_requirements(self, async_client: AsyncBem) -> None:
+        function = await async_client.functions.estimate_review_requirements(
+            function_name="invoice-extractor",
+        )
+        assert_matches_type(FunctionEstimateReviewRequirementsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_estimate_review_requirements_with_all_params(self, async_client: AsyncBem) -> None:
+        function = await async_client.functions.estimate_review_requirements(
+            function_name="invoice-extractor",
+            confidence_levels=[0],
+            confidence_method="wald",
+            evaluation_version="0.1.0-gemini",
+            function_version_num=2,
+            is_regression=True,
+            margin_of_error=0.05,
+            threshold_max=0,
+            threshold_min=0,
+            threshold_step=0.001,
+        )
+        assert_matches_type(FunctionEstimateReviewRequirementsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_estimate_review_requirements(self, async_client: AsyncBem) -> None:
+        response = await async_client.functions.with_raw_response.estimate_review_requirements(
+            function_name="invoice-extractor",
+        )
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        function = await response.parse()
+        assert_matches_type(FunctionEstimateReviewRequirementsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_estimate_review_requirements(self, async_client: AsyncBem) -> None:
+        async with async_client.functions.with_streaming_response.estimate_review_requirements(
+            function_name="invoice-extractor",
+        ) as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            function = await response.parse()
+            assert_matches_type(FunctionEstimateReviewRequirementsResponse, function, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_get_metrics(self, async_client: AsyncBem) -> None:
+        function = await async_client.functions.get_metrics()
+        assert_matches_type(FunctionGetMetricsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_get_metrics_with_all_params(self, async_client: AsyncBem) -> None:
+        function = await async_client.functions.get_metrics(
+            ending_before="endingBefore",
+            function_ids=["string"],
+            function_names=["string"],
+            limit=1,
+            sort_order="asc",
+            starting_after="startingAfter",
+            types=["transform"],
+        )
+        assert_matches_type(FunctionGetMetricsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_raw_response_get_metrics(self, async_client: AsyncBem) -> None:
+        response = await async_client.functions.with_raw_response.get_metrics()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        function = await response.parse()
+        assert_matches_type(FunctionGetMetricsResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_streaming_response_get_metrics(self, async_client: AsyncBem) -> None:
+        async with async_client.functions.with_streaming_response.get_metrics() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            function = await response.parse()
+            assert_matches_type(FunctionGetMetricsResponse, function, path=["response"])
+
+        assert cast(Any, response.is_closed) is True

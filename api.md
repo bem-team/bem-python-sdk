@@ -19,6 +19,9 @@ from bem.types import (
     UpdateFunction,
     UserActionSummary,
     WorkflowUsageInfo,
+    FunctionCompareMetricsResponse,
+    FunctionEstimateReviewRequirementsResponse,
+    FunctionGetMetricsResponse,
 )
 ```
 
@@ -29,6 +32,9 @@ Methods:
 - <code title="patch /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">update</a>(path_function_name, \*\*<a href="src/bem/types/function_update_params.py">params</a>) -> <a href="./src/bem/types/function_response.py">FunctionResponse</a></code>
 - <code title="get /v3/functions">client.functions.<a href="./src/bem/resources/functions/functions.py">list</a>(\*\*<a href="src/bem/types/function_list_params.py">params</a>) -> <a href="./src/bem/types/function.py">SyncFunctionsPage[Function]</a></code>
 - <code title="delete /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">delete</a>(function_name) -> None</code>
+- <code title="post /v3/functions/compare">client.functions.<a href="./src/bem/resources/functions/functions.py">compare_metrics</a>(\*\*<a href="src/bem/types/function_compare_metrics_params.py">params</a>) -> <a href="./src/bem/types/function_compare_metrics_response.py">FunctionCompareMetricsResponse</a></code>
+- <code title="post /v3/functions/review">client.functions.<a href="./src/bem/resources/functions/functions.py">estimate_review_requirements</a>(\*\*<a href="src/bem/types/function_estimate_review_requirements_params.py">params</a>) -> <a href="./src/bem/types/function_estimate_review_requirements_response.py">FunctionEstimateReviewRequirementsResponse</a></code>
+- <code title="get /v3/functions/metrics">client.functions.<a href="./src/bem/resources/functions/functions.py">get_metrics</a>(\*\*<a href="src/bem/types/function_get_metrics_params.py">params</a>) -> <a href="./src/bem/types/function_get_metrics_response.py">FunctionGetMetricsResponse</a></code>
 
 ## Copy
 
@@ -58,6 +64,19 @@ Methods:
 
 - <code title="get /v3/functions/{functionName}/versions/{versionNum}">client.functions.versions.<a href="./src/bem/resources/functions/versions.py">retrieve</a>(version_num, \*, function_name) -> <a href="./src/bem/types/functions/version_retrieve_response.py">VersionRetrieveResponse</a></code>
 - <code title="get /v3/functions/{functionName}/versions">client.functions.versions.<a href="./src/bem/resources/functions/versions.py">list</a>(function_name) -> <a href="./src/bem/types/functions/list_function_versions_response.py">ListFunctionVersionsResponse</a></code>
+
+## Regression
+
+Types:
+
+```python
+from bem.types.functions import RegressionApplyCorrectionsResponse, RegressionRunResponse
+```
+
+Methods:
+
+- <code title="post /v3/functions/regression/corrections">client.functions.regression.<a href="./src/bem/resources/functions/regression.py">apply_corrections</a>(\*\*<a href="src/bem/types/functions/regression_apply_corrections_params.py">params</a>) -> <a href="./src/bem/types/functions/regression_apply_corrections_response.py">RegressionApplyCorrectionsResponse</a></code>
+- <code title="post /v3/functions/regression">client.functions.regression.<a href="./src/bem/resources/functions/regression.py">run</a>(\*\*<a href="src/bem/types/functions/regression_run_params.py">params</a>) -> <a href="./src/bem/types/functions/regression_run_response.py">RegressionRunResponse</a></code>
 
 # Calls
 
@@ -303,3 +322,28 @@ Methods:
 - <code title="patch /v3/subscriptions/{subscriptionID}">client.subscriptions.<a href="./src/bem/resources/subscriptions.py">update</a>(subscription_id, \*\*<a href="src/bem/types/subscription_update_params.py">params</a>) -> <a href="./src/bem/types/subscription_v3.py">SubscriptionV3</a></code>
 - <code title="get /v3/subscriptions">client.subscriptions.<a href="./src/bem/resources/subscriptions.py">list</a>(\*\*<a href="src/bem/types/subscription_list_params.py">params</a>) -> <a href="./src/bem/types/subscription_list_response.py">SubscriptionListResponse</a></code>
 - <code title="delete /v3/subscriptions/{subscriptionID}">client.subscriptions.<a href="./src/bem/resources/subscriptions.py">delete</a>(subscription_id) -> None</code>
+
+# Views
+
+Types:
+
+```python
+from bem.types import (
+    ViewCreateResponse,
+    ViewRetrieveResponse,
+    ViewUpdateResponse,
+    ViewListResponse,
+    ViewGenerateAggregationDataResponse,
+    ViewGenerateTableDataResponse,
+)
+```
+
+Methods:
+
+- <code title="post /v3/views">client.views.<a href="./src/bem/resources/views.py">create</a>(\*\*<a href="src/bem/types/view_create_params.py">params</a>) -> <a href="./src/bem/types/view_create_response.py">ViewCreateResponse</a></code>
+- <code title="get /v3/views/{view_id}">client.views.<a href="./src/bem/resources/views.py">retrieve</a>(view_id) -> <a href="./src/bem/types/view_retrieve_response.py">ViewRetrieveResponse</a></code>
+- <code title="put /v3/views/{view_id}">client.views.<a href="./src/bem/resources/views.py">update</a>(view_id, \*\*<a href="src/bem/types/view_update_params.py">params</a>) -> <a href="./src/bem/types/view_update_response.py">ViewUpdateResponse</a></code>
+- <code title="get /v3/views">client.views.<a href="./src/bem/resources/views.py">list</a>(\*\*<a href="src/bem/types/view_list_params.py">params</a>) -> <a href="./src/bem/types/view_list_response.py">ViewListResponse</a></code>
+- <code title="delete /v3/views/{view_id}">client.views.<a href="./src/bem/resources/views.py">delete</a>(view_id) -> None</code>
+- <code title="post /v3/views/aggregation-data">client.views.<a href="./src/bem/resources/views.py">generate_aggregation_data</a>(\*\*<a href="src/bem/types/view_generate_aggregation_data_params.py">params</a>) -> <a href="./src/bem/types/view_generate_aggregation_data_response.py">ViewGenerateAggregationDataResponse</a></code>
+- <code title="post /v3/views/table-data">client.views.<a href="./src/bem/resources/views.py">generate_table_data</a>(\*\*<a href="src/bem/types/view_generate_table_data_params.py">params</a>) -> <a href="./src/bem/types/view_generate_table_data_response.py">ViewGenerateTableDataResponse</a></code>
