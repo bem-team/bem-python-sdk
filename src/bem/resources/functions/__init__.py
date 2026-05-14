@@ -24,6 +24,14 @@ from .functions import (
     FunctionsResourceWithStreamingResponse,
     AsyncFunctionsResourceWithStreamingResponse,
 )
+from .regression import (
+    RegressionResource,
+    AsyncRegressionResource,
+    RegressionResourceWithRawResponse,
+    AsyncRegressionResourceWithRawResponse,
+    RegressionResourceWithStreamingResponse,
+    AsyncRegressionResourceWithStreamingResponse,
+)
 
 __all__ = [
     "CopyResource",
@@ -38,6 +46,12 @@ __all__ = [
     "AsyncVersionsResourceWithRawResponse",
     "VersionsResourceWithStreamingResponse",
     "AsyncVersionsResourceWithStreamingResponse",
+    "RegressionResource",
+    "AsyncRegressionResource",
+    "RegressionResourceWithRawResponse",
+    "AsyncRegressionResourceWithRawResponse",
+    "RegressionResourceWithStreamingResponse",
+    "AsyncRegressionResourceWithStreamingResponse",
     "FunctionsResource",
     "AsyncFunctionsResource",
     "FunctionsResourceWithRawResponse",

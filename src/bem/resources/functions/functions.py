@@ -20,6 +20,9 @@ from ...types import (
     function_list_params,
     function_create_params,
     function_update_params,
+    function_get_metrics_params,
+    function_compare_metrics_params,
+    function_estimate_review_requirements_params,
 )
 from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import path_template, required_args, maybe_transform, async_maybe_transform
@@ -32,6 +35,14 @@ from .versions import (
     AsyncVersionsResourceWithStreamingResponse,
 )
 from ..._compat import cached_property
+from .regression import (
+    RegressionResource,
+    AsyncRegressionResource,
+    RegressionResourceWithRawResponse,
+    AsyncRegressionResourceWithRawResponse,
+    RegressionResourceWithStreamingResponse,
+    AsyncRegressionResourceWithStreamingResponse,
+)
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
     to_raw_response_wrapper,
@@ -47,28 +58,15 @@ from ...types.function_response import FunctionResponse
 from ...types.parse_config_param import ParseConfigParam
 from ...types.enrich_config_param import EnrichConfigParam
 from ...types.send_destination_type import SendDestinationType
+from ...types.function_get_metrics_response import FunctionGetMetricsResponse
 from ...types.classification_list_item_param import ClassificationListItemParam
+from ...types.function_compare_metrics_response import FunctionCompareMetricsResponse
+from ...types.function_estimate_review_requirements_response import FunctionEstimateReviewRequirementsResponse
 
 __all__ = ["FunctionsResource", "AsyncFunctionsResource"]
 
 
 class FunctionsResource(SyncAPIResource):
-    """Functions are the core building blocks of data transformation in Bem.
-
-    Each function type serves a specific purpose:
-
-    - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
-    - **Route**: Direct data to different processing paths based on conditions
-    - **Split**: Break multi-page documents into individual pages for parallel processing
-    - **Join**: Combine outputs from multiple function calls into a single result
-    - **Parse**: Render documents into a navigable structure of page-aware sections, named entities, and relationships — designed to be walked by an LLM agent via the [File System API](/api/v3/file-system) (`POST /v3/fs`). Two toggles, both `true` by default: `extractEntities` controls per-document entity and relationship extraction; `linkAcrossDocuments` merges entities into one canonical record per real-world thing across the environment, populating cross-document memory.
-    - **Payload Shaping**: Transform and restructure data using JMESPath expressions
-    - **Enrich**: Enhance data with semantic search against collections
-    - **Send**: Deliver workflow outputs to downstream destinations
-
-    Use these endpoints to create, update, list, and manage your functions.
-    """
-
     @cached_property
     def copy(self) -> CopyResource:
         """Functions are the core building blocks of data transformation in Bem.
@@ -106,6 +104,55 @@ class FunctionsResource(SyncAPIResource):
         Use these endpoints to create, update, list, and manage your functions.
         """
         return VersionsResource(self._client)
+
+    @cached_property
+    def regression(self) -> RegressionResource:
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
+
+        ## Evaluations (`/v3/eval`)
+
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
+
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
+        """
+        return RegressionResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> FunctionsResourceWithRawResponse:
@@ -1549,24 +1596,254 @@ class FunctionsResource(SyncAPIResource):
             cast_to=NoneType,
         )
 
+    def compare_metrics(
+        self,
+        *,
+        function_name: str,
+        baseline_version_num: int | Omit = omit,
+        comparison_version_num: int | Omit = omit,
+        is_regression: bool | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionCompareMetricsResponse:
+        """
+        **Compare metrics between two function versions.**
+
+        Computes aggregate and field-level lift/regression between any two versions of a
+        function: accuracy, precision, recall, F1, and PR-AUC. Field-level changes are
+        returned only for fields whose lift exceeds 1% in either direction.
+
+        Supported for every function type that produces labeled transformations:
+        `extract`, `transform`, `analyze`, `join`. Pass `isRegression: true` to compare
+        only the regression dataset (rows produced by `POST /v3/functions/regression`) —
+        the canonical way to judge a candidate version before promoting it.
+
+        Defaults: `baselineVersionNum = currentVersionNum - 1`,
+        `comparisonVersionNum = currentVersionNum`.
+
+        Args:
+          function_name: Name of the function to compare versions for
+
+          baseline_version_num: **Baseline version number for comparison**
+
+              If not provided, defaults to the previous version (current - 1).
+
+          comparison_version_num: **Comparison version number**
+
+              If not provided, defaults to the current version.
+
+          is_regression: **Whether to compare regression test data only**
+
+              If true, only compares transformations marked as regression tests.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._post(
+            "/v3/functions/compare",
+            body=maybe_transform(
+                {
+                    "function_name": function_name,
+                    "baseline_version_num": baseline_version_num,
+                    "comparison_version_num": comparison_version_num,
+                    "is_regression": is_regression,
+                },
+                function_compare_metrics_params.FunctionCompareMetricsParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=FunctionCompareMetricsResponse,
+        )
+
+    def estimate_review_requirements(
+        self,
+        *,
+        function_name: str,
+        confidence_levels: Iterable[int] | Omit = omit,
+        confidence_method: Literal["wald", "wilson"] | Omit = omit,
+        evaluation_version: Literal["0.1.0-gemini"] | Omit = omit,
+        function_version_num: int | Omit = omit,
+        is_regression: bool | Omit = omit,
+        margin_of_error: float | Omit = omit,
+        threshold_max: float | Omit = omit,
+        threshold_min: float | Omit = omit,
+        threshold_step: float | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionEstimateReviewRequirementsResponse:
+        """
+        **Estimate human review requirements for a function.**
+
+        Combines confusion-matrix metrics with the per-transformation evaluation scores
+        (confidence / hallucination / relevance produced by the eval service) to
+        compute:
+
+        - A confidence-bucketed distribution of the function's outputs.
+        - Sample-size estimates at configurable margin-of-error and confidence levels
+          (Wald or Wilson intervals).
+        - A precision-recall AUC and a per-threshold matrix you can use to pick a review
+          cutoff.
+
+        Supported for every function type that produces transformations and feeds the
+        auto-evaluation pipeline: `extract`, `transform`, `analyze`, `join`. Extract
+        works on both vision (PDF/PNG/JPEG/HEIC/HEIF/WebP) and OCR-routed inputs.
+
+        Pass `isRegression: true` to scope the review to transformations created by a
+        previous regression run (see `POST /v3/functions/regression`).
+
+        Args:
+          function_name: Name of the function to analyze
+
+          confidence_levels: Confidence levels for statistical analysis as integers representing percentages
+              (e.g., [90, 95, 99] for 90%, 95%, 99%). IMPORTANT: Only integers are accepted,
+              floats like 0.95 will be rejected.
+
+          confidence_method: Confidence interval calculation method (default "wald").
+
+              - "wald": Normal approximation method (faster, standard)
+              - "wilson": Wilson score interval (more robust for extreme rates)
+
+          evaluation_version: Optional evaluation version to filter evaluations by. Must be one of the
+              supported versions. If not provided, defaults to "0.1.0-gemini".
+
+          function_version_num: Optional function version number to analyze. If not provided, uses the
+              latest/current version of the function.
+
+          is_regression: Internal flag indicating if the request is from a regression test
+
+          margin_of_error: Margin of error for statistical calculations
+
+          threshold_max: Maximum confidence threshold to analyze
+
+          threshold_min: Minimum confidence threshold to analyze
+
+          threshold_step: Step size for threshold analysis (smaller = more granular)
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._post(
+            "/v3/functions/review",
+            body=maybe_transform(
+                {
+                    "function_name": function_name,
+                    "confidence_levels": confidence_levels,
+                    "confidence_method": confidence_method,
+                    "evaluation_version": evaluation_version,
+                    "function_version_num": function_version_num,
+                    "is_regression": is_regression,
+                    "margin_of_error": margin_of_error,
+                    "threshold_max": threshold_max,
+                    "threshold_min": threshold_min,
+                    "threshold_step": threshold_step,
+                },
+                function_estimate_review_requirements_params.FunctionEstimateReviewRequirementsParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=FunctionEstimateReviewRequirementsResponse,
+        )
+
+    def get_metrics(
+        self,
+        *,
+        ending_before: str | Omit = omit,
+        function_ids: SequenceNotStr[str] | Omit = omit,
+        function_names: SequenceNotStr[str] | Omit = omit,
+        limit: int | Omit = omit,
+        sort_order: Literal["asc", "desc"] | Omit = omit,
+        starting_after: str | Omit = omit,
+        types: List[FunctionType] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionGetMetricsResponse:
+        """
+        **Retrieve performance metrics for functions based on labeled transformation
+        data.**
+
+        Calculates accuracy, precision, recall, F1, and the underlying confusion-matrix
+        counts for each matching function by comparing model outputs against user
+        corrections. Metrics are aggregated across every transformation the function has
+        produced, regardless of function type — `extract`, `transform`, `analyze`, and
+        `join` all populate the same `metrics` column on the transformation row, so v3
+        surfaces all of them uniformly.
+
+        ## Filtering
+
+        Combine `functionIDs` / `functionNames` / `types` to narrow the result set.
+        `types` accepts `extract` alongside the legacy `transform` / `analyze` types
+        (which remain readable). Pagination is cursor-based.
+
+        ## Requirements
+
+        A function only shows non-zero metrics once at least one of its transformations
+        has been labeled — submit corrections via `POST /v3/events/{eventID}/feedback`.
+
+        Args:
+          ending_before: Cursor — a `functionID` defining your place in the list.
+
+          sort_order: Sort direction over the result set (default `asc`). Pagination works
+              symmetrically in both directions via `startingAfter` / `endingBefore`.
+
+          starting_after: Cursor — a `functionID` defining your place in the list.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._get(
+            "/v3/functions/metrics",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "ending_before": ending_before,
+                        "function_ids": function_ids,
+                        "function_names": function_names,
+                        "limit": limit,
+                        "sort_order": sort_order,
+                        "starting_after": starting_after,
+                        "types": types,
+                    },
+                    function_get_metrics_params.FunctionGetMetricsParams,
+                ),
+            ),
+            cast_to=FunctionGetMetricsResponse,
+        )
+
 
 class AsyncFunctionsResource(AsyncAPIResource):
-    """Functions are the core building blocks of data transformation in Bem.
-
-    Each function type serves a specific purpose:
-
-    - **Extract**: Extract structured JSON data from unstructured documents (PDFs, emails, images, spreadsheets), with optional layout-aware bounding-box extraction
-    - **Route**: Direct data to different processing paths based on conditions
-    - **Split**: Break multi-page documents into individual pages for parallel processing
-    - **Join**: Combine outputs from multiple function calls into a single result
-    - **Parse**: Render documents into a navigable structure of page-aware sections, named entities, and relationships — designed to be walked by an LLM agent via the [File System API](/api/v3/file-system) (`POST /v3/fs`). Two toggles, both `true` by default: `extractEntities` controls per-document entity and relationship extraction; `linkAcrossDocuments` merges entities into one canonical record per real-world thing across the environment, populating cross-document memory.
-    - **Payload Shaping**: Transform and restructure data using JMESPath expressions
-    - **Enrich**: Enhance data with semantic search against collections
-    - **Send**: Deliver workflow outputs to downstream destinations
-
-    Use these endpoints to create, update, list, and manage your functions.
-    """
-
     @cached_property
     def copy(self) -> AsyncCopyResource:
         """Functions are the core building blocks of data transformation in Bem.
@@ -1604,6 +1881,55 @@ class AsyncFunctionsResource(AsyncAPIResource):
         Use these endpoints to create, update, list, and manage your functions.
         """
         return AsyncVersionsResource(self._client)
+
+    @cached_property
+    def regression(self) -> AsyncRegressionResource:
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
+
+        ## Evaluations (`/v3/eval`)
+
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
+
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
+        """
+        return AsyncRegressionResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncFunctionsResourceWithRawResponse:
@@ -3047,6 +3373,252 @@ class AsyncFunctionsResource(AsyncAPIResource):
             cast_to=NoneType,
         )
 
+    async def compare_metrics(
+        self,
+        *,
+        function_name: str,
+        baseline_version_num: int | Omit = omit,
+        comparison_version_num: int | Omit = omit,
+        is_regression: bool | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionCompareMetricsResponse:
+        """
+        **Compare metrics between two function versions.**
+
+        Computes aggregate and field-level lift/regression between any two versions of a
+        function: accuracy, precision, recall, F1, and PR-AUC. Field-level changes are
+        returned only for fields whose lift exceeds 1% in either direction.
+
+        Supported for every function type that produces labeled transformations:
+        `extract`, `transform`, `analyze`, `join`. Pass `isRegression: true` to compare
+        only the regression dataset (rows produced by `POST /v3/functions/regression`) —
+        the canonical way to judge a candidate version before promoting it.
+
+        Defaults: `baselineVersionNum = currentVersionNum - 1`,
+        `comparisonVersionNum = currentVersionNum`.
+
+        Args:
+          function_name: Name of the function to compare versions for
+
+          baseline_version_num: **Baseline version number for comparison**
+
+              If not provided, defaults to the previous version (current - 1).
+
+          comparison_version_num: **Comparison version number**
+
+              If not provided, defaults to the current version.
+
+          is_regression: **Whether to compare regression test data only**
+
+              If true, only compares transformations marked as regression tests.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return await self._post(
+            "/v3/functions/compare",
+            body=await async_maybe_transform(
+                {
+                    "function_name": function_name,
+                    "baseline_version_num": baseline_version_num,
+                    "comparison_version_num": comparison_version_num,
+                    "is_regression": is_regression,
+                },
+                function_compare_metrics_params.FunctionCompareMetricsParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=FunctionCompareMetricsResponse,
+        )
+
+    async def estimate_review_requirements(
+        self,
+        *,
+        function_name: str,
+        confidence_levels: Iterable[int] | Omit = omit,
+        confidence_method: Literal["wald", "wilson"] | Omit = omit,
+        evaluation_version: Literal["0.1.0-gemini"] | Omit = omit,
+        function_version_num: int | Omit = omit,
+        is_regression: bool | Omit = omit,
+        margin_of_error: float | Omit = omit,
+        threshold_max: float | Omit = omit,
+        threshold_min: float | Omit = omit,
+        threshold_step: float | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionEstimateReviewRequirementsResponse:
+        """
+        **Estimate human review requirements for a function.**
+
+        Combines confusion-matrix metrics with the per-transformation evaluation scores
+        (confidence / hallucination / relevance produced by the eval service) to
+        compute:
+
+        - A confidence-bucketed distribution of the function's outputs.
+        - Sample-size estimates at configurable margin-of-error and confidence levels
+          (Wald or Wilson intervals).
+        - A precision-recall AUC and a per-threshold matrix you can use to pick a review
+          cutoff.
+
+        Supported for every function type that produces transformations and feeds the
+        auto-evaluation pipeline: `extract`, `transform`, `analyze`, `join`. Extract
+        works on both vision (PDF/PNG/JPEG/HEIC/HEIF/WebP) and OCR-routed inputs.
+
+        Pass `isRegression: true` to scope the review to transformations created by a
+        previous regression run (see `POST /v3/functions/regression`).
+
+        Args:
+          function_name: Name of the function to analyze
+
+          confidence_levels: Confidence levels for statistical analysis as integers representing percentages
+              (e.g., [90, 95, 99] for 90%, 95%, 99%). IMPORTANT: Only integers are accepted,
+              floats like 0.95 will be rejected.
+
+          confidence_method: Confidence interval calculation method (default "wald").
+
+              - "wald": Normal approximation method (faster, standard)
+              - "wilson": Wilson score interval (more robust for extreme rates)
+
+          evaluation_version: Optional evaluation version to filter evaluations by. Must be one of the
+              supported versions. If not provided, defaults to "0.1.0-gemini".
+
+          function_version_num: Optional function version number to analyze. If not provided, uses the
+              latest/current version of the function.
+
+          is_regression: Internal flag indicating if the request is from a regression test
+
+          margin_of_error: Margin of error for statistical calculations
+
+          threshold_max: Maximum confidence threshold to analyze
+
+          threshold_min: Minimum confidence threshold to analyze
+
+          threshold_step: Step size for threshold analysis (smaller = more granular)
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return await self._post(
+            "/v3/functions/review",
+            body=await async_maybe_transform(
+                {
+                    "function_name": function_name,
+                    "confidence_levels": confidence_levels,
+                    "confidence_method": confidence_method,
+                    "evaluation_version": evaluation_version,
+                    "function_version_num": function_version_num,
+                    "is_regression": is_regression,
+                    "margin_of_error": margin_of_error,
+                    "threshold_max": threshold_max,
+                    "threshold_min": threshold_min,
+                    "threshold_step": threshold_step,
+                },
+                function_estimate_review_requirements_params.FunctionEstimateReviewRequirementsParams,
+            ),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=FunctionEstimateReviewRequirementsResponse,
+        )
+
+    async def get_metrics(
+        self,
+        *,
+        ending_before: str | Omit = omit,
+        function_ids: SequenceNotStr[str] | Omit = omit,
+        function_names: SequenceNotStr[str] | Omit = omit,
+        limit: int | Omit = omit,
+        sort_order: Literal["asc", "desc"] | Omit = omit,
+        starting_after: str | Omit = omit,
+        types: List[FunctionType] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionGetMetricsResponse:
+        """
+        **Retrieve performance metrics for functions based on labeled transformation
+        data.**
+
+        Calculates accuracy, precision, recall, F1, and the underlying confusion-matrix
+        counts for each matching function by comparing model outputs against user
+        corrections. Metrics are aggregated across every transformation the function has
+        produced, regardless of function type — `extract`, `transform`, `analyze`, and
+        `join` all populate the same `metrics` column on the transformation row, so v3
+        surfaces all of them uniformly.
+
+        ## Filtering
+
+        Combine `functionIDs` / `functionNames` / `types` to narrow the result set.
+        `types` accepts `extract` alongside the legacy `transform` / `analyze` types
+        (which remain readable). Pagination is cursor-based.
+
+        ## Requirements
+
+        A function only shows non-zero metrics once at least one of its transformations
+        has been labeled — submit corrections via `POST /v3/events/{eventID}/feedback`.
+
+        Args:
+          ending_before: Cursor — a `functionID` defining your place in the list.
+
+          sort_order: Sort direction over the result set (default `asc`). Pagination works
+              symmetrically in both directions via `startingAfter` / `endingBefore`.
+
+          starting_after: Cursor — a `functionID` defining your place in the list.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return await self._get(
+            "/v3/functions/metrics",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {
+                        "ending_before": ending_before,
+                        "function_ids": function_ids,
+                        "function_names": function_names,
+                        "limit": limit,
+                        "sort_order": sort_order,
+                        "starting_after": starting_after,
+                        "types": types,
+                    },
+                    function_get_metrics_params.FunctionGetMetricsParams,
+                ),
+            ),
+            cast_to=FunctionGetMetricsResponse,
+        )
+
 
 class FunctionsResourceWithRawResponse:
     def __init__(self, functions: FunctionsResource) -> None:
@@ -3066,6 +3638,15 @@ class FunctionsResourceWithRawResponse:
         )
         self.delete = to_raw_response_wrapper(
             functions.delete,
+        )
+        self.compare_metrics = to_raw_response_wrapper(
+            functions.compare_metrics,
+        )
+        self.estimate_review_requirements = to_raw_response_wrapper(
+            functions.estimate_review_requirements,
+        )
+        self.get_metrics = to_raw_response_wrapper(
+            functions.get_metrics,
         )
 
     @cached_property
@@ -3106,6 +3687,55 @@ class FunctionsResourceWithRawResponse:
         """
         return VersionsResourceWithRawResponse(self._functions.versions)
 
+    @cached_property
+    def regression(self) -> RegressionResourceWithRawResponse:
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
+
+        ## Evaluations (`/v3/eval`)
+
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
+
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
+        """
+        return RegressionResourceWithRawResponse(self._functions.regression)
+
 
 class AsyncFunctionsResourceWithRawResponse:
     def __init__(self, functions: AsyncFunctionsResource) -> None:
@@ -3125,6 +3755,15 @@ class AsyncFunctionsResourceWithRawResponse:
         )
         self.delete = async_to_raw_response_wrapper(
             functions.delete,
+        )
+        self.compare_metrics = async_to_raw_response_wrapper(
+            functions.compare_metrics,
+        )
+        self.estimate_review_requirements = async_to_raw_response_wrapper(
+            functions.estimate_review_requirements,
+        )
+        self.get_metrics = async_to_raw_response_wrapper(
+            functions.get_metrics,
         )
 
     @cached_property
@@ -3165,6 +3804,55 @@ class AsyncFunctionsResourceWithRawResponse:
         """
         return AsyncVersionsResourceWithRawResponse(self._functions.versions)
 
+    @cached_property
+    def regression(self) -> AsyncRegressionResourceWithRawResponse:
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
+
+        ## Evaluations (`/v3/eval`)
+
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
+
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
+        """
+        return AsyncRegressionResourceWithRawResponse(self._functions.regression)
+
 
 class FunctionsResourceWithStreamingResponse:
     def __init__(self, functions: FunctionsResource) -> None:
@@ -3184,6 +3872,15 @@ class FunctionsResourceWithStreamingResponse:
         )
         self.delete = to_streamed_response_wrapper(
             functions.delete,
+        )
+        self.compare_metrics = to_streamed_response_wrapper(
+            functions.compare_metrics,
+        )
+        self.estimate_review_requirements = to_streamed_response_wrapper(
+            functions.estimate_review_requirements,
+        )
+        self.get_metrics = to_streamed_response_wrapper(
+            functions.get_metrics,
         )
 
     @cached_property
@@ -3224,6 +3921,55 @@ class FunctionsResourceWithStreamingResponse:
         """
         return VersionsResourceWithStreamingResponse(self._functions.versions)
 
+    @cached_property
+    def regression(self) -> RegressionResourceWithStreamingResponse:
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
+
+        ## Evaluations (`/v3/eval`)
+
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
+
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
+        """
+        return RegressionResourceWithStreamingResponse(self._functions.regression)
+
 
 class AsyncFunctionsResourceWithStreamingResponse:
     def __init__(self, functions: AsyncFunctionsResource) -> None:
@@ -3243,6 +3989,15 @@ class AsyncFunctionsResourceWithStreamingResponse:
         )
         self.delete = async_to_streamed_response_wrapper(
             functions.delete,
+        )
+        self.compare_metrics = async_to_streamed_response_wrapper(
+            functions.compare_metrics,
+        )
+        self.estimate_review_requirements = async_to_streamed_response_wrapper(
+            functions.estimate_review_requirements,
+        )
+        self.get_metrics = async_to_streamed_response_wrapper(
+            functions.get_metrics,
         )
 
     @cached_property
@@ -3282,3 +4037,52 @@ class AsyncFunctionsResourceWithStreamingResponse:
         Use these endpoints to create, update, list, and manage your functions.
         """
         return AsyncVersionsResourceWithStreamingResponse(self._functions.versions)
+
+    @cached_property
+    def regression(self) -> AsyncRegressionResourceWithStreamingResponse:
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
+
+        ## Evaluations (`/v3/eval`)
+
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
+
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
+        """
+        return AsyncRegressionResourceWithStreamingResponse(self._functions.regression)

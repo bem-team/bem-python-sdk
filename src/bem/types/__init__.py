@@ -23,6 +23,7 @@ from .workflow_audit import WorkflowAudit as WorkflowAudit
 from .collection_item import CollectionItem as CollectionItem
 from .subscription_v3 import SubscriptionV3 as SubscriptionV3
 from .call_list_params import CallListParams as CallListParams
+from .view_list_params import ViewListParams as ViewListParams
 from .call_get_response import CallGetResponse as CallGetResponse
 from .enrich_step_param import EnrichStepParam as EnrichStepParam
 from .error_list_params import ErrorListParams as ErrorListParams
@@ -32,6 +33,9 @@ from .join_webhook_event import JoinWebhookEvent as JoinWebhookEvent
 from .output_list_params import OutputListParams as OutputListParams
 from .parse_config_param import ParseConfigParam as ParseConfigParam
 from .send_webhook_event import SendWebhookEvent as SendWebhookEvent
+from .view_create_params import ViewCreateParams as ViewCreateParams
+from .view_list_response import ViewListResponse as ViewListResponse
+from .view_update_params import ViewUpdateParams as ViewUpdateParams
 from .enrich_config_param import EnrichConfigParam as EnrichConfigParam
 from .f_navigate_response import FNavigateResponse as FNavigateResponse
 from .inbound_email_event import InboundEmailEvent as InboundEmailEvent
@@ -43,6 +47,8 @@ from .workflow_usage_info import WorkflowUsageInfo as WorkflowUsageInfo
 from .enrich_webhook_event import EnrichWebhookEvent as EnrichWebhookEvent
 from .function_list_params import FunctionListParams as FunctionListParams
 from .unwrap_webhook_event import UnwrapWebhookEvent as UnwrapWebhookEvent
+from .view_create_response import ViewCreateResponse as ViewCreateResponse
+from .view_update_response import ViewUpdateResponse as ViewUpdateResponse
 from .workflow_call_params import WorkflowCallParams as WorkflowCallParams
 from .workflow_copy_params import WorkflowCopyParams as WorkflowCopyParams
 from .workflow_list_params import WorkflowListParams as WorkflowListParams
@@ -55,6 +61,7 @@ from .classify_webhook_event import ClassifyWebhookEvent as ClassifyWebhookEvent
 from .collection_list_params import CollectionListParams as CollectionListParams
 from .function_create_params import FunctionCreateParams as FunctionCreateParams
 from .function_update_params import FunctionUpdateParams as FunctionUpdateParams
+from .view_retrieve_response import ViewRetrieveResponse as ViewRetrieveResponse
 from .workflow_copy_response import WorkflowCopyResponse as WorkflowCopyResponse
 from .workflow_create_params import WorkflowCreateParams as WorkflowCreateParams
 from .workflow_edge_response import WorkflowEdgeResponse as WorkflowEdgeResponse
@@ -82,23 +89,41 @@ from .subscription_create_params import SubscriptionCreateParams as Subscription
 from .subscription_list_response import SubscriptionListResponse as SubscriptionListResponse
 from .subscription_update_params import SubscriptionUpdateParams as SubscriptionUpdateParams
 from .workflow_retrieve_response import WorkflowRetrieveResponse as WorkflowRetrieveResponse
+from .function_get_metrics_params import FunctionGetMetricsParams as FunctionGetMetricsParams
 from .function_version_identifier import FunctionVersionIdentifier as FunctionVersionIdentifier
 from .call_retrieve_trace_response import CallRetrieveTraceResponse as CallRetrieveTraceResponse
 from .event_submit_feedback_params import EventSubmitFeedbackParams as EventSubmitFeedbackParams
 from .infer_schema_create_response import InferSchemaCreateResponse as InferSchemaCreateResponse
+from .function_get_metrics_response import FunctionGetMetricsResponse as FunctionGetMetricsResponse
 from .payload_shaping_webhook_event import PayloadShapingWebhookEvent as PayloadShapingWebhookEvent
 from .classification_list_item_param import ClassificationListItemParam as ClassificationListItemParam
 from .collection_count_tokens_params import CollectionCountTokensParams as CollectionCountTokensParams
 from .eval_trigger_evaluation_params import EvalTriggerEvaluationParams as EvalTriggerEvaluationParams
 from .event_submit_feedback_response import EventSubmitFeedbackResponse as EventSubmitFeedbackResponse
 from .split_collection_webhook_event import SplitCollectionWebhookEvent as SplitCollectionWebhookEvent
+from .function_compare_metrics_params import FunctionCompareMetricsParams as FunctionCompareMetricsParams
+from .view_generate_table_data_params import ViewGenerateTableDataParams as ViewGenerateTableDataParams
 from .collection_count_tokens_response import CollectionCountTokensResponse as CollectionCountTokensResponse
 from .eval_trigger_evaluation_response import EvalTriggerEvaluationResponse as EvalTriggerEvaluationResponse
+from .function_compare_metrics_response import FunctionCompareMetricsResponse as FunctionCompareMetricsResponse
 from .function_version_identifier_param import FunctionVersionIdentifierParam as FunctionVersionIdentifierParam
+from .view_generate_table_data_response import ViewGenerateTableDataResponse as ViewGenerateTableDataResponse
 from .collection_processing_webhook_event import CollectionProcessingWebhookEvent as CollectionProcessingWebhookEvent
+from .view_generate_aggregation_data_params import (
+    ViewGenerateAggregationDataParams as ViewGenerateAggregationDataParams,
+)
 from .split_function_semantic_page_item_class import (
     SplitFunctionSemanticPageItemClass as SplitFunctionSemanticPageItemClass,
 )
+from .view_generate_aggregation_data_response import (
+    ViewGenerateAggregationDataResponse as ViewGenerateAggregationDataResponse,
+)
+from .function_estimate_review_requirements_params import (
+    FunctionEstimateReviewRequirementsParams as FunctionEstimateReviewRequirementsParams,
+)
 from .split_function_semantic_page_item_class_param import (
     SplitFunctionSemanticPageItemClassParam as SplitFunctionSemanticPageItemClassParam,
+)
+from .function_estimate_review_requirements_response import (
+    FunctionEstimateReviewRequirementsResponse as FunctionEstimateReviewRequirementsResponse,
 )

@@ -24,6 +24,14 @@ from .calls import (
     CallsResourceWithStreamingResponse,
     AsyncCallsResourceWithStreamingResponse,
 )
+from .views import (
+    ViewsResource,
+    AsyncViewsResource,
+    ViewsResourceWithRawResponse,
+    AsyncViewsResourceWithRawResponse,
+    ViewsResourceWithStreamingResponse,
+    AsyncViewsResourceWithStreamingResponse,
+)
 from .errors import (
     ErrorsResource,
     AsyncErrorsResource,
@@ -187,4 +195,10 @@ __all__ = [
     "AsyncSubscriptionsResourceWithRawResponse",
     "SubscriptionsResourceWithStreamingResponse",
     "AsyncSubscriptionsResourceWithStreamingResponse",
+    "ViewsResource",
+    "AsyncViewsResource",
+    "ViewsResourceWithRawResponse",
+    "AsyncViewsResourceWithRawResponse",
+    "ViewsResourceWithStreamingResponse",
+    "AsyncViewsResourceWithStreamingResponse",
 ]
