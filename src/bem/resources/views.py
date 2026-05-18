@@ -97,6 +97,7 @@ class ViewsResource(SyncAPIResource):
         filters: Iterable[view_create_params.Filter],
         functions: Iterable[view_create_params.Function],
         name: str,
+        description: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -131,6 +132,8 @@ class ViewsResource(SyncAPIResource):
 
           name: Name of the view
 
+          description: Description of the view
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -148,6 +151,7 @@ class ViewsResource(SyncAPIResource):
                     "filters": filters,
                     "functions": functions,
                     "name": name,
+                    "description": description,
                 },
                 view_create_params.ViewCreateParams,
             ),
@@ -204,6 +208,7 @@ class ViewsResource(SyncAPIResource):
         filters: Iterable[view_update_params.Filter],
         functions: Iterable[view_update_params.Function],
         name: str,
+        description: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -230,6 +235,8 @@ class ViewsResource(SyncAPIResource):
 
           name: Name of the view
 
+          description: Description of the view
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -249,6 +256,7 @@ class ViewsResource(SyncAPIResource):
                     "filters": filters,
                     "functions": functions,
                     "name": name,
+                    "description": description,
                 },
                 view_update_params.ViewUpdateParams,
             ),
@@ -383,6 +391,7 @@ class ViewsResource(SyncAPIResource):
         functions: Iterable[view_generate_aggregation_data_params.Function],
         name: str,
         time_window: view_generate_aggregation_data_params.TimeWindow,
+        description: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -415,6 +424,8 @@ class ViewsResource(SyncAPIResource):
 
           time_window: Time window for filtering transformations in a view
 
+          description: Description of the view
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -433,6 +444,7 @@ class ViewsResource(SyncAPIResource):
                     "functions": functions,
                     "name": name,
                     "time_window": time_window,
+                    "description": description,
                 },
                 view_generate_aggregation_data_params.ViewGenerateAggregationDataParams,
             ),
@@ -451,6 +463,7 @@ class ViewsResource(SyncAPIResource):
         functions: Iterable[view_generate_table_data_params.Function],
         name: str,
         time_window: view_generate_table_data_params.TimeWindow,
+        description: str | Omit = omit,
         limit: Optional[int] | Omit = omit,
         offset: Optional[int] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -486,6 +499,8 @@ class ViewsResource(SyncAPIResource):
 
           time_window: Time window for filtering transformations in a view
 
+          description: Description of the view
+
           limit: Maximum number of rows to return (default: 50, max: 200)
 
           offset: Number of rows to skip for pagination
@@ -508,6 +523,7 @@ class ViewsResource(SyncAPIResource):
                     "functions": functions,
                     "name": name,
                     "time_window": time_window,
+                    "description": description,
                     "limit": limit,
                     "offset": offset,
                 },
@@ -582,6 +598,7 @@ class AsyncViewsResource(AsyncAPIResource):
         filters: Iterable[view_create_params.Filter],
         functions: Iterable[view_create_params.Function],
         name: str,
+        description: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -616,6 +633,8 @@ class AsyncViewsResource(AsyncAPIResource):
 
           name: Name of the view
 
+          description: Description of the view
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -633,6 +652,7 @@ class AsyncViewsResource(AsyncAPIResource):
                     "filters": filters,
                     "functions": functions,
                     "name": name,
+                    "description": description,
                 },
                 view_create_params.ViewCreateParams,
             ),
@@ -689,6 +709,7 @@ class AsyncViewsResource(AsyncAPIResource):
         filters: Iterable[view_update_params.Filter],
         functions: Iterable[view_update_params.Function],
         name: str,
+        description: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -715,6 +736,8 @@ class AsyncViewsResource(AsyncAPIResource):
 
           name: Name of the view
 
+          description: Description of the view
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -734,6 +757,7 @@ class AsyncViewsResource(AsyncAPIResource):
                     "filters": filters,
                     "functions": functions,
                     "name": name,
+                    "description": description,
                 },
                 view_update_params.ViewUpdateParams,
             ),
@@ -868,6 +892,7 @@ class AsyncViewsResource(AsyncAPIResource):
         functions: Iterable[view_generate_aggregation_data_params.Function],
         name: str,
         time_window: view_generate_aggregation_data_params.TimeWindow,
+        description: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -900,6 +925,8 @@ class AsyncViewsResource(AsyncAPIResource):
 
           time_window: Time window for filtering transformations in a view
 
+          description: Description of the view
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -918,6 +945,7 @@ class AsyncViewsResource(AsyncAPIResource):
                     "functions": functions,
                     "name": name,
                     "time_window": time_window,
+                    "description": description,
                 },
                 view_generate_aggregation_data_params.ViewGenerateAggregationDataParams,
             ),
@@ -936,6 +964,7 @@ class AsyncViewsResource(AsyncAPIResource):
         functions: Iterable[view_generate_table_data_params.Function],
         name: str,
         time_window: view_generate_table_data_params.TimeWindow,
+        description: str | Omit = omit,
         limit: Optional[int] | Omit = omit,
         offset: Optional[int] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -971,6 +1000,8 @@ class AsyncViewsResource(AsyncAPIResource):
 
           time_window: Time window for filtering transformations in a view
 
+          description: Description of the view
+
           limit: Maximum number of rows to return (default: 50, max: 200)
 
           offset: Number of rows to skip for pagination
@@ -993,6 +1024,7 @@ class AsyncViewsResource(AsyncAPIResource):
                     "functions": functions,
                     "name": name,
                     "time_window": time_window,
+                    "description": description,
                     "limit": limit,
                     "offset": offset,
                 },
