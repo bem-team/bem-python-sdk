@@ -31,6 +31,9 @@ class ViewGenerateAggregationDataParams(TypedDict, total=False):
     time_window: Required[Annotated[TimeWindow, PropertyInfo(alias="timeWindow")]]
     """Time window for filtering transformations in a view"""
 
+    description: str
+    """Description of the view"""
+
 
 class Aggregation(TypedDict, total=False):
     """An aggregation definition for a view"""
@@ -46,6 +49,9 @@ class Aggregation(TypedDict, total=False):
     Name of the column to aggregate (required for count_distinct, sum, average, min,
     max functions)
     """
+
+    display_type: Annotated[Literal["table", "bar_chart", "pie_chart"], PropertyInfo(alias="displayType")]
+    """How to display the aggregation results"""
 
     group_by_column_name: Annotated[Optional[str], PropertyInfo(alias="groupByColumnName")]
     """Name of the column to group by (optional, for grouped aggregations)"""

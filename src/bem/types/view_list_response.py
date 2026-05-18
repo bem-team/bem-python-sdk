@@ -25,6 +25,9 @@ class ViewAggregation(BaseModel):
     max functions)
     """
 
+    display_type: Optional[Literal["table", "bar_chart", "pie_chart"]] = FieldInfo(alias="displayType", default=None)
+    """How to display the aggregation results"""
+
     group_by_column_name: Optional[str] = FieldInfo(alias="groupByColumnName", default=None)
     """Name of the column to group by (optional, for grouped aggregations)"""
 
@@ -109,9 +112,6 @@ class View(BaseModel):
 
     description: Optional[str] = None
     """Description of the view"""
-
-    display_type: Optional[Literal["table", "bar_chart", "pie_chart"]] = FieldInfo(alias="displayType", default=None)
-    """Display type of the view"""
 
 
 class ViewListResponse(BaseModel):
