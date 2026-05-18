@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.24.0 (2026-05-18)
+
+Full Changelog: [v0.23.0...v0.24.0](https://github.com/bem-team/bem-python-sdk/compare/v0.23.0...v0.24.0)
+
+### Features
+
+* **api:** api update ([a6b28d0](https://github.com/bem-team/bem-python-sdk/commit/a6b28d0923be78cdfc3528daf99a26b638fa7545))
+
 ## 0.23.0 (2026-05-14)
 
 Full Changelog: [v0.22.0...v0.23.0](https://github.com/bem-team/bem-python-sdk/compare/v0.22.0...v0.23.0)
