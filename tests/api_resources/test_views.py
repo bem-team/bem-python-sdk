@@ -55,6 +55,45 @@ class TestViews:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
+    def test_method_create_with_all_params(self, client: Bem) -> None:
+        view = client.views.create(
+            aggregations=[
+                {
+                    "function": "count",
+                    "name": "name",
+                    "aggregate_column_name": "aggregateColumnName",
+                    "display_type": "table",
+                    "group_by_column_name": "groupByColumnName",
+                }
+            ],
+            columns=[
+                {
+                    "display_order_index": 0,
+                    "name": "name",
+                    "value_schema_path": ["string"],
+                }
+            ],
+            filters=[
+                {
+                    "column_name": "columnName",
+                    "filter_type": "equals_string",
+                    "number": 0,
+                    "string": "string",
+                }
+            ],
+            functions=[
+                {
+                    "id": "id",
+                    "name": "name",
+                }
+            ],
+            name="name",
+            description="description",
+        )
+        assert_matches_type(ViewCreateResponse, view, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
     def test_raw_response_create(self, client: Bem) -> None:
         response = client.views.with_raw_response.create(
             aggregations=[
@@ -187,6 +226,46 @@ class TestViews:
             ],
             functions=[{}],
             name="name",
+        )
+        assert_matches_type(ViewUpdateResponse, view, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_update_with_all_params(self, client: Bem) -> None:
+        view = client.views.update(
+            view_id="view_id",
+            aggregations=[
+                {
+                    "function": "count",
+                    "name": "name",
+                    "aggregate_column_name": "aggregateColumnName",
+                    "display_type": "table",
+                    "group_by_column_name": "groupByColumnName",
+                }
+            ],
+            columns=[
+                {
+                    "display_order_index": 0,
+                    "name": "name",
+                    "value_schema_path": ["string"],
+                }
+            ],
+            filters=[
+                {
+                    "column_name": "columnName",
+                    "filter_type": "equals_string",
+                    "number": 0,
+                    "string": "string",
+                }
+            ],
+            functions=[
+                {
+                    "id": "id",
+                    "name": "name",
+                }
+            ],
+            name="name",
+            description="description",
         )
         assert_matches_type(ViewUpdateResponse, view, path=["response"])
 
@@ -406,6 +485,49 @@ class TestViews:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
+    def test_method_generate_aggregation_data_with_all_params(self, client: Bem) -> None:
+        view = client.views.generate_aggregation_data(
+            aggregations=[
+                {
+                    "function": "count",
+                    "name": "name",
+                    "aggregate_column_name": "aggregateColumnName",
+                    "display_type": "table",
+                    "group_by_column_name": "groupByColumnName",
+                }
+            ],
+            columns=[
+                {
+                    "display_order_index": 0,
+                    "name": "name",
+                    "value_schema_path": ["string"],
+                }
+            ],
+            filters=[
+                {
+                    "column_name": "columnName",
+                    "filter_type": "equals_string",
+                    "number": 0,
+                    "string": "string",
+                }
+            ],
+            functions=[
+                {
+                    "id": "id",
+                    "name": "name",
+                }
+            ],
+            name="name",
+            time_window={
+                "end": parse_datetime("2019-12-27T18:11:19.117Z"),
+                "start": parse_datetime("2019-12-27T18:11:19.117Z"),
+            },
+            description="description",
+        )
+        assert_matches_type(ViewGenerateAggregationDataResponse, view, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
     def test_raw_response_generate_aggregation_data(self, client: Bem) -> None:
         response = client.views.with_raw_response.generate_aggregation_data(
             aggregations=[
@@ -519,6 +641,7 @@ class TestViews:
                     "function": "count",
                     "name": "name",
                     "aggregate_column_name": "aggregateColumnName",
+                    "display_type": "table",
                     "group_by_column_name": "groupByColumnName",
                 }
             ],
@@ -548,6 +671,7 @@ class TestViews:
                 "end": parse_datetime("2019-12-27T18:11:19.117Z"),
                 "start": parse_datetime("2019-12-27T18:11:19.117Z"),
             },
+            description="description",
             limit=1,
             offset=0,
         )
@@ -658,6 +782,45 @@ class TestAsyncViews:
             ],
             functions=[{}],
             name="name",
+        )
+        assert_matches_type(ViewCreateResponse, view, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_create_with_all_params(self, async_client: AsyncBem) -> None:
+        view = await async_client.views.create(
+            aggregations=[
+                {
+                    "function": "count",
+                    "name": "name",
+                    "aggregate_column_name": "aggregateColumnName",
+                    "display_type": "table",
+                    "group_by_column_name": "groupByColumnName",
+                }
+            ],
+            columns=[
+                {
+                    "display_order_index": 0,
+                    "name": "name",
+                    "value_schema_path": ["string"],
+                }
+            ],
+            filters=[
+                {
+                    "column_name": "columnName",
+                    "filter_type": "equals_string",
+                    "number": 0,
+                    "string": "string",
+                }
+            ],
+            functions=[
+                {
+                    "id": "id",
+                    "name": "name",
+                }
+            ],
+            name="name",
+            description="description",
         )
         assert_matches_type(ViewCreateResponse, view, path=["response"])
 
@@ -795,6 +958,46 @@ class TestAsyncViews:
             ],
             functions=[{}],
             name="name",
+        )
+        assert_matches_type(ViewUpdateResponse, view, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_update_with_all_params(self, async_client: AsyncBem) -> None:
+        view = await async_client.views.update(
+            view_id="view_id",
+            aggregations=[
+                {
+                    "function": "count",
+                    "name": "name",
+                    "aggregate_column_name": "aggregateColumnName",
+                    "display_type": "table",
+                    "group_by_column_name": "groupByColumnName",
+                }
+            ],
+            columns=[
+                {
+                    "display_order_index": 0,
+                    "name": "name",
+                    "value_schema_path": ["string"],
+                }
+            ],
+            filters=[
+                {
+                    "column_name": "columnName",
+                    "filter_type": "equals_string",
+                    "number": 0,
+                    "string": "string",
+                }
+            ],
+            functions=[
+                {
+                    "id": "id",
+                    "name": "name",
+                }
+            ],
+            name="name",
+            description="description",
         )
         assert_matches_type(ViewUpdateResponse, view, path=["response"])
 
@@ -1014,6 +1217,49 @@ class TestAsyncViews:
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
+    async def test_method_generate_aggregation_data_with_all_params(self, async_client: AsyncBem) -> None:
+        view = await async_client.views.generate_aggregation_data(
+            aggregations=[
+                {
+                    "function": "count",
+                    "name": "name",
+                    "aggregate_column_name": "aggregateColumnName",
+                    "display_type": "table",
+                    "group_by_column_name": "groupByColumnName",
+                }
+            ],
+            columns=[
+                {
+                    "display_order_index": 0,
+                    "name": "name",
+                    "value_schema_path": ["string"],
+                }
+            ],
+            filters=[
+                {
+                    "column_name": "columnName",
+                    "filter_type": "equals_string",
+                    "number": 0,
+                    "string": "string",
+                }
+            ],
+            functions=[
+                {
+                    "id": "id",
+                    "name": "name",
+                }
+            ],
+            name="name",
+            time_window={
+                "end": parse_datetime("2019-12-27T18:11:19.117Z"),
+                "start": parse_datetime("2019-12-27T18:11:19.117Z"),
+            },
+            description="description",
+        )
+        assert_matches_type(ViewGenerateAggregationDataResponse, view, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
     async def test_raw_response_generate_aggregation_data(self, async_client: AsyncBem) -> None:
         response = await async_client.views.with_raw_response.generate_aggregation_data(
             aggregations=[
@@ -1127,6 +1373,7 @@ class TestAsyncViews:
                     "function": "count",
                     "name": "name",
                     "aggregate_column_name": "aggregateColumnName",
+                    "display_type": "table",
                     "group_by_column_name": "groupByColumnName",
                 }
             ],
@@ -1156,6 +1403,7 @@ class TestAsyncViews:
                 "end": parse_datetime("2019-12-27T18:11:19.117Z"),
                 "start": parse_datetime("2019-12-27T18:11:19.117Z"),
             },
+            description="description",
             limit=1,
             offset=0,
         )
