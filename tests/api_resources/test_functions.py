@@ -434,6 +434,7 @@ class TestFunctions:
             type="parse",
             display_name="displayName",
             parse_config={
+                "enable_bounding_boxes": True,
                 "extract_entities": True,
                 "link_across_documents": True,
                 "schema": {},
@@ -990,6 +991,7 @@ class TestFunctions:
             display_name="displayName",
             function_name="functionName",
             parse_config={
+                "enable_bounding_boxes": True,
                 "extract_entities": True,
                 "link_across_documents": True,
                 "schema": {},
@@ -1677,6 +1679,7 @@ class TestAsyncFunctions:
             type="parse",
             display_name="displayName",
             parse_config={
+                "enable_bounding_boxes": True,
                 "extract_entities": True,
                 "link_across_documents": True,
                 "schema": {},
@@ -2233,6 +2236,7 @@ class TestAsyncFunctions:
             display_name="displayName",
             function_name="functionName",
             parse_config={
+                "enable_bounding_boxes": True,
                 "extract_entities": True,
                 "link_across_documents": True,
                 "schema": {},
