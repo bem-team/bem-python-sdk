@@ -433,8 +433,8 @@ class TestFunctions:
             function_name="functionName",
             type="parse",
             display_name="displayName",
+            extra_config={"enable_bounding_boxes": True},
             parse_config={
-                "enable_bounding_boxes": True,
                 "extract_entities": True,
                 "link_across_documents": True,
                 "schema": {},
@@ -989,9 +989,9 @@ class TestFunctions:
             path_function_name="functionName",
             type="parse",
             display_name="displayName",
+            extra_config={"enable_bounding_boxes": True},
             function_name="functionName",
             parse_config={
-                "enable_bounding_boxes": True,
                 "extract_entities": True,
                 "link_across_documents": True,
                 "schema": {},
@@ -1678,8 +1678,8 @@ class TestAsyncFunctions:
             function_name="functionName",
             type="parse",
             display_name="displayName",
+            extra_config={"enable_bounding_boxes": True},
             parse_config={
-                "enable_bounding_boxes": True,
                 "extract_entities": True,
                 "link_across_documents": True,
                 "schema": {},
@@ -2234,9 +2234,9 @@ class TestAsyncFunctions:
             path_function_name="functionName",
             type="parse",
             display_name="displayName",
+            extra_config={"enable_bounding_boxes": True},
             function_name="functionName",
             parse_config={
-                "enable_bounding_boxes": True,
                 "extract_entities": True,
                 "link_across_documents": True,
                 "schema": {},
