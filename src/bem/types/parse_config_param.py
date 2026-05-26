@@ -18,17 +18,6 @@ class ParseConfigParam(TypedDict, total=False):
     linking (an environment-wide concern).
     """
 
-    enable_bounding_boxes: Annotated[bool, PropertyInfo(alias="enableBoundingBoxes")]
-    """
-    When true, return per-section and per-entity-mention coordinates in the parse
-    event's `fieldBoundingBoxes` map (same shape as Extract: JSON Pointer key →
-    array of `{page, left, top, width, height}` with coordinates normalized to [0,
-    1]). Keys are `/sections/{N}` and `/entities/{N}/occurrences/{M}` into the parse
-    output. Only applies to the open-ended discovery path (no `schema`) and to
-    vision input types. Bedrock-backed parse functions silently return an empty map
-    (no native bbox support). Defaults to false.
-    """
-
     extract_entities: Annotated[bool, PropertyInfo(alias="extractEntities")]
     """
     When true, extract named entities (people, organizations, products, studies,

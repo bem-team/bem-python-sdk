@@ -665,6 +665,7 @@ class FunctionsResource(SyncAPIResource):
         function_name: str,
         type: Literal["parse"],
         display_name: str | Omit = omit,
+        extra_config: function_create_params.CreateParseFunctionExtraConfig | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -701,6 +702,10 @@ class FunctionsResource(SyncAPIResource):
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
+
+          extra_config: Cross-cutting toggles for Parse functions. Mirrors the `extraConfig` surface on
+              Extract / Join — separated from `parseConfig` so the per-call Parse output shape
+              stays distinct from operator-level execution flags.
 
           parse_config: Per-version configuration for a Parse function.
 
@@ -754,6 +759,7 @@ class FunctionsResource(SyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
+        extra_config: function_create_params.CreateParseFunctionExtraConfig | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -789,6 +795,7 @@ class FunctionsResource(SyncAPIResource):
                     "join_type": join_type,
                     "shaping_schema": shaping_schema,
                     "config": config,
+                    "extra_config": extra_config,
                     "parse_config": parse_config,
                 },
                 function_create_params.FunctionCreateParams,
@@ -1326,6 +1333,7 @@ class FunctionsResource(SyncAPIResource):
         *,
         type: Literal["parse"],
         display_name: str | Omit = omit,
+        extra_config: function_update_params.UpsertParseFunctionExtraConfig | Omit = omit,
         function_name: str | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -1361,6 +1369,10 @@ class FunctionsResource(SyncAPIResource):
 
         Args:
           display_name: Display name of function. Human-readable name to help you identify the function.
+
+          extra_config: Cross-cutting toggles for Parse functions. Mirrors the `extraConfig` surface on
+              Extract / Join — separated from `parseConfig` so the per-call Parse output shape
+              stays distinct from operator-level execution flags.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
@@ -1417,6 +1429,7 @@ class FunctionsResource(SyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
+        extra_config: function_update_params.UpsertParseFunctionExtraConfig | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1454,6 +1467,7 @@ class FunctionsResource(SyncAPIResource):
                     "join_type": join_type,
                     "shaping_schema": shaping_schema,
                     "config": config,
+                    "extra_config": extra_config,
                     "parse_config": parse_config,
                 },
                 function_update_params.FunctionUpdateParams,
@@ -2442,6 +2456,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         function_name: str,
         type: Literal["parse"],
         display_name: str | Omit = omit,
+        extra_config: function_create_params.CreateParseFunctionExtraConfig | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -2478,6 +2493,10 @@ class AsyncFunctionsResource(AsyncAPIResource):
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
+
+          extra_config: Cross-cutting toggles for Parse functions. Mirrors the `extraConfig` surface on
+              Extract / Join — separated from `parseConfig` so the per-call Parse output shape
+              stays distinct from operator-level execution flags.
 
           parse_config: Per-version configuration for a Parse function.
 
@@ -2531,6 +2550,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
+        extra_config: function_create_params.CreateParseFunctionExtraConfig | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -2566,6 +2586,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "join_type": join_type,
                     "shaping_schema": shaping_schema,
                     "config": config,
+                    "extra_config": extra_config,
                     "parse_config": parse_config,
                 },
                 function_create_params.FunctionCreateParams,
@@ -3103,6 +3124,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         type: Literal["parse"],
         display_name: str | Omit = omit,
+        extra_config: function_update_params.UpsertParseFunctionExtraConfig | Omit = omit,
         function_name: str | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -3138,6 +3160,10 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
         Args:
           display_name: Display name of function. Human-readable name to help you identify the function.
+
+          extra_config: Cross-cutting toggles for Parse functions. Mirrors the `extraConfig` surface on
+              Extract / Join — separated from `parseConfig` so the per-call Parse output shape
+              stays distinct from operator-level execution flags.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
@@ -3194,6 +3220,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
+        extra_config: function_update_params.UpsertParseFunctionExtraConfig | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -3231,6 +3258,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "join_type": join_type,
                     "shaping_schema": shaping_schema,
                     "config": config,
+                    "extra_config": extra_config,
                     "parse_config": parse_config,
                 },
                 function_update_params.FunctionUpdateParams,
