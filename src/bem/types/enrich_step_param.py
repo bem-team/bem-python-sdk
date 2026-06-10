@@ -12,36 +12,41 @@ __all__ = ["EnrichStepParam"]
 class EnrichStepParam(TypedDict, total=False):
     """Single enrichment step configuration.
 
-    **Process Flow:**
+    **Process Flow (collection source):**
     1. Extract values from `sourceField` using JMESPath
     2. Perform search against the specified collection (semantic, exact, or hybrid based on `searchMode`)
     3. Return top K matches sorted by relevance (best match first)
     4. Inject results into `targetField`
 
-    **Search Modes:**
-    - `semantic` (default): Vector similarity search - best for natural language and conceptual matching
-    - `exact`: Exact keyword matching - best for SKU numbers, IDs, routing numbers
-    - `hybrid`: Combined semantic + keyword search - best for tags and categories
+    **Process Flow (endpoint source):**
+    1. Extract values from `sourceField` using JMESPath
+    2. Call the named endpoint once per extracted value, following pagination if
+    `nextPagePath`/`nextPageParam` are configured on the endpoint
+    3. Optionally apply LLM agent reasoning to rank candidates (`matchInstructions`),
+    batching across all fetched pages in groups of `maxCandidates`
+    4. Inject results into `targetField`
 
-    **Result Format:**
-    - Results are always returned as an array (list), regardless of `topK` value
-    - Array is sorted by relevance (best match first)
-    - Each result contains `data` (the collection item) and optionally `cosineDistance`
-    - With `topK=1`: Returns array with single best match: `[{data: {...}, cosineDistance: 0.15}]`
-    - With `topK>1`: Returns array with multiple matches sorted by relevance
-    """
+    **Collection Search Modes** (`source: "collection"` only):
+    - `semantic` (default): Vector similarity search — best for natural language and conceptual matching
+    - `exact`: Exact keyword matching — best for SKU numbers, IDs, routing numbers
+    - `hybrid`: Combined semantic + keyword search — best for tags and categories
 
-    collection_name: Required[Annotated[str, PropertyInfo(alias="collectionName")]]
-    """Name of the collection to search against.
+    **Result Format (collection source):**
+    - Always an array sorted by relevance (best match first)
+    - Each element: `{ data, cosineDistance? }` or `{ data, hybridScore? }`
 
-    The collection must exist and contain items. Supports hierarchical paths when
-    used with `includeSubcollections`.
+    **Result Format (endpoint source, no matchInstructions):**
+    - Always an array; the raw fetched value is the single element
+
+    **Result Format (endpoint source, with matchInstructions):**
+    - Array of LLM-ranked matches: `[{ data, confidence, reasoning? }, ...]`
+    - Length capped by `enrichEndpoint.matchTopK` (default 1)
     """
 
     source_field: Required[Annotated[str, PropertyInfo(alias="sourceField")]]
     """
-    JMESPath expression to extract source data for semantic search. Can extract
-    single values or arrays. All extracted values will be used for search.
+    JMESPath expression to extract source data. Can extract a single value or an
+    array. Each extracted value is looked up independently.
     """
 
     target_field: Required[Annotated[str, PropertyInfo(alias="targetField")]]
@@ -49,6 +54,19 @@ class EnrichStepParam(TypedDict, total=False):
     Field path where enriched results should be placed. Use simple field names
     (e.g., "enriched_products"). Results are always injected as an array (list),
     regardless of topK value.
+    """
+
+    collection_name: Annotated[str, PropertyInfo(alias="collectionName")]
+    """
+    Name of the collection to search against. Required when `source` is
+    `"collection"`. The collection must exist and contain items. Supports
+    hierarchical paths when used with `includeSubcollections`.
+    """
+
+    endpoint_name: Annotated[str, PropertyInfo(alias="endpointName")]
+    """
+    Name of an endpoint defined in `enrichConfig.endpoints`. Required when `source`
+    is `"endpoint"`.
     """
 
     include_score: Annotated[bool, PropertyInfo(alias="includeScore")]
@@ -106,6 +124,15 @@ class EnrichStepParam(TypedDict, total=False):
 
     - Use for: Tags, categories, partial identifiers
     - Example: Balances semantic meaning with exact keyword matching
+    """
+
+    source: Literal["collection", "endpoint"]
+    """Where to fetch enrichment data from (default: `"collection"`).
+
+    - `"collection"`: Vector/keyword search against a BEM collection. Requires
+      `collectionName`.
+    - `"endpoint"`: HTTP call to a named endpoint defined in
+      `enrichConfig.endpoints`. Requires `endpointName`.
     """
 
     top_k: Annotated[int, PropertyInfo(alias="topK")]

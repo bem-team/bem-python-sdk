@@ -373,16 +373,35 @@ class TestFunctions:
             config={
                 "steps": [
                     {
-                        "collection_name": "collectionName",
                         "source_field": "sourceField",
                         "target_field": "targetField",
+                        "collection_name": "collectionName",
+                        "endpoint_name": "endpointName",
                         "include_score": True,
                         "include_subcollections": True,
                         "score_threshold": 0,
                         "search_mode": "semantic",
+                        "source": "collection",
                         "top_k": 1,
                     }
-                ]
+                ],
+                "endpoints": [
+                    {
+                        "method": "GET",
+                        "name": "name",
+                        "url": "url",
+                        "body_template": "bodyTemplate",
+                        "headers": {},
+                        "match_instructions": "matchInstructions",
+                        "match_top_k": 1,
+                        "max_candidates": 1,
+                        "max_pages": 1,
+                        "next_page_param": "nextPageParam",
+                        "next_page_path": "nextPagePath",
+                        "query_param": "queryParam",
+                        "response_path": "responsePath",
+                    }
+                ],
             },
             display_name="displayName",
             tags=["string"],
@@ -922,16 +941,35 @@ class TestFunctions:
             config={
                 "steps": [
                     {
-                        "collection_name": "collectionName",
                         "source_field": "sourceField",
                         "target_field": "targetField",
+                        "collection_name": "collectionName",
+                        "endpoint_name": "endpointName",
                         "include_score": True,
                         "include_subcollections": True,
                         "score_threshold": 0,
                         "search_mode": "semantic",
+                        "source": "collection",
                         "top_k": 1,
                     }
-                ]
+                ],
+                "endpoints": [
+                    {
+                        "method": "GET",
+                        "name": "name",
+                        "url": "url",
+                        "body_template": "bodyTemplate",
+                        "headers": {},
+                        "match_instructions": "matchInstructions",
+                        "match_top_k": 1,
+                        "max_candidates": 1,
+                        "max_pages": 1,
+                        "next_page_param": "nextPageParam",
+                        "next_page_path": "nextPagePath",
+                        "query_param": "queryParam",
+                        "response_path": "responsePath",
+                    }
+                ],
             },
         )
         assert_matches_type(FunctionResponse, function, path=["response"])
@@ -1618,16 +1656,35 @@ class TestAsyncFunctions:
             config={
                 "steps": [
                     {
-                        "collection_name": "collectionName",
                         "source_field": "sourceField",
                         "target_field": "targetField",
+                        "collection_name": "collectionName",
+                        "endpoint_name": "endpointName",
                         "include_score": True,
                         "include_subcollections": True,
                         "score_threshold": 0,
                         "search_mode": "semantic",
+                        "source": "collection",
                         "top_k": 1,
                     }
-                ]
+                ],
+                "endpoints": [
+                    {
+                        "method": "GET",
+                        "name": "name",
+                        "url": "url",
+                        "body_template": "bodyTemplate",
+                        "headers": {},
+                        "match_instructions": "matchInstructions",
+                        "match_top_k": 1,
+                        "max_candidates": 1,
+                        "max_pages": 1,
+                        "next_page_param": "nextPageParam",
+                        "next_page_path": "nextPagePath",
+                        "query_param": "queryParam",
+                        "response_path": "responsePath",
+                    }
+                ],
             },
             display_name="displayName",
             tags=["string"],
@@ -2167,16 +2224,35 @@ class TestAsyncFunctions:
             config={
                 "steps": [
                     {
-                        "collection_name": "collectionName",
                         "source_field": "sourceField",
                         "target_field": "targetField",
+                        "collection_name": "collectionName",
+                        "endpoint_name": "endpointName",
                         "include_score": True,
                         "include_subcollections": True,
                         "score_threshold": 0,
                         "search_mode": "semantic",
+                        "source": "collection",
                         "top_k": 1,
                     }
-                ]
+                ],
+                "endpoints": [
+                    {
+                        "method": "GET",
+                        "name": "name",
+                        "url": "url",
+                        "body_template": "bodyTemplate",
+                        "headers": {},
+                        "match_instructions": "matchInstructions",
+                        "match_top_k": 1,
+                        "max_candidates": 1,
+                        "max_pages": 1,
+                        "next_page_param": "nextPageParam",
+                        "next_page_path": "nextPagePath",
+                        "query_param": "queryParam",
+                        "response_path": "responsePath",
+                    }
+                ],
             },
         )
         assert_matches_type(FunctionResponse, function, path=["response"])
