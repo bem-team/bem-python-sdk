@@ -31,6 +31,7 @@ class TestFs:
     def test_method_navigate_with_all_params(self, client: Bem) -> None:
         f = client.fs.navigate(
             op="ls",
+            context={"bucket": "bucket"},
             count_only=True,
             cursor="cursor",
             filter={
@@ -100,6 +101,7 @@ class TestAsyncFs:
     async def test_method_navigate_with_all_params(self, async_client: AsyncBem) -> None:
         f = await async_client.fs.navigate(
             op="ls",
+            context={"bucket": "bucket"},
             count_only=True,
             cursor="cursor",
             filter={

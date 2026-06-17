@@ -76,6 +76,7 @@ class FsResource(SyncAPIResource):
         self,
         *,
         op: FsOp,
+        context: f_navigate_params.Context | Omit = omit,
         count_only: bool | Omit = omit,
         cursor: str | Omit = omit,
         filter: f_navigate_params.Filter | Omit = omit,
@@ -192,6 +193,10 @@ class FsResource(SyncAPIResource):
               environments with no memory-linked docs they return empty data with a hint
               pointing at the toggle.
 
+          context: Request-scoping concerns that are orthogonal to the op itself. Carried on a
+              `context` object so future scoping hints (e.g. as-of timestamps, read
+              consistency) can slot in without reshaping the op-specific fields.
+
           count_only: When true, return only the hit count without snippet payload. Cheaper than
               fetching matches when the agent only wants a yes/no.
 
@@ -238,6 +243,7 @@ class FsResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "op": op,
+                    "context": context,
                     "count_only": count_only,
                     "cursor": cursor,
                     "filter": filter,
@@ -314,6 +320,7 @@ class AsyncFsResource(AsyncAPIResource):
         self,
         *,
         op: FsOp,
+        context: f_navigate_params.Context | Omit = omit,
         count_only: bool | Omit = omit,
         cursor: str | Omit = omit,
         filter: f_navigate_params.Filter | Omit = omit,
@@ -430,6 +437,10 @@ class AsyncFsResource(AsyncAPIResource):
               environments with no memory-linked docs they return empty data with a hint
               pointing at the toggle.
 
+          context: Request-scoping concerns that are orthogonal to the op itself. Carried on a
+              `context` object so future scoping hints (e.g. as-of timestamps, read
+              consistency) can slot in without reshaping the op-specific fields.
+
           count_only: When true, return only the hit count without snippet payload. Cheaper than
               fetching matches when the agent only wants a yes/no.
 
@@ -476,6 +487,7 @@ class AsyncFsResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "op": op,
+                    "context": context,
                     "count_only": count_only,
                     "cursor": cursor,
                     "filter": filter,
