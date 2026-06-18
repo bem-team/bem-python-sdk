@@ -281,6 +281,20 @@ Methods:
 
 - <code title="get /v3/eval/results">client.eval.results.<a href="./src/bem/resources/eval/results.py">retrieve_results</a>(\*\*<a href="src/bem/types/eval/result_retrieve_results_params.py">params</a>) -> <a href="./src/bem/types/eval/evaluation_results.py">EvaluationResults</a></code>
 
+## Score
+
+Types:
+
+```python
+from bem.types.eval import ScoreCreateResponse, ScoreRetrieveResponse, ScoreCancelResponse
+```
+
+Methods:
+
+- <code title="post /v3/eval/score">client.eval.score.<a href="./src/bem/resources/eval/score.py">create</a>(\*\*<a href="src/bem/types/eval/score_create_params.py">params</a>) -> <a href="./src/bem/types/eval/score_create_response.py">ScoreCreateResponse</a></code>
+- <code title="get /v3/eval/score/{scoreRunID}">client.eval.score.<a href="./src/bem/resources/eval/score.py">retrieve</a>(score_run_id) -> <a href="./src/bem/types/eval/score_retrieve_response.py">ScoreRetrieveResponse</a></code>
+- <code title="post /v3/eval/score/{scoreRunID}/cancel">client.eval.score.<a href="./src/bem/resources/eval/score.py">cancel</a>(score_run_id) -> <a href="./src/bem/types/eval/score_cancel_response.py">ScoreCancelResponse</a></code>
+
 # Fs
 
 Types:
@@ -347,3 +361,130 @@ Methods:
 - <code title="delete /v3/views/{view_id}">client.views.<a href="./src/bem/resources/views.py">delete</a>(view_id) -> None</code>
 - <code title="post /v3/views/aggregation-data">client.views.<a href="./src/bem/resources/views.py">generate_aggregation_data</a>(\*\*<a href="src/bem/types/view_generate_aggregation_data_params.py">params</a>) -> <a href="./src/bem/types/view_generate_aggregation_data_response.py">ViewGenerateAggregationDataResponse</a></code>
 - <code title="post /v3/views/table-data">client.views.<a href="./src/bem/resources/views.py">generate_table_data</a>(\*\*<a href="src/bem/types/view_generate_table_data_params.py">params</a>) -> <a href="./src/bem/types/view_generate_table_data_response.py">ViewGenerateTableDataResponse</a></code>
+
+# Buckets
+
+Types:
+
+```python
+from bem.types import (
+    BucketCreateResponse,
+    BucketRetrieveResponse,
+    BucketUpdateResponse,
+    BucketListResponse,
+)
+```
+
+Methods:
+
+- <code title="post /v3/buckets">client.buckets.<a href="./src/bem/resources/buckets.py">create</a>(\*\*<a href="src/bem/types/bucket_create_params.py">params</a>) -> <a href="./src/bem/types/bucket_create_response.py">BucketCreateResponse</a></code>
+- <code title="get /v3/buckets/{bucketID}">client.buckets.<a href="./src/bem/resources/buckets.py">retrieve</a>(bucket_id) -> <a href="./src/bem/types/bucket_retrieve_response.py">BucketRetrieveResponse</a></code>
+- <code title="patch /v3/buckets/{bucketID}">client.buckets.<a href="./src/bem/resources/buckets.py">update</a>(bucket_id, \*\*<a href="src/bem/types/bucket_update_params.py">params</a>) -> <a href="./src/bem/types/bucket_update_response.py">BucketUpdateResponse</a></code>
+- <code title="get /v3/buckets">client.buckets.<a href="./src/bem/resources/buckets.py">list</a>(\*\*<a href="src/bem/types/bucket_list_params.py">params</a>) -> <a href="./src/bem/types/bucket_list_response.py">BucketListResponse</a></code>
+- <code title="delete /v3/buckets/{bucketID}">client.buckets.<a href="./src/bem/resources/buckets.py">delete</a>(bucket_id, \*\*<a href="src/bem/types/bucket_delete_params.py">params</a>) -> None</code>
+
+# Entities
+
+Types:
+
+```python
+from bem.types import (
+    EntityUpdateResponse,
+    EntityBulkCreateResponse,
+    EntityBulkValidateResponse,
+    EntityRetrieveRelationsResponse,
+    EntityRetrieveSeedStatusResponse,
+)
+```
+
+Methods:
+
+- <code title="patch /v3/entities/{id}">client.entities.<a href="./src/bem/resources/entities/entities.py">update</a>(id, \*\*<a href="src/bem/types/entity_update_params.py">params</a>) -> <a href="./src/bem/types/entity_update_response.py">EntityUpdateResponse</a></code>
+- <code title="post /v3/entities/bulk">client.entities.<a href="./src/bem/resources/entities/entities.py">bulk_create</a>(\*\*<a href="src/bem/types/entity_bulk_create_params.py">params</a>) -> <a href="./src/bem/types/entity_bulk_create_response.py">EntityBulkCreateResponse</a></code>
+- <code title="post /v3/entities/bulk-validate">client.entities.<a href="./src/bem/resources/entities/entities.py">bulk_validate</a>(\*\*<a href="src/bem/types/entity_bulk_validate_params.py">params</a>) -> <a href="./src/bem/types/entity_bulk_validate_response.py">EntityBulkValidateResponse</a></code>
+- <code title="get /v3/entities/{id}/relations">client.entities.<a href="./src/bem/resources/entities/entities.py">retrieve_relations</a>(id, \*\*<a href="src/bem/types/entity_retrieve_relations_params.py">params</a>) -> <a href="./src/bem/types/entity_retrieve_relations_response.py">EntityRetrieveRelationsResponse</a></code>
+- <code title="get /v3/entities/seed/{id}">client.entities.<a href="./src/bem/resources/entities/entities.py">retrieve_seed_status</a>(id) -> <a href="./src/bem/types/entity_retrieve_seed_status_response.py">EntityRetrieveSeedStatusResponse</a></code>
+
+## Synonyms
+
+Types:
+
+```python
+from bem.types.entities import SynonymAddResponse
+```
+
+Methods:
+
+- <code title="post /v3/entities/{id}/synonyms">client.entities.synonyms.<a href="./src/bem/resources/entities/synonyms.py">add</a>(id, \*\*<a href="src/bem/types/entities/synonym_add_params.py">params</a>) -> <a href="./src/bem/types/entities/synonym_add_response.py">SynonymAddResponse</a></code>
+- <code title="delete /v3/entities/{id}/synonyms/{synonymID}">client.entities.synonyms.<a href="./src/bem/resources/entities/synonyms.py">remove</a>(synonym_id, \*, id, \*\*<a href="src/bem/types/entities/synonym_remove_params.py">params</a>) -> None</code>
+
+# EntityTypes
+
+Types:
+
+```python
+from bem.types import (
+    EntityTypeCreateResponse,
+    EntityTypeRetrieveResponse,
+    EntityTypeUpdateResponse,
+    EntityTypeListResponse,
+)
+```
+
+Methods:
+
+- <code title="post /v3/entity-types">client.entity_types.<a href="./src/bem/resources/entity_types/entity_types.py">create</a>(\*\*<a href="src/bem/types/entity_type_create_params.py">params</a>) -> <a href="./src/bem/types/entity_type_create_response.py">EntityTypeCreateResponse</a></code>
+- <code title="get /v3/entity-types/{typeID}">client.entity_types.<a href="./src/bem/resources/entity_types/entity_types.py">retrieve</a>(type_id) -> <a href="./src/bem/types/entity_type_retrieve_response.py">EntityTypeRetrieveResponse</a></code>
+- <code title="patch /v3/entity-types/{typeID}">client.entity_types.<a href="./src/bem/resources/entity_types/entity_types.py">update</a>(type_id, \*\*<a href="src/bem/types/entity_type_update_params.py">params</a>) -> <a href="./src/bem/types/entity_type_update_response.py">EntityTypeUpdateResponse</a></code>
+- <code title="get /v3/entity-types">client.entity_types.<a href="./src/bem/resources/entity_types/entity_types.py">list</a>(\*\*<a href="src/bem/types/entity_type_list_params.py">params</a>) -> <a href="./src/bem/types/entity_type_list_response.py">EntityTypeListResponse</a></code>
+- <code title="delete /v3/entity-types/{typeID}">client.entity_types.<a href="./src/bem/resources/entity_types/entity_types.py">delete</a>(type_id) -> None</code>
+
+## Reviewers
+
+Types:
+
+```python
+from bem.types.entity_types import ReviewerListResponse, ReviewerAssignResponse
+```
+
+Methods:
+
+- <code title="get /v3/entity-types/{typeID}/reviewers">client.entity_types.reviewers.<a href="./src/bem/resources/entity_types/reviewers.py">list</a>(type_id) -> <a href="./src/bem/types/entity_types/reviewer_list_response.py">ReviewerListResponse</a></code>
+- <code title="post /v3/entity-types/{typeID}/reviewers">client.entity_types.reviewers.<a href="./src/bem/resources/entity_types/reviewers.py">assign</a>(type_id, \*\*<a href="src/bem/types/entity_types/reviewer_assign_params.py">params</a>) -> <a href="./src/bem/types/entity_types/reviewer_assign_response.py">ReviewerAssignResponse</a></code>
+- <code title="delete /v3/entity-types/{typeID}/reviewers/{userID}">client.entity_types.reviewers.<a href="./src/bem/resources/entity_types/reviewers.py">remove</a>(user_id, \*, type_id) -> None</code>
+
+# KnowledgeGraph
+
+Types:
+
+```python
+from bem.types import KnowledgeGraphRetrieveResponse
+```
+
+Methods:
+
+- <code title="get /v3/knowledge-graph">client.knowledge_graph.<a href="./src/bem/resources/knowledge_graph.py">retrieve</a>(\*\*<a href="src/bem/types/knowledge_graph_retrieve_params.py">params</a>) -> <a href="./src/bem/types/knowledge_graph_retrieve_response.py">KnowledgeGraphRetrieveResponse</a></code>
+
+# ReviewQueue
+
+Types:
+
+```python
+from bem.types import ReviewQueueListResponse
+```
+
+Methods:
+
+- <code title="get /v3/review-queue">client.review_queue.<a href="./src/bem/resources/review_queue.py">list</a>(\*\*<a href="src/bem/types/review_queue_list_params.py">params</a>) -> <a href="./src/bem/types/review_queue_list_response.py">ReviewQueueListResponse</a></code>
+
+# Users
+
+Types:
+
+```python
+from bem.types import UserListReviewerAssignmentsResponse
+```
+
+Methods:
+
+- <code title="get /v3/users/{userID}/reviewer-assignments">client.users.<a href="./src/bem/resources/users.py">list_reviewer_assignments</a>(user_id) -> <a href="./src/bem/types/user_list_reviewer_assignments_response.py">UserListReviewerAssignmentsResponse</a></code>
