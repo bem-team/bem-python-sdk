@@ -24,6 +24,14 @@ from .calls import (
     CallsResourceWithStreamingResponse,
     AsyncCallsResourceWithStreamingResponse,
 )
+from .users import (
+    UsersResource,
+    AsyncUsersResource,
+    UsersResourceWithRawResponse,
+    AsyncUsersResourceWithRawResponse,
+    UsersResourceWithStreamingResponse,
+    AsyncUsersResourceWithStreamingResponse,
+)
 from .views import (
     ViewsResource,
     AsyncViewsResource,
@@ -48,6 +56,14 @@ from .events import (
     EventsResourceWithStreamingResponse,
     AsyncEventsResourceWithStreamingResponse,
 )
+from .buckets import (
+    BucketsResource,
+    AsyncBucketsResource,
+    BucketsResourceWithRawResponse,
+    AsyncBucketsResourceWithRawResponse,
+    BucketsResourceWithStreamingResponse,
+    AsyncBucketsResourceWithStreamingResponse,
+)
 from .outputs import (
     OutputsResource,
     AsyncOutputsResource,
@@ -55,6 +71,14 @@ from .outputs import (
     AsyncOutputsResourceWithRawResponse,
     OutputsResourceWithStreamingResponse,
     AsyncOutputsResourceWithStreamingResponse,
+)
+from .entities import (
+    EntitiesResource,
+    AsyncEntitiesResource,
+    EntitiesResourceWithRawResponse,
+    AsyncEntitiesResourceWithRawResponse,
+    EntitiesResourceWithStreamingResponse,
+    AsyncEntitiesResourceWithStreamingResponse,
 )
 from .webhooks import WebhooksResource, AsyncWebhooksResource
 from .functions import (
@@ -89,6 +113,14 @@ from .collections import (
     CollectionsResourceWithStreamingResponse,
     AsyncCollectionsResourceWithStreamingResponse,
 )
+from .entity_types import (
+    EntityTypesResource,
+    AsyncEntityTypesResource,
+    EntityTypesResourceWithRawResponse,
+    AsyncEntityTypesResourceWithRawResponse,
+    EntityTypesResourceWithStreamingResponse,
+    AsyncEntityTypesResourceWithStreamingResponse,
+)
 from .infer_schema import (
     InferSchemaResource,
     AsyncInferSchemaResource,
@@ -96,6 +128,14 @@ from .infer_schema import (
     AsyncInferSchemaResourceWithRawResponse,
     InferSchemaResourceWithStreamingResponse,
     AsyncInferSchemaResourceWithStreamingResponse,
+)
+from .review_queue import (
+    ReviewQueueResource,
+    AsyncReviewQueueResource,
+    ReviewQueueResourceWithRawResponse,
+    AsyncReviewQueueResourceWithRawResponse,
+    ReviewQueueResourceWithStreamingResponse,
+    AsyncReviewQueueResourceWithStreamingResponse,
 )
 from .subscriptions import (
     SubscriptionsResource,
@@ -112,6 +152,14 @@ from .webhook_secret import (
     AsyncWebhookSecretResourceWithRawResponse,
     WebhookSecretResourceWithStreamingResponse,
     AsyncWebhookSecretResourceWithStreamingResponse,
+)
+from .knowledge_graph import (
+    KnowledgeGraphResource,
+    AsyncKnowledgeGraphResource,
+    KnowledgeGraphResourceWithRawResponse,
+    AsyncKnowledgeGraphResourceWithRawResponse,
+    KnowledgeGraphResourceWithStreamingResponse,
+    AsyncKnowledgeGraphResourceWithStreamingResponse,
 )
 
 __all__ = [
@@ -201,4 +249,40 @@ __all__ = [
     "AsyncViewsResourceWithRawResponse",
     "ViewsResourceWithStreamingResponse",
     "AsyncViewsResourceWithStreamingResponse",
+    "BucketsResource",
+    "AsyncBucketsResource",
+    "BucketsResourceWithRawResponse",
+    "AsyncBucketsResourceWithRawResponse",
+    "BucketsResourceWithStreamingResponse",
+    "AsyncBucketsResourceWithStreamingResponse",
+    "EntitiesResource",
+    "AsyncEntitiesResource",
+    "EntitiesResourceWithRawResponse",
+    "AsyncEntitiesResourceWithRawResponse",
+    "EntitiesResourceWithStreamingResponse",
+    "AsyncEntitiesResourceWithStreamingResponse",
+    "EntityTypesResource",
+    "AsyncEntityTypesResource",
+    "EntityTypesResourceWithRawResponse",
+    "AsyncEntityTypesResourceWithRawResponse",
+    "EntityTypesResourceWithStreamingResponse",
+    "AsyncEntityTypesResourceWithStreamingResponse",
+    "KnowledgeGraphResource",
+    "AsyncKnowledgeGraphResource",
+    "KnowledgeGraphResourceWithRawResponse",
+    "AsyncKnowledgeGraphResourceWithRawResponse",
+    "KnowledgeGraphResourceWithStreamingResponse",
+    "AsyncKnowledgeGraphResourceWithStreamingResponse",
+    "ReviewQueueResource",
+    "AsyncReviewQueueResource",
+    "ReviewQueueResourceWithRawResponse",
+    "AsyncReviewQueueResourceWithRawResponse",
+    "ReviewQueueResourceWithStreamingResponse",
+    "AsyncReviewQueueResourceWithStreamingResponse",
+    "UsersResource",
+    "AsyncUsersResource",
+    "UsersResourceWithRawResponse",
+    "AsyncUsersResourceWithRawResponse",
+    "UsersResourceWithStreamingResponse",
+    "AsyncUsersResourceWithStreamingResponse",
 ]
