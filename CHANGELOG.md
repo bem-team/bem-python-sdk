@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.28.0 (2026-06-18)
+
+Full Changelog: [v0.27.0...v0.28.0](https://github.com/bem-team/bem-python-sdk/compare/v0.27.0...v0.28.0)
+
+### Features
+
+* **api:** api update ([89286fe](https://github.com/bem-team/bem-python-sdk/commit/89286fed4763d8c3f3bba0280a7e046bc6681045))
+* **api:** memory v1 and bulk scoring updates ([ddca210](https://github.com/bem-team/bem-python-sdk/commit/ddca210813d653c1dd1b322e74cfda8b893bed20))
+
+
+### Bug Fixes
+
+* **auth:** prioritize first auth header ([efb9477](https://github.com/bem-team/bem-python-sdk/commit/efb94773a05495d3965a00424d235d4a8ddd580a))
+
 ## 0.27.0 (2026-06-09)
 
 Full Changelog: [v0.26.0...v0.27.0](https://github.com/bem-team/bem-python-sdk/compare/v0.26.0...v0.27.0)
