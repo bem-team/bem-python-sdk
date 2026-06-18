@@ -4,6 +4,14 @@ from __future__ import annotations
 
 import httpx
 
+from .score import (
+    ScoreResource,
+    AsyncScoreResource,
+    ScoreResourceWithRawResponse,
+    AsyncScoreResourceWithRawResponse,
+    ScoreResourceWithStreamingResponse,
+    AsyncScoreResourceWithStreamingResponse,
+)
 from ...types import eval_trigger_evaluation_params
 from .results import (
     ResultsResource,
@@ -124,6 +132,55 @@ class EvalResource(SyncAPIResource):
         types.
         """
         return ResultsResource(self._client)
+
+    @cached_property
+    def score(self) -> ScoreResource:
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
+
+        ## Evaluations (`/v3/eval`)
+
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
+
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
+        """
+        return ScoreResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> EvalResourceWithRawResponse:
@@ -295,6 +352,55 @@ class AsyncEvalResource(AsyncAPIResource):
         return AsyncResultsResource(self._client)
 
     @cached_property
+    def score(self) -> AsyncScoreResource:
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
+
+        ## Evaluations (`/v3/eval`)
+
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
+
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
+        """
+        return AsyncScoreResource(self._client)
+
+    @cached_property
     def with_raw_response(self) -> AsyncEvalResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
@@ -424,6 +530,55 @@ class EvalResourceWithRawResponse:
         """
         return ResultsResourceWithRawResponse(self._eval.results)
 
+    @cached_property
+    def score(self) -> ScoreResourceWithRawResponse:
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
+
+        ## Evaluations (`/v3/eval`)
+
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
+
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
+        """
+        return ScoreResourceWithRawResponse(self._eval.score)
+
 
 class AsyncEvalResourceWithRawResponse:
     def __init__(self, eval: AsyncEvalResource) -> None:
@@ -481,6 +636,55 @@ class AsyncEvalResourceWithRawResponse:
         types.
         """
         return AsyncResultsResourceWithRawResponse(self._eval.results)
+
+    @cached_property
+    def score(self) -> AsyncScoreResourceWithRawResponse:
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
+
+        ## Evaluations (`/v3/eval`)
+
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
+
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
+        """
+        return AsyncScoreResourceWithRawResponse(self._eval.score)
 
 
 class EvalResourceWithStreamingResponse:
@@ -540,6 +744,55 @@ class EvalResourceWithStreamingResponse:
         """
         return ResultsResourceWithStreamingResponse(self._eval.results)
 
+    @cached_property
+    def score(self) -> ScoreResourceWithStreamingResponse:
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
+
+        ## Evaluations (`/v3/eval`)
+
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
+
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
+        """
+        return ScoreResourceWithStreamingResponse(self._eval.score)
+
 
 class AsyncEvalResourceWithStreamingResponse:
     def __init__(self, eval: AsyncEvalResource) -> None:
@@ -597,3 +850,52 @@ class AsyncEvalResourceWithStreamingResponse:
         types.
         """
         return AsyncResultsResourceWithStreamingResponse(self._eval.results)
+
+    @cached_property
+    def score(self) -> AsyncScoreResourceWithStreamingResponse:
+        """
+        Monitor, evaluate, and iterate on the quality of every function in your
+        environment. Function Accuracy bundles two complementary loops:
+
+        ## Evaluations (`/v3/eval`)
+
+        Trigger and retrieve per-transformation evaluations. Evaluations run
+        asynchronously and score each transformation's output against the
+        function's schema for confidence, per-field hallucination detection,
+        and relevance. Supported for `extract`, `transform`, `analyze`, and
+        `join` events.
+
+        1. **Trigger** — `POST /v3/eval` queues jobs for a batch of transformation IDs.
+        2. **Poll** — `GET /v3/eval/results` returns the current state of each
+           requested ID, partitioned into `results`, `pending`, and `failed`.
+           Accepts either `eventIDs` (preferred) or `transformationIDs` as a
+           comma-separated query parameter, and always keys the response by
+           event KSUID.
+
+        Up to 100 IDs may be submitted per request.
+
+        ## Metrics, review, regression (`/v3/functions/{metrics,review,regression,compare}`)
+
+        Roll evaluation results and user corrections up into actionable
+        function-level signal:
+
+        - **`GET /v3/functions/metrics`** — aggregate accuracy, precision,
+          recall, F1, and confusion-matrix counts per function.
+        - **`POST /v3/functions/review`** — sample-size estimation,
+          confidence-bucketed distribution, PR-AUC, and per-threshold
+          confidence intervals (Wald or Wilson) for picking review cutoffs.
+        - **`POST /v3/functions/regression`** — replay corrected historical
+          inputs against a new function version, producing a labeled
+          regression dataset.
+        - **`POST /v3/functions/regression/corrections`** — propagate
+          baseline corrections onto the regression dataset so it can be
+          scored.
+        - **`POST /v3/functions/compare`** — compute aggregate and
+          field-level lift between any two versions, optionally scoped to
+          the regression dataset.
+
+        All five endpoints support `extract` end-to-end on both the vision
+        and OCR paths, alongside the legacy `transform` / `analyze` / `join`
+        types.
+        """
+        return AsyncScoreResourceWithStreamingResponse(self._eval.score)

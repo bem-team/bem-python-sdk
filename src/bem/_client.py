@@ -40,33 +40,45 @@ if TYPE_CHECKING:
         fs,
         eval,
         calls,
+        users,
         views,
         errors,
         events,
+        buckets,
         outputs,
+        entities,
         functions,
         workflows,
         connectors,
         collections,
+        entity_types,
         infer_schema,
+        review_queue,
         subscriptions,
         webhook_secret,
+        knowledge_graph,
     )
     from .resources.fs import FsResource, AsyncFsResource
     from .resources.calls import CallsResource, AsyncCallsResource
+    from .resources.users import UsersResource, AsyncUsersResource
     from .resources.views import ViewsResource, AsyncViewsResource
     from .resources.errors import ErrorsResource, AsyncErrorsResource
     from .resources.events import EventsResource, AsyncEventsResource
+    from .resources.buckets import BucketsResource, AsyncBucketsResource
     from .resources.outputs import OutputsResource, AsyncOutputsResource
     from .resources.webhooks import WebhooksResource, AsyncWebhooksResource
     from .resources.eval.eval import EvalResource, AsyncEvalResource
     from .resources.connectors import ConnectorsResource, AsyncConnectorsResource
     from .resources.infer_schema import InferSchemaResource, AsyncInferSchemaResource
+    from .resources.review_queue import ReviewQueueResource, AsyncReviewQueueResource
     from .resources.subscriptions import SubscriptionsResource, AsyncSubscriptionsResource
     from .resources.webhook_secret import WebhookSecretResource, AsyncWebhookSecretResource
+    from .resources.knowledge_graph import KnowledgeGraphResource, AsyncKnowledgeGraphResource
+    from .resources.entities.entities import EntitiesResource, AsyncEntitiesResource
     from .resources.functions.functions import FunctionsResource, AsyncFunctionsResource
     from .resources.workflows.workflows import WorkflowsResource, AsyncWorkflowsResource
     from .resources.collections.collections import CollectionsResource, AsyncCollectionsResource
+    from .resources.entity_types.entity_types import EntityTypesResource, AsyncEntityTypesResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Bem", "AsyncBem", "Client", "AsyncClient"]
 
@@ -443,10 +455,22 @@ class Bem(SyncAPIClient):
         """
         Subscriptions wire up notifications for the events your functions and collections produce.
 
-        Each subscription targets a single function (by `functionName` or `functionID`) or a single
-        collection (by `collectionName` or `collectionID`) and selects a `type` corresponding to the
+        Most subscriptions target a single function (by `functionName` or `functionID`) or a single
+        collection (by `collectionName` or `collectionID`) and select a `type` corresponding to the
         event you want to receive — for example `transform`, `route`, `join`, `evaluation`, `error`,
         `enrich`, or `collection_processing`.
+
+        Entity-lifecycle events are account-wide and target no function or collection. Set `type` to
+        one of the following and provide a `webhookURL` (these event types support webhook delivery
+        only):
+
+        - `entity_proposed` — an entity entered the `proposed` curation status (queued for review).
+        - `entity_validated` — an entity was approved/validated by a reviewer.
+        - `entity_rejected` — an entity was rejected by a reviewer.
+
+        Each entity-lifecycle delivery is a JSON POST describing the transition (`entityID`,
+        `typeName`, `priorStatus`, `newStatus`, optional `actorUserID` and `reason`, and a
+        `timestamp`).
 
         Deliveries can be sent to any combination of:
 
@@ -501,6 +525,137 @@ class Bem(SyncAPIClient):
         return ViewsResource(self)
 
     @cached_property
+    def buckets(self) -> BucketsResource:
+        """
+        Buckets are named partitions of the knowledge graph within an
+        account+environment. Entities, mentions, and relations are scoped to a
+        bucket so a single account+environment can host multiple isolated graphs
+        — for example one per data source or workspace.
+
+        Every account+environment has exactly one **default** bucket, used by
+        unscoped flows. The default bucket can be renamed but never deleted.
+
+        Use these endpoints to create, list, fetch, rename, and delete buckets:
+
+        - **`POST /v3/buckets`** creates a non-default bucket.
+        - **`GET /v3/buckets`** lists buckets with cursor pagination
+          (`startingAfter` / `endingBefore` over `bucketID`).
+        - **`PATCH /v3/buckets/{bucketID}`** updates `name` and/or `description`.
+        - **`DELETE /v3/buckets/{bucketID}`** soft-deletes a bucket. A non-empty
+          bucket is rejected with `409 Conflict` unless `?cascade=true` is
+          passed; the default bucket can never be deleted.
+        """
+        from .resources.buckets import BucketsResource
+
+        return BucketsResource(self)
+
+    @cached_property
+    def entities(self) -> EntitiesResource:
+        from .resources.entities import EntitiesResource
+
+        return EntitiesResource(self)
+
+    @cached_property
+    def entity_types(self) -> EntityTypesResource:
+        """
+        Entity Types are the customer-defined taxonomy for the knowledge graph,
+        scoped to an account+environment. Each type has a unique, immutable name
+        and can be organised into hierarchies via `parentTypeID`. A type may
+        carry per-type structured attribute metadata in `attributeSchema` (for
+        example `{"unit": "mg", "range": [0, 100]}`).
+
+        Use these endpoints to create, list, fetch, update, and delete entity
+        types:
+
+        - **`POST /v3/entity-types`** creates a type, optionally under a parent.
+        - **`GET /v3/entity-types`** lists types with cursor pagination
+          (`startingAfter` / `endingBefore` over `typeID`) and an optional
+          `parentTypeId` filter for direct children.
+        - **`PATCH /v3/entity-types/{typeID}`** updates `description`,
+          `parentTypeID`, and/or `attributeSchema`. The `name` is immutable.
+        - **`DELETE /v3/entity-types/{typeID}`** soft-deletes a type. The request
+          is rejected with `409 Conflict` while any live entity is assigned to
+          the type or any live child type points at it.
+        """
+        from .resources.entity_types import EntityTypesResource
+
+        return EntityTypesResource(self)
+
+    @cached_property
+    def knowledge_graph(self) -> KnowledgeGraphResource:
+        """
+        Read the cross-document knowledge graph — the canonical entities and the
+        directed relations between them that the Parse pipeline populates when
+        `linkAcrossDocuments` is enabled.
+
+        - **`GET /v3/entities/{id}/relations`** returns the inbound and outbound
+          edges incident to one entity, split by direction. Supports
+          `direction`, an exact `relationType` filter, and cursor pagination over
+          edges. A merged-away entity id transparently resolves to its surviving
+          canonical entity.
+        - **`GET /v3/knowledge-graph`** returns the graph as `{ nodes, edges }`,
+          paginating over edges. The `nodes` for a page are the distinct endpoint
+          entities of that page's edges (both endpoints of every edge are
+          included). Filter with `type[]`, `since`, and `search`; an edge is
+          returned only when both of its endpoints survive the entity filters.
+
+        Both endpoints take an optional `bucket` (`bkt_...`) to scope the read to
+        a single bucket; omit it for the unscoped account+environment view.
+        """
+        from .resources.knowledge_graph import KnowledgeGraphResource
+
+        return KnowledgeGraphResource(self)
+
+    @cached_property
+    def review_queue(self) -> ReviewQueueResource:
+        """
+        The reviewer-facing read surface for entity curation, available on the
+        dashboard (JWT) only.
+
+        - **`GET /v3/review-queue`** returns a cursor-paginated set of entities
+          awaiting curation, scoped to your account+environment (and optional
+          `bucket`). Each row is a full entity plus a small preview (up to 2) of
+          its first mentions, so a reviewer can triage without opening every
+          entity.
+
+        Filters AND together. `status` (repeatable) defaults to the pre-terminal
+        states `extracted` + `proposed` when omitted. `type` (repeatable `ety_…`
+        IDs) matches the entity's *effective* type — its assigned type id, or, for
+        entities with no assigned type, its bem-inferred type name. `assignedTo`
+        (`me` or a `usr_…` ID) restricts to entities whose effective type the user
+        reviews. `since` (RFC3339) filters by creation time. Pagination is
+        cursor-based on `entityID` ascending; default limit 50, maximum 200.
+        """
+        from .resources.review_queue import ReviewQueueResource
+
+        return ReviewQueueResource(self)
+
+    @cached_property
+    def users(self) -> UsersResource:
+        """
+        Reviewer assignments link users to the entity types they are responsible
+        for reviewing, scoped to an account+environment. These are dashboard-only
+        endpoints: an assignment needs a user identity, which only the dashboard
+        (JWT) surface carries.
+
+        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
+          reviewer of the type. The assignment is idempotent: re-assigning an
+          existing reviewer returns the existing assignment. Requires the `admin`
+          role.
+        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
+          to review the type, with each user's email and role. Requires the
+          `operator` role.
+        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
+          assignment. Requires the `admin` role.
+        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
+          the entity types a user reviews. A user may read their own assignments;
+          reading another user's assignments requires the `admin` role.
+        """
+        from .resources.users import UsersResource
+
+        return UsersResource(self)
+
+    @cached_property
     def with_raw_response(self) -> BemWithRawResponse:
         return BemWithRawResponse(self)
 
@@ -515,9 +670,11 @@ class Bem(SyncAPIClient):
 
     @override
     def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
-        return {
-            **(self._api_key if security.get("api_key", False) else {}),
-        }
+        headers: dict[str, str] = {}
+        if security.get("api_key", False):
+            for key, value in self._api_key.items():
+                headers.setdefault(key, value)
+        return headers
 
     @property
     def _api_key(self) -> dict[str, str]:
@@ -990,10 +1147,22 @@ class AsyncBem(AsyncAPIClient):
         """
         Subscriptions wire up notifications for the events your functions and collections produce.
 
-        Each subscription targets a single function (by `functionName` or `functionID`) or a single
-        collection (by `collectionName` or `collectionID`) and selects a `type` corresponding to the
+        Most subscriptions target a single function (by `functionName` or `functionID`) or a single
+        collection (by `collectionName` or `collectionID`) and select a `type` corresponding to the
         event you want to receive — for example `transform`, `route`, `join`, `evaluation`, `error`,
         `enrich`, or `collection_processing`.
+
+        Entity-lifecycle events are account-wide and target no function or collection. Set `type` to
+        one of the following and provide a `webhookURL` (these event types support webhook delivery
+        only):
+
+        - `entity_proposed` — an entity entered the `proposed` curation status (queued for review).
+        - `entity_validated` — an entity was approved/validated by a reviewer.
+        - `entity_rejected` — an entity was rejected by a reviewer.
+
+        Each entity-lifecycle delivery is a JSON POST describing the transition (`entityID`,
+        `typeName`, `priorStatus`, `newStatus`, optional `actorUserID` and `reason`, and a
+        `timestamp`).
 
         Deliveries can be sent to any combination of:
 
@@ -1048,6 +1217,137 @@ class AsyncBem(AsyncAPIClient):
         return AsyncViewsResource(self)
 
     @cached_property
+    def buckets(self) -> AsyncBucketsResource:
+        """
+        Buckets are named partitions of the knowledge graph within an
+        account+environment. Entities, mentions, and relations are scoped to a
+        bucket so a single account+environment can host multiple isolated graphs
+        — for example one per data source or workspace.
+
+        Every account+environment has exactly one **default** bucket, used by
+        unscoped flows. The default bucket can be renamed but never deleted.
+
+        Use these endpoints to create, list, fetch, rename, and delete buckets:
+
+        - **`POST /v3/buckets`** creates a non-default bucket.
+        - **`GET /v3/buckets`** lists buckets with cursor pagination
+          (`startingAfter` / `endingBefore` over `bucketID`).
+        - **`PATCH /v3/buckets/{bucketID}`** updates `name` and/or `description`.
+        - **`DELETE /v3/buckets/{bucketID}`** soft-deletes a bucket. A non-empty
+          bucket is rejected with `409 Conflict` unless `?cascade=true` is
+          passed; the default bucket can never be deleted.
+        """
+        from .resources.buckets import AsyncBucketsResource
+
+        return AsyncBucketsResource(self)
+
+    @cached_property
+    def entities(self) -> AsyncEntitiesResource:
+        from .resources.entities import AsyncEntitiesResource
+
+        return AsyncEntitiesResource(self)
+
+    @cached_property
+    def entity_types(self) -> AsyncEntityTypesResource:
+        """
+        Entity Types are the customer-defined taxonomy for the knowledge graph,
+        scoped to an account+environment. Each type has a unique, immutable name
+        and can be organised into hierarchies via `parentTypeID`. A type may
+        carry per-type structured attribute metadata in `attributeSchema` (for
+        example `{"unit": "mg", "range": [0, 100]}`).
+
+        Use these endpoints to create, list, fetch, update, and delete entity
+        types:
+
+        - **`POST /v3/entity-types`** creates a type, optionally under a parent.
+        - **`GET /v3/entity-types`** lists types with cursor pagination
+          (`startingAfter` / `endingBefore` over `typeID`) and an optional
+          `parentTypeId` filter for direct children.
+        - **`PATCH /v3/entity-types/{typeID}`** updates `description`,
+          `parentTypeID`, and/or `attributeSchema`. The `name` is immutable.
+        - **`DELETE /v3/entity-types/{typeID}`** soft-deletes a type. The request
+          is rejected with `409 Conflict` while any live entity is assigned to
+          the type or any live child type points at it.
+        """
+        from .resources.entity_types import AsyncEntityTypesResource
+
+        return AsyncEntityTypesResource(self)
+
+    @cached_property
+    def knowledge_graph(self) -> AsyncKnowledgeGraphResource:
+        """
+        Read the cross-document knowledge graph — the canonical entities and the
+        directed relations between them that the Parse pipeline populates when
+        `linkAcrossDocuments` is enabled.
+
+        - **`GET /v3/entities/{id}/relations`** returns the inbound and outbound
+          edges incident to one entity, split by direction. Supports
+          `direction`, an exact `relationType` filter, and cursor pagination over
+          edges. A merged-away entity id transparently resolves to its surviving
+          canonical entity.
+        - **`GET /v3/knowledge-graph`** returns the graph as `{ nodes, edges }`,
+          paginating over edges. The `nodes` for a page are the distinct endpoint
+          entities of that page's edges (both endpoints of every edge are
+          included). Filter with `type[]`, `since`, and `search`; an edge is
+          returned only when both of its endpoints survive the entity filters.
+
+        Both endpoints take an optional `bucket` (`bkt_...`) to scope the read to
+        a single bucket; omit it for the unscoped account+environment view.
+        """
+        from .resources.knowledge_graph import AsyncKnowledgeGraphResource
+
+        return AsyncKnowledgeGraphResource(self)
+
+    @cached_property
+    def review_queue(self) -> AsyncReviewQueueResource:
+        """
+        The reviewer-facing read surface for entity curation, available on the
+        dashboard (JWT) only.
+
+        - **`GET /v3/review-queue`** returns a cursor-paginated set of entities
+          awaiting curation, scoped to your account+environment (and optional
+          `bucket`). Each row is a full entity plus a small preview (up to 2) of
+          its first mentions, so a reviewer can triage without opening every
+          entity.
+
+        Filters AND together. `status` (repeatable) defaults to the pre-terminal
+        states `extracted` + `proposed` when omitted. `type` (repeatable `ety_…`
+        IDs) matches the entity's *effective* type — its assigned type id, or, for
+        entities with no assigned type, its bem-inferred type name. `assignedTo`
+        (`me` or a `usr_…` ID) restricts to entities whose effective type the user
+        reviews. `since` (RFC3339) filters by creation time. Pagination is
+        cursor-based on `entityID` ascending; default limit 50, maximum 200.
+        """
+        from .resources.review_queue import AsyncReviewQueueResource
+
+        return AsyncReviewQueueResource(self)
+
+    @cached_property
+    def users(self) -> AsyncUsersResource:
+        """
+        Reviewer assignments link users to the entity types they are responsible
+        for reviewing, scoped to an account+environment. These are dashboard-only
+        endpoints: an assignment needs a user identity, which only the dashboard
+        (JWT) surface carries.
+
+        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
+          reviewer of the type. The assignment is idempotent: re-assigning an
+          existing reviewer returns the existing assignment. Requires the `admin`
+          role.
+        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
+          to review the type, with each user's email and role. Requires the
+          `operator` role.
+        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
+          assignment. Requires the `admin` role.
+        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
+          the entity types a user reviews. A user may read their own assignments;
+          reading another user's assignments requires the `admin` role.
+        """
+        from .resources.users import AsyncUsersResource
+
+        return AsyncUsersResource(self)
+
+    @cached_property
     def with_raw_response(self) -> AsyncBemWithRawResponse:
         return AsyncBemWithRawResponse(self)
 
@@ -1062,9 +1362,11 @@ class AsyncBem(AsyncAPIClient):
 
     @override
     def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
-        return {
-            **(self._api_key if security.get("api_key", False) else {}),
-        }
+        headers: dict[str, str] = {}
+        if security.get("api_key", False):
+            for key, value in self._api_key.items():
+                headers.setdefault(key, value)
+        return headers
 
     @property
     def _api_key(self) -> dict[str, str]:
@@ -1473,10 +1775,22 @@ class BemWithRawResponse:
         """
         Subscriptions wire up notifications for the events your functions and collections produce.
 
-        Each subscription targets a single function (by `functionName` or `functionID`) or a single
-        collection (by `collectionName` or `collectionID`) and selects a `type` corresponding to the
+        Most subscriptions target a single function (by `functionName` or `functionID`) or a single
+        collection (by `collectionName` or `collectionID`) and select a `type` corresponding to the
         event you want to receive — for example `transform`, `route`, `join`, `evaluation`, `error`,
         `enrich`, or `collection_processing`.
+
+        Entity-lifecycle events are account-wide and target no function or collection. Set `type` to
+        one of the following and provide a `webhookURL` (these event types support webhook delivery
+        only):
+
+        - `entity_proposed` — an entity entered the `proposed` curation status (queued for review).
+        - `entity_validated` — an entity was approved/validated by a reviewer.
+        - `entity_rejected` — an entity was rejected by a reviewer.
+
+        Each entity-lifecycle delivery is a JSON POST describing the transition (`entityID`,
+        `typeName`, `priorStatus`, `newStatus`, optional `actorUserID` and `reason`, and a
+        `timestamp`).
 
         Deliveries can be sent to any combination of:
 
@@ -1529,6 +1843,137 @@ class BemWithRawResponse:
         from .resources.views import ViewsResourceWithRawResponse
 
         return ViewsResourceWithRawResponse(self._client.views)
+
+    @cached_property
+    def buckets(self) -> buckets.BucketsResourceWithRawResponse:
+        """
+        Buckets are named partitions of the knowledge graph within an
+        account+environment. Entities, mentions, and relations are scoped to a
+        bucket so a single account+environment can host multiple isolated graphs
+        — for example one per data source or workspace.
+
+        Every account+environment has exactly one **default** bucket, used by
+        unscoped flows. The default bucket can be renamed but never deleted.
+
+        Use these endpoints to create, list, fetch, rename, and delete buckets:
+
+        - **`POST /v3/buckets`** creates a non-default bucket.
+        - **`GET /v3/buckets`** lists buckets with cursor pagination
+          (`startingAfter` / `endingBefore` over `bucketID`).
+        - **`PATCH /v3/buckets/{bucketID}`** updates `name` and/or `description`.
+        - **`DELETE /v3/buckets/{bucketID}`** soft-deletes a bucket. A non-empty
+          bucket is rejected with `409 Conflict` unless `?cascade=true` is
+          passed; the default bucket can never be deleted.
+        """
+        from .resources.buckets import BucketsResourceWithRawResponse
+
+        return BucketsResourceWithRawResponse(self._client.buckets)
+
+    @cached_property
+    def entities(self) -> entities.EntitiesResourceWithRawResponse:
+        from .resources.entities import EntitiesResourceWithRawResponse
+
+        return EntitiesResourceWithRawResponse(self._client.entities)
+
+    @cached_property
+    def entity_types(self) -> entity_types.EntityTypesResourceWithRawResponse:
+        """
+        Entity Types are the customer-defined taxonomy for the knowledge graph,
+        scoped to an account+environment. Each type has a unique, immutable name
+        and can be organised into hierarchies via `parentTypeID`. A type may
+        carry per-type structured attribute metadata in `attributeSchema` (for
+        example `{"unit": "mg", "range": [0, 100]}`).
+
+        Use these endpoints to create, list, fetch, update, and delete entity
+        types:
+
+        - **`POST /v3/entity-types`** creates a type, optionally under a parent.
+        - **`GET /v3/entity-types`** lists types with cursor pagination
+          (`startingAfter` / `endingBefore` over `typeID`) and an optional
+          `parentTypeId` filter for direct children.
+        - **`PATCH /v3/entity-types/{typeID}`** updates `description`,
+          `parentTypeID`, and/or `attributeSchema`. The `name` is immutable.
+        - **`DELETE /v3/entity-types/{typeID}`** soft-deletes a type. The request
+          is rejected with `409 Conflict` while any live entity is assigned to
+          the type or any live child type points at it.
+        """
+        from .resources.entity_types import EntityTypesResourceWithRawResponse
+
+        return EntityTypesResourceWithRawResponse(self._client.entity_types)
+
+    @cached_property
+    def knowledge_graph(self) -> knowledge_graph.KnowledgeGraphResourceWithRawResponse:
+        """
+        Read the cross-document knowledge graph — the canonical entities and the
+        directed relations between them that the Parse pipeline populates when
+        `linkAcrossDocuments` is enabled.
+
+        - **`GET /v3/entities/{id}/relations`** returns the inbound and outbound
+          edges incident to one entity, split by direction. Supports
+          `direction`, an exact `relationType` filter, and cursor pagination over
+          edges. A merged-away entity id transparently resolves to its surviving
+          canonical entity.
+        - **`GET /v3/knowledge-graph`** returns the graph as `{ nodes, edges }`,
+          paginating over edges. The `nodes` for a page are the distinct endpoint
+          entities of that page's edges (both endpoints of every edge are
+          included). Filter with `type[]`, `since`, and `search`; an edge is
+          returned only when both of its endpoints survive the entity filters.
+
+        Both endpoints take an optional `bucket` (`bkt_...`) to scope the read to
+        a single bucket; omit it for the unscoped account+environment view.
+        """
+        from .resources.knowledge_graph import KnowledgeGraphResourceWithRawResponse
+
+        return KnowledgeGraphResourceWithRawResponse(self._client.knowledge_graph)
+
+    @cached_property
+    def review_queue(self) -> review_queue.ReviewQueueResourceWithRawResponse:
+        """
+        The reviewer-facing read surface for entity curation, available on the
+        dashboard (JWT) only.
+
+        - **`GET /v3/review-queue`** returns a cursor-paginated set of entities
+          awaiting curation, scoped to your account+environment (and optional
+          `bucket`). Each row is a full entity plus a small preview (up to 2) of
+          its first mentions, so a reviewer can triage without opening every
+          entity.
+
+        Filters AND together. `status` (repeatable) defaults to the pre-terminal
+        states `extracted` + `proposed` when omitted. `type` (repeatable `ety_…`
+        IDs) matches the entity's *effective* type — its assigned type id, or, for
+        entities with no assigned type, its bem-inferred type name. `assignedTo`
+        (`me` or a `usr_…` ID) restricts to entities whose effective type the user
+        reviews. `since` (RFC3339) filters by creation time. Pagination is
+        cursor-based on `entityID` ascending; default limit 50, maximum 200.
+        """
+        from .resources.review_queue import ReviewQueueResourceWithRawResponse
+
+        return ReviewQueueResourceWithRawResponse(self._client.review_queue)
+
+    @cached_property
+    def users(self) -> users.UsersResourceWithRawResponse:
+        """
+        Reviewer assignments link users to the entity types they are responsible
+        for reviewing, scoped to an account+environment. These are dashboard-only
+        endpoints: an assignment needs a user identity, which only the dashboard
+        (JWT) surface carries.
+
+        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
+          reviewer of the type. The assignment is idempotent: re-assigning an
+          existing reviewer returns the existing assignment. Requires the `admin`
+          role.
+        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
+          to review the type, with each user's email and role. Requires the
+          `operator` role.
+        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
+          assignment. Requires the `admin` role.
+        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
+          the entity types a user reviews. A user may read their own assignments;
+          reading another user's assignments requires the `admin` role.
+        """
+        from .resources.users import UsersResourceWithRawResponse
+
+        return UsersResourceWithRawResponse(self._client.users)
 
 
 class AsyncBemWithRawResponse:
@@ -1839,10 +2284,22 @@ class AsyncBemWithRawResponse:
         """
         Subscriptions wire up notifications for the events your functions and collections produce.
 
-        Each subscription targets a single function (by `functionName` or `functionID`) or a single
-        collection (by `collectionName` or `collectionID`) and selects a `type` corresponding to the
+        Most subscriptions target a single function (by `functionName` or `functionID`) or a single
+        collection (by `collectionName` or `collectionID`) and select a `type` corresponding to the
         event you want to receive — for example `transform`, `route`, `join`, `evaluation`, `error`,
         `enrich`, or `collection_processing`.
+
+        Entity-lifecycle events are account-wide and target no function or collection. Set `type` to
+        one of the following and provide a `webhookURL` (these event types support webhook delivery
+        only):
+
+        - `entity_proposed` — an entity entered the `proposed` curation status (queued for review).
+        - `entity_validated` — an entity was approved/validated by a reviewer.
+        - `entity_rejected` — an entity was rejected by a reviewer.
+
+        Each entity-lifecycle delivery is a JSON POST describing the transition (`entityID`,
+        `typeName`, `priorStatus`, `newStatus`, optional `actorUserID` and `reason`, and a
+        `timestamp`).
 
         Deliveries can be sent to any combination of:
 
@@ -1895,6 +2352,137 @@ class AsyncBemWithRawResponse:
         from .resources.views import AsyncViewsResourceWithRawResponse
 
         return AsyncViewsResourceWithRawResponse(self._client.views)
+
+    @cached_property
+    def buckets(self) -> buckets.AsyncBucketsResourceWithRawResponse:
+        """
+        Buckets are named partitions of the knowledge graph within an
+        account+environment. Entities, mentions, and relations are scoped to a
+        bucket so a single account+environment can host multiple isolated graphs
+        — for example one per data source or workspace.
+
+        Every account+environment has exactly one **default** bucket, used by
+        unscoped flows. The default bucket can be renamed but never deleted.
+
+        Use these endpoints to create, list, fetch, rename, and delete buckets:
+
+        - **`POST /v3/buckets`** creates a non-default bucket.
+        - **`GET /v3/buckets`** lists buckets with cursor pagination
+          (`startingAfter` / `endingBefore` over `bucketID`).
+        - **`PATCH /v3/buckets/{bucketID}`** updates `name` and/or `description`.
+        - **`DELETE /v3/buckets/{bucketID}`** soft-deletes a bucket. A non-empty
+          bucket is rejected with `409 Conflict` unless `?cascade=true` is
+          passed; the default bucket can never be deleted.
+        """
+        from .resources.buckets import AsyncBucketsResourceWithRawResponse
+
+        return AsyncBucketsResourceWithRawResponse(self._client.buckets)
+
+    @cached_property
+    def entities(self) -> entities.AsyncEntitiesResourceWithRawResponse:
+        from .resources.entities import AsyncEntitiesResourceWithRawResponse
+
+        return AsyncEntitiesResourceWithRawResponse(self._client.entities)
+
+    @cached_property
+    def entity_types(self) -> entity_types.AsyncEntityTypesResourceWithRawResponse:
+        """
+        Entity Types are the customer-defined taxonomy for the knowledge graph,
+        scoped to an account+environment. Each type has a unique, immutable name
+        and can be organised into hierarchies via `parentTypeID`. A type may
+        carry per-type structured attribute metadata in `attributeSchema` (for
+        example `{"unit": "mg", "range": [0, 100]}`).
+
+        Use these endpoints to create, list, fetch, update, and delete entity
+        types:
+
+        - **`POST /v3/entity-types`** creates a type, optionally under a parent.
+        - **`GET /v3/entity-types`** lists types with cursor pagination
+          (`startingAfter` / `endingBefore` over `typeID`) and an optional
+          `parentTypeId` filter for direct children.
+        - **`PATCH /v3/entity-types/{typeID}`** updates `description`,
+          `parentTypeID`, and/or `attributeSchema`. The `name` is immutable.
+        - **`DELETE /v3/entity-types/{typeID}`** soft-deletes a type. The request
+          is rejected with `409 Conflict` while any live entity is assigned to
+          the type or any live child type points at it.
+        """
+        from .resources.entity_types import AsyncEntityTypesResourceWithRawResponse
+
+        return AsyncEntityTypesResourceWithRawResponse(self._client.entity_types)
+
+    @cached_property
+    def knowledge_graph(self) -> knowledge_graph.AsyncKnowledgeGraphResourceWithRawResponse:
+        """
+        Read the cross-document knowledge graph — the canonical entities and the
+        directed relations between them that the Parse pipeline populates when
+        `linkAcrossDocuments` is enabled.
+
+        - **`GET /v3/entities/{id}/relations`** returns the inbound and outbound
+          edges incident to one entity, split by direction. Supports
+          `direction`, an exact `relationType` filter, and cursor pagination over
+          edges. A merged-away entity id transparently resolves to its surviving
+          canonical entity.
+        - **`GET /v3/knowledge-graph`** returns the graph as `{ nodes, edges }`,
+          paginating over edges. The `nodes` for a page are the distinct endpoint
+          entities of that page's edges (both endpoints of every edge are
+          included). Filter with `type[]`, `since`, and `search`; an edge is
+          returned only when both of its endpoints survive the entity filters.
+
+        Both endpoints take an optional `bucket` (`bkt_...`) to scope the read to
+        a single bucket; omit it for the unscoped account+environment view.
+        """
+        from .resources.knowledge_graph import AsyncKnowledgeGraphResourceWithRawResponse
+
+        return AsyncKnowledgeGraphResourceWithRawResponse(self._client.knowledge_graph)
+
+    @cached_property
+    def review_queue(self) -> review_queue.AsyncReviewQueueResourceWithRawResponse:
+        """
+        The reviewer-facing read surface for entity curation, available on the
+        dashboard (JWT) only.
+
+        - **`GET /v3/review-queue`** returns a cursor-paginated set of entities
+          awaiting curation, scoped to your account+environment (and optional
+          `bucket`). Each row is a full entity plus a small preview (up to 2) of
+          its first mentions, so a reviewer can triage without opening every
+          entity.
+
+        Filters AND together. `status` (repeatable) defaults to the pre-terminal
+        states `extracted` + `proposed` when omitted. `type` (repeatable `ety_…`
+        IDs) matches the entity's *effective* type — its assigned type id, or, for
+        entities with no assigned type, its bem-inferred type name. `assignedTo`
+        (`me` or a `usr_…` ID) restricts to entities whose effective type the user
+        reviews. `since` (RFC3339) filters by creation time. Pagination is
+        cursor-based on `entityID` ascending; default limit 50, maximum 200.
+        """
+        from .resources.review_queue import AsyncReviewQueueResourceWithRawResponse
+
+        return AsyncReviewQueueResourceWithRawResponse(self._client.review_queue)
+
+    @cached_property
+    def users(self) -> users.AsyncUsersResourceWithRawResponse:
+        """
+        Reviewer assignments link users to the entity types they are responsible
+        for reviewing, scoped to an account+environment. These are dashboard-only
+        endpoints: an assignment needs a user identity, which only the dashboard
+        (JWT) surface carries.
+
+        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
+          reviewer of the type. The assignment is idempotent: re-assigning an
+          existing reviewer returns the existing assignment. Requires the `admin`
+          role.
+        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
+          to review the type, with each user's email and role. Requires the
+          `operator` role.
+        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
+          assignment. Requires the `admin` role.
+        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
+          the entity types a user reviews. A user may read their own assignments;
+          reading another user's assignments requires the `admin` role.
+        """
+        from .resources.users import AsyncUsersResourceWithRawResponse
+
+        return AsyncUsersResourceWithRawResponse(self._client.users)
 
 
 class BemWithStreamedResponse:
@@ -2205,10 +2793,22 @@ class BemWithStreamedResponse:
         """
         Subscriptions wire up notifications for the events your functions and collections produce.
 
-        Each subscription targets a single function (by `functionName` or `functionID`) or a single
-        collection (by `collectionName` or `collectionID`) and selects a `type` corresponding to the
+        Most subscriptions target a single function (by `functionName` or `functionID`) or a single
+        collection (by `collectionName` or `collectionID`) and select a `type` corresponding to the
         event you want to receive — for example `transform`, `route`, `join`, `evaluation`, `error`,
         `enrich`, or `collection_processing`.
+
+        Entity-lifecycle events are account-wide and target no function or collection. Set `type` to
+        one of the following and provide a `webhookURL` (these event types support webhook delivery
+        only):
+
+        - `entity_proposed` — an entity entered the `proposed` curation status (queued for review).
+        - `entity_validated` — an entity was approved/validated by a reviewer.
+        - `entity_rejected` — an entity was rejected by a reviewer.
+
+        Each entity-lifecycle delivery is a JSON POST describing the transition (`entityID`,
+        `typeName`, `priorStatus`, `newStatus`, optional `actorUserID` and `reason`, and a
+        `timestamp`).
 
         Deliveries can be sent to any combination of:
 
@@ -2261,6 +2861,137 @@ class BemWithStreamedResponse:
         from .resources.views import ViewsResourceWithStreamingResponse
 
         return ViewsResourceWithStreamingResponse(self._client.views)
+
+    @cached_property
+    def buckets(self) -> buckets.BucketsResourceWithStreamingResponse:
+        """
+        Buckets are named partitions of the knowledge graph within an
+        account+environment. Entities, mentions, and relations are scoped to a
+        bucket so a single account+environment can host multiple isolated graphs
+        — for example one per data source or workspace.
+
+        Every account+environment has exactly one **default** bucket, used by
+        unscoped flows. The default bucket can be renamed but never deleted.
+
+        Use these endpoints to create, list, fetch, rename, and delete buckets:
+
+        - **`POST /v3/buckets`** creates a non-default bucket.
+        - **`GET /v3/buckets`** lists buckets with cursor pagination
+          (`startingAfter` / `endingBefore` over `bucketID`).
+        - **`PATCH /v3/buckets/{bucketID}`** updates `name` and/or `description`.
+        - **`DELETE /v3/buckets/{bucketID}`** soft-deletes a bucket. A non-empty
+          bucket is rejected with `409 Conflict` unless `?cascade=true` is
+          passed; the default bucket can never be deleted.
+        """
+        from .resources.buckets import BucketsResourceWithStreamingResponse
+
+        return BucketsResourceWithStreamingResponse(self._client.buckets)
+
+    @cached_property
+    def entities(self) -> entities.EntitiesResourceWithStreamingResponse:
+        from .resources.entities import EntitiesResourceWithStreamingResponse
+
+        return EntitiesResourceWithStreamingResponse(self._client.entities)
+
+    @cached_property
+    def entity_types(self) -> entity_types.EntityTypesResourceWithStreamingResponse:
+        """
+        Entity Types are the customer-defined taxonomy for the knowledge graph,
+        scoped to an account+environment. Each type has a unique, immutable name
+        and can be organised into hierarchies via `parentTypeID`. A type may
+        carry per-type structured attribute metadata in `attributeSchema` (for
+        example `{"unit": "mg", "range": [0, 100]}`).
+
+        Use these endpoints to create, list, fetch, update, and delete entity
+        types:
+
+        - **`POST /v3/entity-types`** creates a type, optionally under a parent.
+        - **`GET /v3/entity-types`** lists types with cursor pagination
+          (`startingAfter` / `endingBefore` over `typeID`) and an optional
+          `parentTypeId` filter for direct children.
+        - **`PATCH /v3/entity-types/{typeID}`** updates `description`,
+          `parentTypeID`, and/or `attributeSchema`. The `name` is immutable.
+        - **`DELETE /v3/entity-types/{typeID}`** soft-deletes a type. The request
+          is rejected with `409 Conflict` while any live entity is assigned to
+          the type or any live child type points at it.
+        """
+        from .resources.entity_types import EntityTypesResourceWithStreamingResponse
+
+        return EntityTypesResourceWithStreamingResponse(self._client.entity_types)
+
+    @cached_property
+    def knowledge_graph(self) -> knowledge_graph.KnowledgeGraphResourceWithStreamingResponse:
+        """
+        Read the cross-document knowledge graph — the canonical entities and the
+        directed relations between them that the Parse pipeline populates when
+        `linkAcrossDocuments` is enabled.
+
+        - **`GET /v3/entities/{id}/relations`** returns the inbound and outbound
+          edges incident to one entity, split by direction. Supports
+          `direction`, an exact `relationType` filter, and cursor pagination over
+          edges. A merged-away entity id transparently resolves to its surviving
+          canonical entity.
+        - **`GET /v3/knowledge-graph`** returns the graph as `{ nodes, edges }`,
+          paginating over edges. The `nodes` for a page are the distinct endpoint
+          entities of that page's edges (both endpoints of every edge are
+          included). Filter with `type[]`, `since`, and `search`; an edge is
+          returned only when both of its endpoints survive the entity filters.
+
+        Both endpoints take an optional `bucket` (`bkt_...`) to scope the read to
+        a single bucket; omit it for the unscoped account+environment view.
+        """
+        from .resources.knowledge_graph import KnowledgeGraphResourceWithStreamingResponse
+
+        return KnowledgeGraphResourceWithStreamingResponse(self._client.knowledge_graph)
+
+    @cached_property
+    def review_queue(self) -> review_queue.ReviewQueueResourceWithStreamingResponse:
+        """
+        The reviewer-facing read surface for entity curation, available on the
+        dashboard (JWT) only.
+
+        - **`GET /v3/review-queue`** returns a cursor-paginated set of entities
+          awaiting curation, scoped to your account+environment (and optional
+          `bucket`). Each row is a full entity plus a small preview (up to 2) of
+          its first mentions, so a reviewer can triage without opening every
+          entity.
+
+        Filters AND together. `status` (repeatable) defaults to the pre-terminal
+        states `extracted` + `proposed` when omitted. `type` (repeatable `ety_…`
+        IDs) matches the entity's *effective* type — its assigned type id, or, for
+        entities with no assigned type, its bem-inferred type name. `assignedTo`
+        (`me` or a `usr_…` ID) restricts to entities whose effective type the user
+        reviews. `since` (RFC3339) filters by creation time. Pagination is
+        cursor-based on `entityID` ascending; default limit 50, maximum 200.
+        """
+        from .resources.review_queue import ReviewQueueResourceWithStreamingResponse
+
+        return ReviewQueueResourceWithStreamingResponse(self._client.review_queue)
+
+    @cached_property
+    def users(self) -> users.UsersResourceWithStreamingResponse:
+        """
+        Reviewer assignments link users to the entity types they are responsible
+        for reviewing, scoped to an account+environment. These are dashboard-only
+        endpoints: an assignment needs a user identity, which only the dashboard
+        (JWT) surface carries.
+
+        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
+          reviewer of the type. The assignment is idempotent: re-assigning an
+          existing reviewer returns the existing assignment. Requires the `admin`
+          role.
+        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
+          to review the type, with each user's email and role. Requires the
+          `operator` role.
+        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
+          assignment. Requires the `admin` role.
+        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
+          the entity types a user reviews. A user may read their own assignments;
+          reading another user's assignments requires the `admin` role.
+        """
+        from .resources.users import UsersResourceWithStreamingResponse
+
+        return UsersResourceWithStreamingResponse(self._client.users)
 
 
 class AsyncBemWithStreamedResponse:
@@ -2571,10 +3302,22 @@ class AsyncBemWithStreamedResponse:
         """
         Subscriptions wire up notifications for the events your functions and collections produce.
 
-        Each subscription targets a single function (by `functionName` or `functionID`) or a single
-        collection (by `collectionName` or `collectionID`) and selects a `type` corresponding to the
+        Most subscriptions target a single function (by `functionName` or `functionID`) or a single
+        collection (by `collectionName` or `collectionID`) and select a `type` corresponding to the
         event you want to receive — for example `transform`, `route`, `join`, `evaluation`, `error`,
         `enrich`, or `collection_processing`.
+
+        Entity-lifecycle events are account-wide and target no function or collection. Set `type` to
+        one of the following and provide a `webhookURL` (these event types support webhook delivery
+        only):
+
+        - `entity_proposed` — an entity entered the `proposed` curation status (queued for review).
+        - `entity_validated` — an entity was approved/validated by a reviewer.
+        - `entity_rejected` — an entity was rejected by a reviewer.
+
+        Each entity-lifecycle delivery is a JSON POST describing the transition (`entityID`,
+        `typeName`, `priorStatus`, `newStatus`, optional `actorUserID` and `reason`, and a
+        `timestamp`).
 
         Deliveries can be sent to any combination of:
 
@@ -2627,6 +3370,137 @@ class AsyncBemWithStreamedResponse:
         from .resources.views import AsyncViewsResourceWithStreamingResponse
 
         return AsyncViewsResourceWithStreamingResponse(self._client.views)
+
+    @cached_property
+    def buckets(self) -> buckets.AsyncBucketsResourceWithStreamingResponse:
+        """
+        Buckets are named partitions of the knowledge graph within an
+        account+environment. Entities, mentions, and relations are scoped to a
+        bucket so a single account+environment can host multiple isolated graphs
+        — for example one per data source or workspace.
+
+        Every account+environment has exactly one **default** bucket, used by
+        unscoped flows. The default bucket can be renamed but never deleted.
+
+        Use these endpoints to create, list, fetch, rename, and delete buckets:
+
+        - **`POST /v3/buckets`** creates a non-default bucket.
+        - **`GET /v3/buckets`** lists buckets with cursor pagination
+          (`startingAfter` / `endingBefore` over `bucketID`).
+        - **`PATCH /v3/buckets/{bucketID}`** updates `name` and/or `description`.
+        - **`DELETE /v3/buckets/{bucketID}`** soft-deletes a bucket. A non-empty
+          bucket is rejected with `409 Conflict` unless `?cascade=true` is
+          passed; the default bucket can never be deleted.
+        """
+        from .resources.buckets import AsyncBucketsResourceWithStreamingResponse
+
+        return AsyncBucketsResourceWithStreamingResponse(self._client.buckets)
+
+    @cached_property
+    def entities(self) -> entities.AsyncEntitiesResourceWithStreamingResponse:
+        from .resources.entities import AsyncEntitiesResourceWithStreamingResponse
+
+        return AsyncEntitiesResourceWithStreamingResponse(self._client.entities)
+
+    @cached_property
+    def entity_types(self) -> entity_types.AsyncEntityTypesResourceWithStreamingResponse:
+        """
+        Entity Types are the customer-defined taxonomy for the knowledge graph,
+        scoped to an account+environment. Each type has a unique, immutable name
+        and can be organised into hierarchies via `parentTypeID`. A type may
+        carry per-type structured attribute metadata in `attributeSchema` (for
+        example `{"unit": "mg", "range": [0, 100]}`).
+
+        Use these endpoints to create, list, fetch, update, and delete entity
+        types:
+
+        - **`POST /v3/entity-types`** creates a type, optionally under a parent.
+        - **`GET /v3/entity-types`** lists types with cursor pagination
+          (`startingAfter` / `endingBefore` over `typeID`) and an optional
+          `parentTypeId` filter for direct children.
+        - **`PATCH /v3/entity-types/{typeID}`** updates `description`,
+          `parentTypeID`, and/or `attributeSchema`. The `name` is immutable.
+        - **`DELETE /v3/entity-types/{typeID}`** soft-deletes a type. The request
+          is rejected with `409 Conflict` while any live entity is assigned to
+          the type or any live child type points at it.
+        """
+        from .resources.entity_types import AsyncEntityTypesResourceWithStreamingResponse
+
+        return AsyncEntityTypesResourceWithStreamingResponse(self._client.entity_types)
+
+    @cached_property
+    def knowledge_graph(self) -> knowledge_graph.AsyncKnowledgeGraphResourceWithStreamingResponse:
+        """
+        Read the cross-document knowledge graph — the canonical entities and the
+        directed relations between them that the Parse pipeline populates when
+        `linkAcrossDocuments` is enabled.
+
+        - **`GET /v3/entities/{id}/relations`** returns the inbound and outbound
+          edges incident to one entity, split by direction. Supports
+          `direction`, an exact `relationType` filter, and cursor pagination over
+          edges. A merged-away entity id transparently resolves to its surviving
+          canonical entity.
+        - **`GET /v3/knowledge-graph`** returns the graph as `{ nodes, edges }`,
+          paginating over edges. The `nodes` for a page are the distinct endpoint
+          entities of that page's edges (both endpoints of every edge are
+          included). Filter with `type[]`, `since`, and `search`; an edge is
+          returned only when both of its endpoints survive the entity filters.
+
+        Both endpoints take an optional `bucket` (`bkt_...`) to scope the read to
+        a single bucket; omit it for the unscoped account+environment view.
+        """
+        from .resources.knowledge_graph import AsyncKnowledgeGraphResourceWithStreamingResponse
+
+        return AsyncKnowledgeGraphResourceWithStreamingResponse(self._client.knowledge_graph)
+
+    @cached_property
+    def review_queue(self) -> review_queue.AsyncReviewQueueResourceWithStreamingResponse:
+        """
+        The reviewer-facing read surface for entity curation, available on the
+        dashboard (JWT) only.
+
+        - **`GET /v3/review-queue`** returns a cursor-paginated set of entities
+          awaiting curation, scoped to your account+environment (and optional
+          `bucket`). Each row is a full entity plus a small preview (up to 2) of
+          its first mentions, so a reviewer can triage without opening every
+          entity.
+
+        Filters AND together. `status` (repeatable) defaults to the pre-terminal
+        states `extracted` + `proposed` when omitted. `type` (repeatable `ety_…`
+        IDs) matches the entity's *effective* type — its assigned type id, or, for
+        entities with no assigned type, its bem-inferred type name. `assignedTo`
+        (`me` or a `usr_…` ID) restricts to entities whose effective type the user
+        reviews. `since` (RFC3339) filters by creation time. Pagination is
+        cursor-based on `entityID` ascending; default limit 50, maximum 200.
+        """
+        from .resources.review_queue import AsyncReviewQueueResourceWithStreamingResponse
+
+        return AsyncReviewQueueResourceWithStreamingResponse(self._client.review_queue)
+
+    @cached_property
+    def users(self) -> users.AsyncUsersResourceWithStreamingResponse:
+        """
+        Reviewer assignments link users to the entity types they are responsible
+        for reviewing, scoped to an account+environment. These are dashboard-only
+        endpoints: an assignment needs a user identity, which only the dashboard
+        (JWT) surface carries.
+
+        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
+          reviewer of the type. The assignment is idempotent: re-assigning an
+          existing reviewer returns the existing assignment. Requires the `admin`
+          role.
+        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
+          to review the type, with each user's email and role. Requires the
+          `operator` role.
+        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
+          assignment. Requires the `admin` role.
+        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
+          the entity types a user reviews. A user may read their own assignments;
+          reading another user's assignments requires the `admin` role.
+        """
+        from .resources.users import AsyncUsersResourceWithStreamingResponse
+
+        return AsyncUsersResourceWithStreamingResponse(self._client.users)
 
 
 Client = Bem

@@ -8,6 +8,14 @@ from .eval import (
     EvalResourceWithStreamingResponse,
     AsyncEvalResourceWithStreamingResponse,
 )
+from .score import (
+    ScoreResource,
+    AsyncScoreResource,
+    ScoreResourceWithRawResponse,
+    AsyncScoreResourceWithRawResponse,
+    ScoreResourceWithStreamingResponse,
+    AsyncScoreResourceWithStreamingResponse,
+)
 from .results import (
     ResultsResource,
     AsyncResultsResource,
@@ -24,6 +32,12 @@ __all__ = [
     "AsyncResultsResourceWithRawResponse",
     "ResultsResourceWithStreamingResponse",
     "AsyncResultsResourceWithStreamingResponse",
+    "ScoreResource",
+    "AsyncScoreResource",
+    "ScoreResourceWithRawResponse",
+    "AsyncScoreResourceWithRawResponse",
+    "ScoreResourceWithStreamingResponse",
+    "AsyncScoreResourceWithStreamingResponse",
     "EvalResource",
     "AsyncEvalResource",
     "EvalResourceWithRawResponse",

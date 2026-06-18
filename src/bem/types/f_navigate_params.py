@@ -10,7 +10,7 @@ from .fs_op import FsOp
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
 
-__all__ = ["FNavigateParams", "Filter", "Range"]
+__all__ = ["FNavigateParams", "Context", "Filter", "Range"]
 
 
 class FNavigateParams(TypedDict, total=False):
@@ -36,6 +36,13 @@ class FNavigateParams(TypedDict, total=False):
     is only populated when the parse function had `linkAcrossDocuments: true`. On
     environments with no memory-linked docs they return empty data with a hint
     pointing at the toggle.
+    """
+
+    context: Context
+    """Request-scoping concerns that are orthogonal to the op itself.
+
+    Carried on a `context` object so future scoping hints (e.g. as-of timestamps,
+    read consistency) can slot in without reshaping the op-specific fields.
     """
 
     count_only: Annotated[bool, PropertyInfo(alias="countOnly")]
@@ -90,6 +97,31 @@ class FNavigateParams(TypedDict, total=False):
 
     `["sections.label", "sections.page"]`), letting an agent map a doc's structure
     cheaply before reading content. Used with `op=cat`.
+    """
+
+
+class Context(TypedDict, total=False):
+    """Request-scoping concerns that are orthogonal to the op itself.
+
+    Carried on a
+    `context` object so future scoping hints (e.g. as-of timestamps, read
+    consistency) can slot in without reshaping the op-specific fields.
+    """
+
+    bucket: str
+    """
+    Bucket KSUID (prefix `bkt_`) to scope the request to — a named partition of the
+    knowledge graph within the caller's account+environment.
+
+    **Optional.** Omitting it (or passing an empty value) leaves the request
+    UNSCOPED: memory-level reads (`find` / `open` / `xref`) return entities across
+    every bucket in the account+environment, so pre-bucket callers keep their
+    original all-entities behavior unchanged. (Writes are different: a parse call
+    with no bucket targets the account default bucket.) When a bucket IS supplied,
+    memory-level ops return only entities in that bucket; doc-level ops
+    (`ls`/`cat`/`head`/`stat`/`grep`) are unaffected either way — documents are not
+    bucket-partitioned. A bucket that does not belong to the caller's
+    account+environment is rejected.
     """
 
 
