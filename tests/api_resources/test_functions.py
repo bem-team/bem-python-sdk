@@ -454,6 +454,7 @@ class TestFunctions:
             display_name="displayName",
             extra_config={"enable_bounding_boxes": True},
             parse_config={
+                "default_bucket": "defaultBucket",
                 "extract_entities": True,
                 "link_across_documents": True,
                 "schema": {},
@@ -1030,6 +1031,7 @@ class TestFunctions:
             extra_config={"enable_bounding_boxes": True},
             function_name="functionName",
             parse_config={
+                "default_bucket": "defaultBucket",
                 "extract_entities": True,
                 "link_across_documents": True,
                 "schema": {},
@@ -1737,6 +1739,7 @@ class TestAsyncFunctions:
             display_name="displayName",
             extra_config={"enable_bounding_boxes": True},
             parse_config={
+                "default_bucket": "defaultBucket",
                 "extract_entities": True,
                 "link_across_documents": True,
                 "schema": {},
@@ -2313,6 +2316,7 @@ class TestAsyncFunctions:
             extra_config={"enable_bounding_boxes": True},
             function_name="functionName",
             parse_config={
+                "default_bucket": "defaultBucket",
                 "extract_entities": True,
                 "link_across_documents": True,
                 "schema": {},

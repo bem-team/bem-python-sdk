@@ -18,6 +18,13 @@ class ParseConfigParam(TypedDict, total=False):
     linking (an environment-wide concern).
     """
 
+    default_bucket: Annotated[str, PropertyInfo(alias="defaultBucket")]
+    """
+    Optional bucket NAME that parse-extracted entities land in when no call-level
+    bucket is supplied. Lower precedence than a call-level bucket, higher than the
+    account+environment default.
+    """
+
     extract_entities: Annotated[bool, PropertyInfo(alias="extractEntities")]
     """
     When true, extract named entities (people, organizations, products, studies,

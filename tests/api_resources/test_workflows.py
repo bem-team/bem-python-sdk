@@ -348,6 +348,7 @@ class TestWorkflows:
                 },
             },
             wait=True,
+            bucket="bucket",
             call_reference_id="callReferenceID",
             metadata={},
         )
@@ -770,6 +771,7 @@ class TestAsyncWorkflows:
                 },
             },
             wait=True,
+            bucket="bucket",
             call_reference_id="callReferenceID",
             metadata={},
         )
