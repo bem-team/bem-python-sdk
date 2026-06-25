@@ -18,6 +18,13 @@ class ParseConfig(BaseModel):
     linking (an environment-wide concern).
     """
 
+    default_bucket: Optional[str] = FieldInfo(alias="defaultBucket", default=None)
+    """
+    Optional bucket NAME that parse-extracted entities land in when no call-level
+    bucket is supplied. Lower precedence than a call-level bucket, higher than the
+    account+environment default.
+    """
+
     extract_entities: Optional[bool] = FieldInfo(alias="extractEntities", default=None)
     """
     When true, extract named entities (people, organizations, products, studies,
