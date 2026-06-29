@@ -26,6 +26,9 @@ __all__ = [
     "CreateEnrichFunction",
     "CreateParseFunction",
     "CreateParseFunctionExtraConfig",
+    "CreateRenderFunction",
+    "CreateRenderFunctionRenderConfig",
+    "CreateRenderFunctionRenderConfigTemplate",
 ]
 
 
@@ -336,6 +339,59 @@ class CreateParseFunctionExtraConfig(TypedDict, total=False):
     """
 
 
+class CreateRenderFunction(TypedDict, total=False):
+    function_name: Required[Annotated[str, PropertyInfo(alias="functionName")]]
+    """Name of function. Must be UNIQUE on a per-environment basis."""
+
+    render_config: Required[Annotated[CreateRenderFunctionRenderConfig, PropertyInfo(alias="renderConfig")]]
+    """Request-side render configuration.
+
+    Carries the template document as base64-encoded `.docx` bytes: the server
+    validates them, stores the template, and derives the placeholder/style-id
+    contract at create/update time, so clients never submit `placeholders` or
+    `styleIds`. The response shape (`RenderConfig`) returns the derived contract.
+    """
+
+    type: Required[Literal["render"]]
+
+    display_name: Annotated[str, PropertyInfo(alias="displayName")]
+    """Display name of function.
+
+    Human-readable name to help you identify the function.
+    """
+
+    tags: SequenceNotStr[str]
+    """Array of tags to categorize and organize functions."""
+
+
+class CreateRenderFunctionRenderConfigTemplate(TypedDict, total=False):
+    base64: Required[str]
+    """Base64-encoded `.docx` bytes.
+
+    In the Bem CLI, use `@path/to/file` to embed it automatically.
+    """
+
+    name: str
+    """Original upload filename (e.g.
+
+    `contract.docx`), stored for display only. Does not affect where the template is
+    stored.
+    """
+
+
+class CreateRenderFunctionRenderConfig(TypedDict, total=False):
+    """Request-side render configuration.
+
+    Carries the template document as
+    base64-encoded `.docx` bytes: the server validates them, stores the template,
+    and derives the placeholder/style-id contract at create/update time, so
+    clients never submit `placeholders` or `styleIds`. The response shape
+    (`RenderConfig`) returns the derived contract.
+    """
+
+    template: Required[CreateRenderFunctionRenderConfigTemplate]
+
+
 FunctionCreateParams: TypeAlias = Union[
     CreateExtractFunction,
     CreateClassifyFunction,
@@ -345,4 +401,5 @@ FunctionCreateParams: TypeAlias = Union[
     CreatePayloadShapingFunction,
     CreateEnrichFunction,
     CreateParseFunction,
+    CreateRenderFunction,
 ]
