@@ -34,6 +34,13 @@ class Node(BaseModel):
     canonical: str
     """Canonical (most descriptive) surface form."""
 
+    depth: int
+    """
+    Hops from the center node when the request centers the graph on one entity
+    (`nodeID`). The center is depth 0. When the request is uncentered (no `nodeID`),
+    this is 0 for every node.
+    """
+
     mention_count: int = FieldInfo(alias="mentionCount")
     """Total mentions of this entity across all parsed documents."""
 

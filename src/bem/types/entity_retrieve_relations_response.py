@@ -23,6 +23,13 @@ class InboundSourceEntity(BaseModel):
     canonical: str
     """Canonical (most descriptive) surface form of the entity."""
 
+    depth: int
+    """Hops from the queried entity.
+
+    This endpoint returns direct relations, so this is 1 (a self-loop's far end is
+    the queried entity itself, 0).
+    """
+
     type: str
     """Effective entity type."""
 
@@ -59,6 +66,13 @@ class OutboundTargetEntity(BaseModel):
 
     canonical: str
     """Canonical (most descriptive) surface form of the entity."""
+
+    depth: int
+    """Hops from the queried entity.
+
+    This endpoint returns direct relations, so this is 1 (a self-loop's far end is
+    the queried entity itself, 0).
+    """
 
     type: str
     """Effective entity type."""
