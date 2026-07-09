@@ -27,6 +27,15 @@ class WorkflowCallParams(TypedDict, total=False):
     `--wait=true`, not `--wait true`.
     """
 
+    bucket: str
+    """
+    Optional bucket NAME that entities extracted by the workflow's parse function(s)
+    land in. Resolution precedence: this call-level bucket > the parse function's
+    configured `defaultBucket` > the account+environment default bucket. A
+    non-existent bucket name returns 400, but only when the workflow contains a
+    parse function; on a parse-free workflow it is ignored.
+    """
+
     call_reference_id: Annotated[str, PropertyInfo(alias="callReferenceID")]
     """Your reference ID for tracking this call."""
 

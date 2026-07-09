@@ -454,6 +454,7 @@ class WorkflowsResource(SyncAPIResource):
         *,
         input: workflow_call_params.Input,
         wait: bool | Omit = omit,
+        bucket: str | Omit = omit,
         call_reference_id: str | Omit = omit,
         metadata: object | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -552,6 +553,12 @@ class WorkflowsResource(SyncAPIResource):
               object. Default: `false`. This is a boolean flag — use `--wait` or
               `--wait=true`, not `--wait true`.
 
+          bucket: Optional bucket NAME that entities extracted by the workflow's parse function(s)
+              land in. Resolution precedence: this call-level bucket > the parse function's
+              configured `defaultBucket` > the account+environment default bucket. A
+              non-existent bucket name returns 400, but only when the workflow contains a
+              parse function; on a parse-free workflow it is ignored.
+
           call_reference_id: Your reference ID for tracking this call.
 
           metadata: Arbitrary JSON object attached to this call. Stored on the call record and
@@ -573,6 +580,7 @@ class WorkflowsResource(SyncAPIResource):
             body=maybe_transform(
                 {
                     "input": input,
+                    "bucket": bucket,
                     "call_reference_id": call_reference_id,
                     "metadata": metadata,
                 },
@@ -1068,6 +1076,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         *,
         input: workflow_call_params.Input,
         wait: bool | Omit = omit,
+        bucket: str | Omit = omit,
         call_reference_id: str | Omit = omit,
         metadata: object | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1166,6 +1175,12 @@ class AsyncWorkflowsResource(AsyncAPIResource):
               object. Default: `false`. This is a boolean flag — use `--wait` or
               `--wait=true`, not `--wait true`.
 
+          bucket: Optional bucket NAME that entities extracted by the workflow's parse function(s)
+              land in. Resolution precedence: this call-level bucket > the parse function's
+              configured `defaultBucket` > the account+environment default bucket. A
+              non-existent bucket name returns 400, but only when the workflow contains a
+              parse function; on a parse-free workflow it is ignored.
+
           call_reference_id: Your reference ID for tracking this call.
 
           metadata: Arbitrary JSON object attached to this call. Stored on the call record and
@@ -1187,6 +1202,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
             body=await async_maybe_transform(
                 {
                     "input": input,
+                    "bucket": bucket,
                     "call_reference_id": call_reference_id,
                     "metadata": metadata,
                 },

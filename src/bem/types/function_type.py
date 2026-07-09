@@ -16,4 +16,5 @@ FunctionType: TypeAlias = Literal[
     "payload_shaping",
     "enrich",
     "parse",
+    "render",
 ]

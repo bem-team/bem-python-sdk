@@ -70,6 +70,8 @@ class KnowledgeGraphResource(SyncAPIResource):
         bucket: str | Omit = omit,
         cursor: str | Omit = omit,
         limit: int | Omit = omit,
+        max_depth: int | Omit = omit,
+        node_id: str | Omit = omit,
         search: str | Omit = omit,
         since: Union[str, datetime] | Omit = omit,
         type: SequenceNotStr[str] | Omit = omit,
@@ -90,6 +92,14 @@ class KnowledgeGraphResource(SyncAPIResource):
           cursor: Cursor: return edges whose KSUID sorts after this value.
 
           limit: Maximum number of edges per page (default 50, max 200).
+
+          max_depth: Maximum hops from the center node. Only meaningful with `nodeID`. Defaults to 2
+              and is clamped down to a system maximum (5).
+
+          node_id: Center the graph on this entity (`ent_...`) and only return the subgraph within
+              `maxDepth` hops of it; every node then carries its `depth` (hops from the
+              center, center = 0). Omit for the uncentered whole-graph view. `rootNodeID` and
+              `focusNodeID` are accepted as aliases.
 
           search: Case-insensitive substring match on canonical names. Both endpoints of an edge
               must match for the edge (and its nodes) to be returned.
@@ -119,6 +129,8 @@ class KnowledgeGraphResource(SyncAPIResource):
                         "bucket": bucket,
                         "cursor": cursor,
                         "limit": limit,
+                        "max_depth": max_depth,
+                        "node_id": node_id,
                         "search": search,
                         "since": since,
                         "type": type,
@@ -176,6 +188,8 @@ class AsyncKnowledgeGraphResource(AsyncAPIResource):
         bucket: str | Omit = omit,
         cursor: str | Omit = omit,
         limit: int | Omit = omit,
+        max_depth: int | Omit = omit,
+        node_id: str | Omit = omit,
         search: str | Omit = omit,
         since: Union[str, datetime] | Omit = omit,
         type: SequenceNotStr[str] | Omit = omit,
@@ -196,6 +210,14 @@ class AsyncKnowledgeGraphResource(AsyncAPIResource):
           cursor: Cursor: return edges whose KSUID sorts after this value.
 
           limit: Maximum number of edges per page (default 50, max 200).
+
+          max_depth: Maximum hops from the center node. Only meaningful with `nodeID`. Defaults to 2
+              and is clamped down to a system maximum (5).
+
+          node_id: Center the graph on this entity (`ent_...`) and only return the subgraph within
+              `maxDepth` hops of it; every node then carries its `depth` (hops from the
+              center, center = 0). Omit for the uncentered whole-graph view. `rootNodeID` and
+              `focusNodeID` are accepted as aliases.
 
           search: Case-insensitive substring match on canonical names. Both endpoints of an edge
               must match for the edge (and its nodes) to be returned.
@@ -225,6 +247,8 @@ class AsyncKnowledgeGraphResource(AsyncAPIResource):
                         "bucket": bucket,
                         "cursor": cursor,
                         "limit": limit,
+                        "max_depth": max_depth,
+                        "node_id": node_id,
                         "search": search,
                         "since": since,
                         "type": type,

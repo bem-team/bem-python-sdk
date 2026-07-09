@@ -196,8 +196,8 @@ class FunctionsResource(SyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -270,8 +270,8 @@ class FunctionsResource(SyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -337,8 +337,8 @@ class FunctionsResource(SyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -410,8 +410,8 @@ class FunctionsResource(SyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -469,8 +469,8 @@ class FunctionsResource(SyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -533,8 +533,8 @@ class FunctionsResource(SyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -595,8 +595,8 @@ class FunctionsResource(SyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -685,8 +685,8 @@ class FunctionsResource(SyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -732,7 +732,69 @@ class FunctionsResource(SyncAPIResource):
         """
         ...
 
-    @required_args(["function_name", "type"])
+    @overload
+    def create(
+        self,
+        *,
+        function_name: str,
+        render_config: function_create_params.CreateRenderFunctionRenderConfig,
+        type: Literal["render"],
+        display_name: str | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """
+        **Create a function.**
+
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
+
+        Args:
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          render_config: Request-side render configuration. Carries the template document as
+              base64-encoded `.docx` bytes: the server validates them, stores the template,
+              and derives the placeholder/style-id contract at create/update time, so clients
+              never submit `placeholders` or `styleIds`. The response shape (`RenderConfig`)
+              returns the derived contract.
+
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @required_args(["function_name", "type"], ["function_name", "render_config", "type"])
     def create(
         self,
         *,
@@ -744,7 +806,8 @@ class FunctionsResource(SyncAPIResource):
         | Literal["join"]
         | Literal["payload_shaping"]
         | Literal["enrich"]
-        | Literal["parse"],
+        | Literal["parse"]
+        | Literal["render"],
         display_name: str | Omit = omit,
         enable_bounding_boxes: bool | Omit = omit,
         output_schema: object | Omit = omit,
@@ -768,6 +831,7 @@ class FunctionsResource(SyncAPIResource):
         config: EnrichConfigParam | Omit = omit,
         extra_config: function_create_params.CreateParseFunctionExtraConfig | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
+        render_config: function_create_params.CreateRenderFunctionRenderConfig | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -804,6 +868,7 @@ class FunctionsResource(SyncAPIResource):
                     "config": config,
                     "extra_config": extra_config,
                     "parse_config": parse_config,
+                    "render_config": render_config,
                 },
                 function_create_params.FunctionCreateParams,
             ),
@@ -1408,6 +1473,69 @@ class FunctionsResource(SyncAPIResource):
         """
         ...
 
+    @overload
+    def update(
+        self,
+        path_function_name: str,
+        *,
+        type: Literal["render"],
+        display_name: str | Omit = omit,
+        function_name: str | Omit = omit,
+        render_config: function_update_params.UpsertRenderFunctionRenderConfig | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
+
+        Args:
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          render_config: Request-side render configuration. Carries the template document as
+              base64-encoded `.docx` bytes: the server validates them, stores the template,
+              and derives the placeholder/style-id contract at create/update time, so clients
+              never submit `placeholders` or `styleIds`. The response shape (`RenderConfig`)
+              returns the derived contract.
+
+          tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
     @required_args(["type"])
     def update(
         self,
@@ -1420,7 +1548,8 @@ class FunctionsResource(SyncAPIResource):
         | Literal["join"]
         | Literal["payload_shaping"]
         | Literal["enrich"]
-        | Literal["parse"],
+        | Literal["parse"]
+        | Literal["render"],
         display_name: str | Omit = omit,
         enable_bounding_boxes: bool | Omit = omit,
         function_name: str | Omit = omit,
@@ -1445,6 +1574,7 @@ class FunctionsResource(SyncAPIResource):
         config: EnrichConfigParam | Omit = omit,
         extra_config: function_update_params.UpsertParseFunctionExtraConfig | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
+        render_config: function_update_params.UpsertRenderFunctionRenderConfig | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1483,6 +1613,7 @@ class FunctionsResource(SyncAPIResource):
                     "config": config,
                     "extra_config": extra_config,
                     "parse_config": parse_config,
+                    "render_config": render_config,
                 },
                 function_update_params.FunctionUpdateParams,
             ),
@@ -2001,8 +2132,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -2075,8 +2206,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -2142,8 +2273,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -2215,8 +2346,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -2274,8 +2405,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -2338,8 +2469,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -2400,8 +2531,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -2490,8 +2621,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         **Create a function.**
 
-        The function type (`extract`, `classify`, `split`, `join`, `enrich`, or
-        `payload_shaping`) determines which configuration fields are required — see
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
         [Function types overview](/guide/function-types/overview) for the per-type
         contract.
 
@@ -2537,7 +2668,69 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         ...
 
-    @required_args(["function_name", "type"])
+    @overload
+    async def create(
+        self,
+        *,
+        function_name: str,
+        render_config: function_create_params.CreateRenderFunctionRenderConfig,
+        type: Literal["render"],
+        display_name: str | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """
+        **Create a function.**
+
+        The function `type` determines which configuration fields are required — see the
+        `CreateFunctionV3` discriminated union and
+        [Function types overview](/guide/function-types/overview) for the per-type
+        contract.
+
+        The response contains both `functionID` and `functionName`. Either is a stable
+        handle you can use elsewhere; most workflows reference functions by
+        `functionName` because it's human-readable.
+
+        ## Naming rules
+
+        - `functionName` must be unique per environment.
+        - Allowed characters: letters, digits, hyphens, and underscores.
+        - Names cannot be reused after deletion within the same environment for at least
+          the retention window of the previous record.
+
+        The new function is created at `versionNum: 1`. Subsequent
+        `PATCH /v3/functions/{functionName}` calls produce new versions — the version-1
+        configuration remains immutable and addressable.
+
+        Args:
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          render_config: Request-side render configuration. Carries the template document as
+              base64-encoded `.docx` bytes: the server validates them, stores the template,
+              and derives the placeholder/style-id contract at create/update time, so clients
+              never submit `placeholders` or `styleIds`. The response shape (`RenderConfig`)
+              returns the derived contract.
+
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
+    @required_args(["function_name", "type"], ["function_name", "render_config", "type"])
     async def create(
         self,
         *,
@@ -2549,7 +2742,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         | Literal["join"]
         | Literal["payload_shaping"]
         | Literal["enrich"]
-        | Literal["parse"],
+        | Literal["parse"]
+        | Literal["render"],
         display_name: str | Omit = omit,
         enable_bounding_boxes: bool | Omit = omit,
         output_schema: object | Omit = omit,
@@ -2573,6 +2767,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         config: EnrichConfigParam | Omit = omit,
         extra_config: function_create_params.CreateParseFunctionExtraConfig | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
+        render_config: function_create_params.CreateRenderFunctionRenderConfig | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -2609,6 +2804,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "config": config,
                     "extra_config": extra_config,
                     "parse_config": parse_config,
+                    "render_config": render_config,
                 },
                 function_create_params.FunctionCreateParams,
             ),
@@ -3213,6 +3409,69 @@ class AsyncFunctionsResource(AsyncAPIResource):
         """
         ...
 
+    @overload
+    async def update(
+        self,
+        path_function_name: str,
+        *,
+        type: Literal["render"],
+        display_name: str | Omit = omit,
+        function_name: str | Omit = omit,
+        render_config: function_update_params.UpsertRenderFunctionRenderConfig | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FunctionResponse:
+        """**Update a function.
+
+        Updates create a new version.**
+
+        The previous version remains addressable and immutable. Workflow nodes that
+        pinned the function with a `versionNum` continue to use the pinned version;
+        nodes that reference the function by name with no version automatically pick up
+        the new version on their next call.
+
+        ## What you can change
+
+        Any field allowed by the function's type. Most commonly: `outputSchema` (for
+        `extract`/`join`), `classifications` (for `classify`), `displayName`, and
+        `tags`.
+
+        ## Versioning behaviour
+
+        - Each successful update increments `currentVersionNum` by 1.
+        - `displayName`, `tags`, and `functionName` updates also create a new version,
+          so the version history is a complete record of every change.
+        - To revert, fetch the previous version and re-submit its configuration as a new
+          update — versions themselves are immutable.
+
+        Args:
+          display_name: Display name of function. Human-readable name to help you identify the function.
+
+          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          render_config: Request-side render configuration. Carries the template document as
+              base64-encoded `.docx` bytes: the server validates them, stores the template,
+              and derives the placeholder/style-id contract at create/update time, so clients
+              never submit `placeholders` or `styleIds`. The response shape (`RenderConfig`)
+              returns the derived contract.
+
+          tags: Array of tags to categorize and organize functions.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        ...
+
     @required_args(["type"])
     async def update(
         self,
@@ -3225,7 +3484,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         | Literal["join"]
         | Literal["payload_shaping"]
         | Literal["enrich"]
-        | Literal["parse"],
+        | Literal["parse"]
+        | Literal["render"],
         display_name: str | Omit = omit,
         enable_bounding_boxes: bool | Omit = omit,
         function_name: str | Omit = omit,
@@ -3250,6 +3510,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         config: EnrichConfigParam | Omit = omit,
         extra_config: function_update_params.UpsertParseFunctionExtraConfig | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
+        render_config: function_update_params.UpsertRenderFunctionRenderConfig | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -3288,6 +3549,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "config": config,
                     "extra_config": extra_config,
                     "parse_config": parse_config,
+                    "render_config": render_config,
                 },
                 function_update_params.FunctionUpdateParams,
             ),

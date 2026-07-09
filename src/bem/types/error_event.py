@@ -57,6 +57,17 @@ class ErrorEvent(BaseModel):
     inbound_email: Optional[InboundEmailEvent] = FieldInfo(alias="inboundEmail", default=None)
     """The inbound email that triggered this event."""
 
+    kind: Optional[str] = None
+    """Open, extensible error-kind label for typed transformation errors.
+
+    The platform emits these as plain strings and the set grows over time, so
+    clients must accept unknown values. For render functions the known kinds are
+    `render_source_fetch`, `render_template_fetch`, `render_image_unresolved`,
+    `render_validation`, `render_exception`, `render_upload`, and `render_contract`.
+    Omitted for historical events that pre-date the kind column and for
+    non-transform errors.
+    """
+
     metadata: Optional[Metadata] = None
 
     workflow_id: Optional[str] = FieldInfo(alias="workflowID", default=None)
