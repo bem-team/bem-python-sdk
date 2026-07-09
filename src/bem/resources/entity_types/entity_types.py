@@ -24,10 +24,8 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
+from ...types.entity_type import EntityType
 from ...types.entity_type_list_response import EntityTypeListResponse
-from ...types.entity_type_create_response import EntityTypeCreateResponse
-from ...types.entity_type_update_response import EntityTypeUpdateResponse
-from ...types.entity_type_retrieve_response import EntityTypeRetrieveResponse
 
 __all__ = ["EntityTypesResource", "AsyncEntityTypesResource"]
 
@@ -109,7 +107,7 @@ class EntityTypesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> EntityTypeCreateResponse:
+    ) -> EntityType:
         """Create an Entity Type
 
         Args:
@@ -146,7 +144,7 @@ class EntityTypesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=EntityTypeCreateResponse,
+            cast_to=EntityType,
         )
 
     def retrieve(
@@ -159,7 +157,7 @@ class EntityTypesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> EntityTypeRetrieveResponse:
+    ) -> EntityType:
         """
         Get an Entity Type
 
@@ -179,7 +177,7 @@ class EntityTypesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=EntityTypeRetrieveResponse,
+            cast_to=EntityType,
         )
 
     def update(
@@ -195,7 +193,7 @@ class EntityTypesResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> EntityTypeUpdateResponse:
+    ) -> EntityType:
         """
         Update an Entity Type
 
@@ -231,7 +229,7 @@ class EntityTypesResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=EntityTypeUpdateResponse,
+            cast_to=EntityType,
         )
 
     def list(
@@ -400,7 +398,7 @@ class AsyncEntityTypesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> EntityTypeCreateResponse:
+    ) -> EntityType:
         """Create an Entity Type
 
         Args:
@@ -437,7 +435,7 @@ class AsyncEntityTypesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=EntityTypeCreateResponse,
+            cast_to=EntityType,
         )
 
     async def retrieve(
@@ -450,7 +448,7 @@ class AsyncEntityTypesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> EntityTypeRetrieveResponse:
+    ) -> EntityType:
         """
         Get an Entity Type
 
@@ -470,7 +468,7 @@ class AsyncEntityTypesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=EntityTypeRetrieveResponse,
+            cast_to=EntityType,
         )
 
     async def update(
@@ -486,7 +484,7 @@ class AsyncEntityTypesResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> EntityTypeUpdateResponse:
+    ) -> EntityType:
         """
         Update an Entity Type
 
@@ -522,7 +520,7 @@ class AsyncEntityTypesResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=EntityTypeUpdateResponse,
+            cast_to=EntityType,
         )
 
     async def list(

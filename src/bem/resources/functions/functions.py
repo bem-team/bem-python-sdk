@@ -58,9 +58,11 @@ from ...types.function_response import FunctionResponse
 from ...types.parse_config_param import ParseConfigParam
 from ...types.enrich_config_param import EnrichConfigParam
 from ...types.send_destination_type import SendDestinationType
+from ...types.render_config_input_param import RenderConfigInputParam
 from ...types.function_get_metrics_response import FunctionGetMetricsResponse
 from ...types.classification_list_item_param import ClassificationListItemParam
 from ...types.function_compare_metrics_response import FunctionCompareMetricsResponse
+from ...types.parse_extra_function_config_param import ParseExtraFunctionConfigParam
 from ...types.function_estimate_review_requirements_response import FunctionEstimateReviewRequirementsResponse
 
 __all__ = ["FunctionsResource", "AsyncFunctionsResource"]
@@ -672,7 +674,7 @@ class FunctionsResource(SyncAPIResource):
         function_name: str,
         type: Literal["parse"],
         display_name: str | Omit = omit,
-        extra_config: function_create_params.CreateParseFunctionExtraConfig | Omit = omit,
+        extra_config: ParseExtraFunctionConfigParam | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -737,7 +739,7 @@ class FunctionsResource(SyncAPIResource):
         self,
         *,
         function_name: str,
-        render_config: function_create_params.CreateRenderFunctionRenderConfig,
+        render_config: RenderConfigInputParam,
         type: Literal["render"],
         display_name: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -829,9 +831,9 @@ class FunctionsResource(SyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
-        extra_config: function_create_params.CreateParseFunctionExtraConfig | Omit = omit,
+        extra_config: ParseExtraFunctionConfigParam | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
-        render_config: function_create_params.CreateRenderFunctionRenderConfig | Omit = omit,
+        render_config: RenderConfigInputParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1412,7 +1414,7 @@ class FunctionsResource(SyncAPIResource):
         *,
         type: Literal["parse"],
         display_name: str | Omit = omit,
-        extra_config: function_update_params.UpsertParseFunctionExtraConfig | Omit = omit,
+        extra_config: ParseExtraFunctionConfigParam | Omit = omit,
         function_name: str | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -1481,7 +1483,7 @@ class FunctionsResource(SyncAPIResource):
         type: Literal["render"],
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
-        render_config: function_update_params.UpsertRenderFunctionRenderConfig | Omit = omit,
+        render_config: RenderConfigInputParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1572,9 +1574,9 @@ class FunctionsResource(SyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
-        extra_config: function_update_params.UpsertParseFunctionExtraConfig | Omit = omit,
+        extra_config: ParseExtraFunctionConfigParam | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
-        render_config: function_update_params.UpsertRenderFunctionRenderConfig | Omit = omit,
+        render_config: RenderConfigInputParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -2608,7 +2610,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         function_name: str,
         type: Literal["parse"],
         display_name: str | Omit = omit,
-        extra_config: function_create_params.CreateParseFunctionExtraConfig | Omit = omit,
+        extra_config: ParseExtraFunctionConfigParam | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -2673,7 +2675,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         *,
         function_name: str,
-        render_config: function_create_params.CreateRenderFunctionRenderConfig,
+        render_config: RenderConfigInputParam,
         type: Literal["render"],
         display_name: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -2765,9 +2767,9 @@ class AsyncFunctionsResource(AsyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
-        extra_config: function_create_params.CreateParseFunctionExtraConfig | Omit = omit,
+        extra_config: ParseExtraFunctionConfigParam | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
-        render_config: function_create_params.CreateRenderFunctionRenderConfig | Omit = omit,
+        render_config: RenderConfigInputParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -3348,7 +3350,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         type: Literal["parse"],
         display_name: str | Omit = omit,
-        extra_config: function_update_params.UpsertParseFunctionExtraConfig | Omit = omit,
+        extra_config: ParseExtraFunctionConfigParam | Omit = omit,
         function_name: str | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
@@ -3417,7 +3419,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         type: Literal["render"],
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
-        render_config: function_update_params.UpsertRenderFunctionRenderConfig | Omit = omit,
+        render_config: RenderConfigInputParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -3508,9 +3510,9 @@ class AsyncFunctionsResource(AsyncAPIResource):
         join_type: Literal["standard"] | Omit = omit,
         shaping_schema: str | Omit = omit,
         config: EnrichConfigParam | Omit = omit,
-        extra_config: function_update_params.UpsertParseFunctionExtraConfig | Omit = omit,
+        extra_config: ParseExtraFunctionConfigParam | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
-        render_config: function_update_params.UpsertRenderFunctionRenderConfig | Omit = omit,
+        render_config: RenderConfigInputParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,

@@ -7,10 +7,10 @@ from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
 
-__all__ = ["EntityTypeCreateResponse"]
+__all__ = ["EntityType"]
 
 
-class EntityTypeCreateResponse(BaseModel):
+class EntityType(BaseModel):
     """
     An EntityType is a customer-defined type in the knowledge-graph taxonomy,
     scoped to an account+environment. Types may be organised into hierarchies
