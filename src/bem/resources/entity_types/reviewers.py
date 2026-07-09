@@ -16,8 +16,8 @@ from ..._response import (
 )
 from ..._base_client import make_request_options
 from ...types.entity_types import reviewer_assign_params
+from ...types.entity_types.reviewer import Reviewer
 from ...types.entity_types.reviewer_list_response import ReviewerListResponse
-from ...types.entity_types.reviewer_assign_response import ReviewerAssignResponse
 
 __all__ = ["ReviewersResource", "AsyncReviewersResource"]
 
@@ -106,7 +106,7 @@ class ReviewersResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ReviewerAssignResponse:
+    ) -> Reviewer:
         """Assign a Reviewer
 
         Args:
@@ -130,7 +130,7 @@ class ReviewersResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ReviewerAssignResponse,
+            cast_to=Reviewer,
         )
 
     def remove(
@@ -255,7 +255,7 @@ class AsyncReviewersResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ReviewerAssignResponse:
+    ) -> Reviewer:
         """Assign a Reviewer
 
         Args:
@@ -279,7 +279,7 @@ class AsyncReviewersResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ReviewerAssignResponse,
+            cast_to=Reviewer,
         )
 
     async def remove(

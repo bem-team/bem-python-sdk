@@ -9,10 +9,8 @@ import pytest
 
 from bem import Bem, AsyncBem
 from bem.types import (
+    View,
     ViewListResponse,
-    ViewCreateResponse,
-    ViewUpdateResponse,
-    ViewRetrieveResponse,
     ViewGenerateTableDataResponse,
     ViewGenerateAggregationDataResponse,
 )
@@ -51,7 +49,7 @@ class TestViews:
             functions=[{}],
             name="name",
         )
-        assert_matches_type(ViewCreateResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -90,7 +88,7 @@ class TestViews:
             name="name",
             description="description",
         )
-        assert_matches_type(ViewCreateResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -122,7 +120,7 @@ class TestViews:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         view = response.parse()
-        assert_matches_type(ViewCreateResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -154,7 +152,7 @@ class TestViews:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             view = response.parse()
-            assert_matches_type(ViewCreateResponse, view, path=["response"])
+            assert_matches_type(View, view, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -164,7 +162,7 @@ class TestViews:
         view = client.views.retrieve(
             "view_id",
         )
-        assert_matches_type(ViewRetrieveResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -176,7 +174,7 @@ class TestViews:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         view = response.parse()
-        assert_matches_type(ViewRetrieveResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -188,7 +186,7 @@ class TestViews:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             view = response.parse()
-            assert_matches_type(ViewRetrieveResponse, view, path=["response"])
+            assert_matches_type(View, view, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -227,7 +225,7 @@ class TestViews:
             functions=[{}],
             name="name",
         )
-        assert_matches_type(ViewUpdateResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -267,7 +265,7 @@ class TestViews:
             name="name",
             description="description",
         )
-        assert_matches_type(ViewUpdateResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -300,7 +298,7 @@ class TestViews:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         view = response.parse()
-        assert_matches_type(ViewUpdateResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -333,7 +331,7 @@ class TestViews:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             view = response.parse()
-            assert_matches_type(ViewUpdateResponse, view, path=["response"])
+            assert_matches_type(View, view, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -783,7 +781,7 @@ class TestAsyncViews:
             functions=[{}],
             name="name",
         )
-        assert_matches_type(ViewCreateResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -822,7 +820,7 @@ class TestAsyncViews:
             name="name",
             description="description",
         )
-        assert_matches_type(ViewCreateResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -854,7 +852,7 @@ class TestAsyncViews:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         view = await response.parse()
-        assert_matches_type(ViewCreateResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -886,7 +884,7 @@ class TestAsyncViews:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             view = await response.parse()
-            assert_matches_type(ViewCreateResponse, view, path=["response"])
+            assert_matches_type(View, view, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -896,7 +894,7 @@ class TestAsyncViews:
         view = await async_client.views.retrieve(
             "view_id",
         )
-        assert_matches_type(ViewRetrieveResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -908,7 +906,7 @@ class TestAsyncViews:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         view = await response.parse()
-        assert_matches_type(ViewRetrieveResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -920,7 +918,7 @@ class TestAsyncViews:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             view = await response.parse()
-            assert_matches_type(ViewRetrieveResponse, view, path=["response"])
+            assert_matches_type(View, view, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -959,7 +957,7 @@ class TestAsyncViews:
             functions=[{}],
             name="name",
         )
-        assert_matches_type(ViewUpdateResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -999,7 +997,7 @@ class TestAsyncViews:
             name="name",
             description="description",
         )
-        assert_matches_type(ViewUpdateResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -1032,7 +1030,7 @@ class TestAsyncViews:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         view = await response.parse()
-        assert_matches_type(ViewUpdateResponse, view, path=["response"])
+        assert_matches_type(View, view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -1065,7 +1063,7 @@ class TestAsyncViews:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             view = await response.parse()
-            assert_matches_type(ViewUpdateResponse, view, path=["response"])
+            assert_matches_type(View, view, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

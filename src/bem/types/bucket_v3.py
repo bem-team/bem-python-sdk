@@ -6,10 +6,10 @@ from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
 
-__all__ = ["BucketRetrieveResponse"]
+__all__ = ["BucketV3"]
 
 
-class BucketRetrieveResponse(BaseModel):
+class BucketV3(BaseModel):
     """
     A Bucket is a named partition of the knowledge graph within an
     account+environment. Entities, mentions, and relations are scoped to a

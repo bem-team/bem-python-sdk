@@ -18,9 +18,9 @@ from ..._response import (
 )
 from ...types.eval import score_create_params
 from ..._base_client import make_request_options
-from ...types.eval.score_cancel_response import ScoreCancelResponse
+from ...types.eval.eval_score_run import EvalScoreRun
 from ...types.eval.score_create_response import ScoreCreateResponse
-from ...types.eval.score_retrieve_response import ScoreRetrieveResponse
+from ...types.eval.eval_match_config_param import EvalMatchConfigParam
 
 __all__ = ["ScoreResource", "AsyncScoreResource"]
 
@@ -97,7 +97,7 @@ class ScoreResource(SyncAPIResource):
         function_name: str,
         pairs: Iterable[score_create_params.Pair],
         function_version_num: int | Omit = omit,
-        match_config: score_create_params.MatchConfig | Omit = omit,
+        match_config: EvalMatchConfigParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -168,7 +168,7 @@ class ScoreResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ScoreRetrieveResponse:
+    ) -> EvalScoreRun:
         """
         **Get the status and per-pair results of a score run.**
 
@@ -192,7 +192,7 @@ class ScoreResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ScoreRetrieveResponse,
+            cast_to=EvalScoreRun,
         )
 
     def cancel(
@@ -205,7 +205,7 @@ class ScoreResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ScoreCancelResponse:
+    ) -> EvalScoreRun:
         """**Cancel an in-flight score run.**
 
         Transitions the run to `cancelled`.
@@ -230,7 +230,7 @@ class ScoreResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ScoreCancelResponse,
+            cast_to=EvalScoreRun,
         )
 
 
@@ -306,7 +306,7 @@ class AsyncScoreResource(AsyncAPIResource):
         function_name: str,
         pairs: Iterable[score_create_params.Pair],
         function_version_num: int | Omit = omit,
-        match_config: score_create_params.MatchConfig | Omit = omit,
+        match_config: EvalMatchConfigParam | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -377,7 +377,7 @@ class AsyncScoreResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ScoreRetrieveResponse:
+    ) -> EvalScoreRun:
         """
         **Get the status and per-pair results of a score run.**
 
@@ -401,7 +401,7 @@ class AsyncScoreResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ScoreRetrieveResponse,
+            cast_to=EvalScoreRun,
         )
 
     async def cancel(
@@ -414,7 +414,7 @@ class AsyncScoreResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ScoreCancelResponse:
+    ) -> EvalScoreRun:
         """**Cancel an in-flight score run.**
 
         Transitions the run to `cancelled`.
@@ -439,7 +439,7 @@ class AsyncScoreResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ScoreCancelResponse,
+            cast_to=EvalScoreRun,
         )
 
 

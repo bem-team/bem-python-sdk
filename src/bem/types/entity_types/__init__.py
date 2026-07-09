@@ -2,6 +2,6 @@
 
 from __future__ import annotations
 
+from .reviewer import Reviewer as Reviewer
 from .reviewer_assign_params import ReviewerAssignParams as ReviewerAssignParams
 from .reviewer_list_response import ReviewerListResponse as ReviewerListResponse
-from .reviewer_assign_response import ReviewerAssignResponse as ReviewerAssignResponse

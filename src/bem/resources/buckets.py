@@ -16,10 +16,8 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
+from ..types.bucket_v3 import BucketV3
 from ..types.bucket_list_response import BucketListResponse
-from ..types.bucket_create_response import BucketCreateResponse
-from ..types.bucket_update_response import BucketUpdateResponse
-from ..types.bucket_retrieve_response import BucketRetrieveResponse
 
 __all__ = ["BucketsResource", "AsyncBucketsResource"]
 
@@ -75,7 +73,7 @@ class BucketsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BucketCreateResponse:
+    ) -> BucketV3:
         """Create a Bucket
 
         Args:
@@ -105,7 +103,7 @@ class BucketsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=BucketCreateResponse,
+            cast_to=BucketV3,
         )
 
     def retrieve(
@@ -118,7 +116,7 @@ class BucketsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BucketRetrieveResponse:
+    ) -> BucketV3:
         """
         Get a Bucket
 
@@ -138,7 +136,7 @@ class BucketsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=BucketRetrieveResponse,
+            cast_to=BucketV3,
         )
 
     def update(
@@ -153,7 +151,7 @@ class BucketsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BucketUpdateResponse:
+    ) -> BucketV3:
         """
         Update a Bucket
 
@@ -184,7 +182,7 @@ class BucketsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=BucketUpdateResponse,
+            cast_to=BucketV3,
         )
 
     def list(
@@ -338,7 +336,7 @@ class AsyncBucketsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BucketCreateResponse:
+    ) -> BucketV3:
         """Create a Bucket
 
         Args:
@@ -368,7 +366,7 @@ class AsyncBucketsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=BucketCreateResponse,
+            cast_to=BucketV3,
         )
 
     async def retrieve(
@@ -381,7 +379,7 @@ class AsyncBucketsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BucketRetrieveResponse:
+    ) -> BucketV3:
         """
         Get a Bucket
 
@@ -401,7 +399,7 @@ class AsyncBucketsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=BucketRetrieveResponse,
+            cast_to=BucketV3,
         )
 
     async def update(
@@ -416,7 +414,7 @@ class AsyncBucketsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BucketUpdateResponse:
+    ) -> BucketV3:
         """
         Update a Bucket
 
@@ -447,7 +445,7 @@ class AsyncBucketsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=BucketUpdateResponse,
+            cast_to=BucketV3,
         )
 
     async def list(

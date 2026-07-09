@@ -24,11 +24,14 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
+from ..types.view import View
 from .._base_client import make_request_options
+from ..types.time_window_param import TimeWindowParam
+from ..types.view_column_param import ViewColumnParam
+from ..types.view_filter_param import ViewFilterParam
 from ..types.view_list_response import ViewListResponse
-from ..types.view_create_response import ViewCreateResponse
-from ..types.view_update_response import ViewUpdateResponse
-from ..types.view_retrieve_response import ViewRetrieveResponse
+from ..types.view_aggregation_param import ViewAggregationParam
+from ..types.function_identifier_param import FunctionIdentifierParam
 from ..types.view_generate_table_data_response import ViewGenerateTableDataResponse
 from ..types.view_generate_aggregation_data_response import ViewGenerateAggregationDataResponse
 
@@ -92,10 +95,10 @@ class ViewsResource(SyncAPIResource):
     def create(
         self,
         *,
-        aggregations: Iterable[view_create_params.Aggregation],
-        columns: Iterable[view_create_params.Column],
-        filters: Iterable[view_create_params.Filter],
-        functions: Iterable[view_create_params.Function],
+        aggregations: Iterable[ViewAggregationParam],
+        columns: Iterable[ViewColumnParam],
+        filters: Iterable[ViewFilterParam],
+        functions: Iterable[FunctionIdentifierParam],
         name: str,
         description: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -104,7 +107,7 @@ class ViewsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ViewCreateResponse:
+    ) -> View:
         """
         **Create a view.**
 
@@ -158,7 +161,7 @@ class ViewsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ViewCreateResponse,
+            cast_to=View,
         )
 
     def retrieve(
@@ -171,7 +174,7 @@ class ViewsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ViewRetrieveResponse:
+    ) -> View:
         """**Retrieve a view by ID.**
 
         Returns the view's current version.
@@ -196,17 +199,17 @@ class ViewsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ViewRetrieveResponse,
+            cast_to=View,
         )
 
     def update(
         self,
         view_id: str,
         *,
-        aggregations: Iterable[view_update_params.Aggregation],
-        columns: Iterable[view_update_params.Column],
-        filters: Iterable[view_update_params.Filter],
-        functions: Iterable[view_update_params.Function],
+        aggregations: Iterable[ViewAggregationParam],
+        columns: Iterable[ViewColumnParam],
+        filters: Iterable[ViewFilterParam],
+        functions: Iterable[FunctionIdentifierParam],
         name: str,
         description: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -215,7 +218,7 @@ class ViewsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ViewUpdateResponse:
+    ) -> View:
         """**Update a view.
 
         Updates create a new version.**
@@ -263,7 +266,7 @@ class ViewsResource(SyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ViewUpdateResponse,
+            cast_to=View,
         )
 
     def list(
@@ -385,12 +388,12 @@ class ViewsResource(SyncAPIResource):
     def generate_aggregation_data(
         self,
         *,
-        aggregations: Iterable[view_generate_aggregation_data_params.Aggregation],
-        columns: Iterable[view_generate_aggregation_data_params.Column],
-        filters: Iterable[view_generate_aggregation_data_params.Filter],
-        functions: Iterable[view_generate_aggregation_data_params.Function],
+        aggregations: Iterable[ViewAggregationParam],
+        columns: Iterable[ViewColumnParam],
+        filters: Iterable[ViewFilterParam],
+        functions: Iterable[FunctionIdentifierParam],
         name: str,
-        time_window: view_generate_aggregation_data_params.TimeWindow,
+        time_window: TimeWindowParam,
         description: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -457,12 +460,12 @@ class ViewsResource(SyncAPIResource):
     def generate_table_data(
         self,
         *,
-        aggregations: Iterable[view_generate_table_data_params.Aggregation],
-        columns: Iterable[view_generate_table_data_params.Column],
-        filters: Iterable[view_generate_table_data_params.Filter],
-        functions: Iterable[view_generate_table_data_params.Function],
+        aggregations: Iterable[ViewAggregationParam],
+        columns: Iterable[ViewColumnParam],
+        filters: Iterable[ViewFilterParam],
+        functions: Iterable[FunctionIdentifierParam],
         name: str,
-        time_window: view_generate_table_data_params.TimeWindow,
+        time_window: TimeWindowParam,
         description: str | Omit = omit,
         limit: Optional[int] | Omit = omit,
         offset: Optional[int] | Omit = omit,
@@ -593,10 +596,10 @@ class AsyncViewsResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        aggregations: Iterable[view_create_params.Aggregation],
-        columns: Iterable[view_create_params.Column],
-        filters: Iterable[view_create_params.Filter],
-        functions: Iterable[view_create_params.Function],
+        aggregations: Iterable[ViewAggregationParam],
+        columns: Iterable[ViewColumnParam],
+        filters: Iterable[ViewFilterParam],
+        functions: Iterable[FunctionIdentifierParam],
         name: str,
         description: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -605,7 +608,7 @@ class AsyncViewsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ViewCreateResponse:
+    ) -> View:
         """
         **Create a view.**
 
@@ -659,7 +662,7 @@ class AsyncViewsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ViewCreateResponse,
+            cast_to=View,
         )
 
     async def retrieve(
@@ -672,7 +675,7 @@ class AsyncViewsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ViewRetrieveResponse:
+    ) -> View:
         """**Retrieve a view by ID.**
 
         Returns the view's current version.
@@ -697,17 +700,17 @@ class AsyncViewsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ViewRetrieveResponse,
+            cast_to=View,
         )
 
     async def update(
         self,
         view_id: str,
         *,
-        aggregations: Iterable[view_update_params.Aggregation],
-        columns: Iterable[view_update_params.Column],
-        filters: Iterable[view_update_params.Filter],
-        functions: Iterable[view_update_params.Function],
+        aggregations: Iterable[ViewAggregationParam],
+        columns: Iterable[ViewColumnParam],
+        filters: Iterable[ViewFilterParam],
+        functions: Iterable[FunctionIdentifierParam],
         name: str,
         description: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -716,7 +719,7 @@ class AsyncViewsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ViewUpdateResponse:
+    ) -> View:
         """**Update a view.
 
         Updates create a new version.**
@@ -764,7 +767,7 @@ class AsyncViewsResource(AsyncAPIResource):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=ViewUpdateResponse,
+            cast_to=View,
         )
 
     async def list(
@@ -886,12 +889,12 @@ class AsyncViewsResource(AsyncAPIResource):
     async def generate_aggregation_data(
         self,
         *,
-        aggregations: Iterable[view_generate_aggregation_data_params.Aggregation],
-        columns: Iterable[view_generate_aggregation_data_params.Column],
-        filters: Iterable[view_generate_aggregation_data_params.Filter],
-        functions: Iterable[view_generate_aggregation_data_params.Function],
+        aggregations: Iterable[ViewAggregationParam],
+        columns: Iterable[ViewColumnParam],
+        filters: Iterable[ViewFilterParam],
+        functions: Iterable[FunctionIdentifierParam],
         name: str,
-        time_window: view_generate_aggregation_data_params.TimeWindow,
+        time_window: TimeWindowParam,
         description: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -958,12 +961,12 @@ class AsyncViewsResource(AsyncAPIResource):
     async def generate_table_data(
         self,
         *,
-        aggregations: Iterable[view_generate_table_data_params.Aggregation],
-        columns: Iterable[view_generate_table_data_params.Column],
-        filters: Iterable[view_generate_table_data_params.Filter],
-        functions: Iterable[view_generate_table_data_params.Function],
+        aggregations: Iterable[ViewAggregationParam],
+        columns: Iterable[ViewColumnParam],
+        filters: Iterable[ViewFilterParam],
+        functions: Iterable[FunctionIdentifierParam],
         name: str,
-        time_window: view_generate_table_data_params.TimeWindow,
+        time_window: TimeWindowParam,
         description: str | Omit = omit,
         limit: Optional[int] | Omit = omit,
         offset: Optional[int] | Omit = omit,

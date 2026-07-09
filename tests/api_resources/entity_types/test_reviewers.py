@@ -9,7 +9,7 @@ import pytest
 
 from bem import Bem, AsyncBem
 from tests.utils import assert_matches_type
-from bem.types.entity_types import ReviewerListResponse, ReviewerAssignResponse
+from bem.types.entity_types import Reviewer, ReviewerListResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -66,7 +66,7 @@ class TestReviewers:
             type_id="typeID",
             user_id="usr_2xyz...",
         )
-        assert_matches_type(ReviewerAssignResponse, reviewer, path=["response"])
+        assert_matches_type(Reviewer, reviewer, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -79,7 +79,7 @@ class TestReviewers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         reviewer = response.parse()
-        assert_matches_type(ReviewerAssignResponse, reviewer, path=["response"])
+        assert_matches_type(Reviewer, reviewer, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -92,7 +92,7 @@ class TestReviewers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             reviewer = response.parse()
-            assert_matches_type(ReviewerAssignResponse, reviewer, path=["response"])
+            assert_matches_type(Reviewer, reviewer, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -212,7 +212,7 @@ class TestAsyncReviewers:
             type_id="typeID",
             user_id="usr_2xyz...",
         )
-        assert_matches_type(ReviewerAssignResponse, reviewer, path=["response"])
+        assert_matches_type(Reviewer, reviewer, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -225,7 +225,7 @@ class TestAsyncReviewers:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         reviewer = await response.parse()
-        assert_matches_type(ReviewerAssignResponse, reviewer, path=["response"])
+        assert_matches_type(Reviewer, reviewer, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -238,7 +238,7 @@ class TestAsyncReviewers:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             reviewer = await response.parse()
-            assert_matches_type(ReviewerAssignResponse, reviewer, path=["response"])
+            assert_matches_type(Reviewer, reviewer, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

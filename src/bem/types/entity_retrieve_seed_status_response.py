@@ -6,27 +6,9 @@ from typing_extensions import Literal
 from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
+from .seed_row_result import SeedRowResult
 
-__all__ = ["EntityRetrieveSeedStatusResponse", "Result"]
-
-
-class Result(BaseModel):
-    """The outcome of seeding one row."""
-
-    canonical: str
-    """The canonical name from the input row."""
-
-    outcome: Literal["created", "merged-with", "rejected"]
-    """
-    What happened to this row: `created` (new entity), `merged-with` (matched an
-    existing entity), or `rejected` (see `reason`).
-    """
-
-    entity_id: Optional[str] = FieldInfo(alias="entityID", default=None)
-    """Public ID (`ent_...`) of the created or merged entity. Absent when rejected."""
-
-    reason: Optional[str] = None
-    """Human-readable explanation when `outcome` is `rejected`."""
+__all__ = ["EntityRetrieveSeedStatusResponse"]
 
 
 class EntityRetrieveSeedStatusResponse(BaseModel):
@@ -53,5 +35,5 @@ class EntityRetrieveSeedStatusResponse(BaseModel):
     error: Optional[str] = None
     """Terminal error message when `status` is `failed`."""
 
-    results: Optional[List[Result]] = None
+    results: Optional[List[SeedRowResult]] = None
     """Per-row outcomes. Present only once `status` is `completed`."""

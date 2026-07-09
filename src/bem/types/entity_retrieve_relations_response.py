@@ -6,32 +6,9 @@ from datetime import datetime
 from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
+from .related_entity import RelatedEntity
 
-__all__ = ["EntityRetrieveRelationsResponse", "Inbound", "InboundSourceEntity", "Outbound", "OutboundTargetEntity"]
-
-
-class InboundSourceEntity(BaseModel):
-    """
-    A compact view of an entity sitting on the far end of a relation edge — the
-    stable public id, the canonical name, and the effective type. The full
-    entity is fetched separately via the entity detail / File System endpoints.
-    """
-
-    id: str
-    """Stable public identifier for the entity (`ent_...`)."""
-
-    canonical: str
-    """Canonical (most descriptive) surface form of the entity."""
-
-    depth: int
-    """Hops from the queried entity.
-
-    This endpoint returns direct relations, so this is 1 (a self-loop's far end is
-    the queried entity itself, 0).
-    """
-
-    type: str
-    """Effective entity type."""
+__all__ = ["EntityRetrieveRelationsResponse", "Inbound", "Outbound"]
 
 
 class Inbound(BaseModel):
@@ -46,36 +23,12 @@ class Inbound(BaseModel):
     relation_type: str = FieldInfo(alias="relationType")
     """Free-form relation label (e.g. `author_of`, `affiliated_with`)."""
 
-    source_entity: InboundSourceEntity = FieldInfo(alias="sourceEntity")
+    source_entity: RelatedEntity = FieldInfo(alias="sourceEntity")
     """
     A compact view of an entity sitting on the far end of a relation edge — the
     stable public id, the canonical name, and the effective type. The full entity is
     fetched separately via the entity detail / File System endpoints.
     """
-
-
-class OutboundTargetEntity(BaseModel):
-    """
-    A compact view of an entity sitting on the far end of a relation edge — the
-    stable public id, the canonical name, and the effective type. The full
-    entity is fetched separately via the entity detail / File System endpoints.
-    """
-
-    id: str
-    """Stable public identifier for the entity (`ent_...`)."""
-
-    canonical: str
-    """Canonical (most descriptive) surface form of the entity."""
-
-    depth: int
-    """Hops from the queried entity.
-
-    This endpoint returns direct relations, so this is 1 (a self-loop's far end is
-    the queried entity itself, 0).
-    """
-
-    type: str
-    """Effective entity type."""
 
 
 class Outbound(BaseModel):
@@ -90,7 +43,7 @@ class Outbound(BaseModel):
     relation_type: str = FieldInfo(alias="relationType")
     """Free-form relation label (e.g. `author_of`, `affiliated_with`)."""
 
-    target_entity: OutboundTargetEntity = FieldInfo(alias="targetEntity")
+    target_entity: RelatedEntity = FieldInfo(alias="targetEntity")
     """
     A compact view of an entity sitting on the far end of a relation edge — the
     stable public id, the canonical name, and the effective type. The full entity is
