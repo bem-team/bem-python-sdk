@@ -9,7 +9,7 @@ import pytest
 
 from bem import Bem, AsyncBem
 from tests.utils import assert_matches_type
-from bem.types.eval import ScoreCancelResponse, ScoreCreateResponse, ScoreRetrieveResponse
+from bem.types.eval import EvalScoreRun, ScoreCreateResponse
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -109,7 +109,7 @@ class TestScore:
         score = client.eval.score.retrieve(
             "scoreRunID",
         )
-        assert_matches_type(ScoreRetrieveResponse, score, path=["response"])
+        assert_matches_type(EvalScoreRun, score, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -121,7 +121,7 @@ class TestScore:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         score = response.parse()
-        assert_matches_type(ScoreRetrieveResponse, score, path=["response"])
+        assert_matches_type(EvalScoreRun, score, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -133,7 +133,7 @@ class TestScore:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             score = response.parse()
-            assert_matches_type(ScoreRetrieveResponse, score, path=["response"])
+            assert_matches_type(EvalScoreRun, score, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -151,7 +151,7 @@ class TestScore:
         score = client.eval.score.cancel(
             "scoreRunID",
         )
-        assert_matches_type(ScoreCancelResponse, score, path=["response"])
+        assert_matches_type(EvalScoreRun, score, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -163,7 +163,7 @@ class TestScore:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         score = response.parse()
-        assert_matches_type(ScoreCancelResponse, score, path=["response"])
+        assert_matches_type(EvalScoreRun, score, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -175,7 +175,7 @@ class TestScore:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             score = response.parse()
-            assert_matches_type(ScoreCancelResponse, score, path=["response"])
+            assert_matches_type(EvalScoreRun, score, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -285,7 +285,7 @@ class TestAsyncScore:
         score = await async_client.eval.score.retrieve(
             "scoreRunID",
         )
-        assert_matches_type(ScoreRetrieveResponse, score, path=["response"])
+        assert_matches_type(EvalScoreRun, score, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -297,7 +297,7 @@ class TestAsyncScore:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         score = await response.parse()
-        assert_matches_type(ScoreRetrieveResponse, score, path=["response"])
+        assert_matches_type(EvalScoreRun, score, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -309,7 +309,7 @@ class TestAsyncScore:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             score = await response.parse()
-            assert_matches_type(ScoreRetrieveResponse, score, path=["response"])
+            assert_matches_type(EvalScoreRun, score, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -327,7 +327,7 @@ class TestAsyncScore:
         score = await async_client.eval.score.cancel(
             "scoreRunID",
         )
-        assert_matches_type(ScoreCancelResponse, score, path=["response"])
+        assert_matches_type(EvalScoreRun, score, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -339,7 +339,7 @@ class TestAsyncScore:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         score = await response.parse()
-        assert_matches_type(ScoreCancelResponse, score, path=["response"])
+        assert_matches_type(EvalScoreRun, score, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -351,7 +351,7 @@ class TestAsyncScore:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             score = await response.parse()
-            assert_matches_type(ScoreCancelResponse, score, path=["response"])
+            assert_matches_type(EvalScoreRun, score, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

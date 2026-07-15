@@ -5,6 +5,8 @@ from typing import List, Optional
 from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
+from .metrics_details import MetricsDetails
+from .rate_confidence_interval import RateConfidenceInterval
 
 __all__ = [
     "FunctionEstimateReviewRequirementsResponse",
@@ -12,19 +14,10 @@ __all__ = [
     "EstimateConfidenceDistribution",
     "EstimateThresholdMatrix",
     "EstimateThresholdMatrixAccuracyAboveThreshold",
-    "EstimateThresholdMatrixAccuracyAboveThreshold_95",
     "EstimateThresholdMatrixFalseDiscoveryRate",
-    "EstimateThresholdMatrixFalseDiscoveryRate_95",
     "EstimateThresholdMatrixFalsePositiveRate",
-    "EstimateThresholdMatrixFalsePositiveRate_95",
     "EstimateThresholdMatrixPrecision",
-    "EstimateThresholdMatrixPrecision_95",
     "EstimateThresholdMatrixRecall",
-    "EstimateThresholdMatrixRecall_95",
-    "Metrics",
-    "MetricsAggregateMetrics",
-    "MetricsFieldMetric",
-    "MetricsFieldMetricMetrics",
 ]
 
 
@@ -38,33 +31,6 @@ class EstimateConfidenceDistribution(BaseModel):
     medium: Optional[int] = None
 
 
-class EstimateThresholdMatrixAccuracyAboveThreshold_95(BaseModel):
-    """
-    Confidence interval for a rate/proportion using Wald (normal approximation) method by default.
-
-    Wald confidence intervals use the normal approximation to the binomial distribution.
-    For extreme rates or small sample sizes, Wilson confidence intervals may be more appropriate.
-    """
-
-    current_sample: int = FieldInfo(alias="currentSample")
-    """Current number of samples/observations available"""
-
-    sample_needed: int = FieldInfo(alias="sampleNeeded")
-    """Minimum number of samples needed for reliable confidence interval calculation"""
-
-    ci_lower: Optional[float] = FieldInfo(alias="ciLower", default=None)
-    """Lower bound of the confidence interval (null if insufficient sample size)"""
-
-    ci_upper: Optional[float] = FieldInfo(alias="ciUpper", default=None)
-    """Upper bound of the confidence interval (null if insufficient sample size)"""
-
-    mid: Optional[float] = None
-    """
-    Point estimate (observed rate) at the center of the interval (null if
-    insufficient sample size)
-    """
-
-
 class EstimateThresholdMatrixAccuracyAboveThreshold(BaseModel):
     """
     Accuracy confidence intervals for samples above threshold, by confidence level.
@@ -72,7 +38,7 @@ class EstimateThresholdMatrixAccuracyAboveThreshold(BaseModel):
     Values contain statistical confidence intervals.
     """
 
-    api_95: Optional[EstimateThresholdMatrixAccuracyAboveThreshold_95] = FieldInfo(alias="95", default=None)
+    api_95: Optional[RateConfidenceInterval] = FieldInfo(alias="95", default=None)
     """
     Confidence interval for a rate/proportion using Wald (normal approximation)
     method by default.
@@ -80,33 +46,6 @@ class EstimateThresholdMatrixAccuracyAboveThreshold(BaseModel):
     Wald confidence intervals use the normal approximation to the binomial
     distribution. For extreme rates or small sample sizes, Wilson confidence
     intervals may be more appropriate.
-    """
-
-
-class EstimateThresholdMatrixFalseDiscoveryRate_95(BaseModel):
-    """
-    Confidence interval for a rate/proportion using Wald (normal approximation) method by default.
-
-    Wald confidence intervals use the normal approximation to the binomial distribution.
-    For extreme rates or small sample sizes, Wilson confidence intervals may be more appropriate.
-    """
-
-    current_sample: int = FieldInfo(alias="currentSample")
-    """Current number of samples/observations available"""
-
-    sample_needed: int = FieldInfo(alias="sampleNeeded")
-    """Minimum number of samples needed for reliable confidence interval calculation"""
-
-    ci_lower: Optional[float] = FieldInfo(alias="ciLower", default=None)
-    """Lower bound of the confidence interval (null if insufficient sample size)"""
-
-    ci_upper: Optional[float] = FieldInfo(alias="ciUpper", default=None)
-    """Upper bound of the confidence interval (null if insufficient sample size)"""
-
-    mid: Optional[float] = None
-    """
-    Point estimate (observed rate) at the center of the interval (null if
-    insufficient sample size)
     """
 
 
@@ -117,7 +56,7 @@ class EstimateThresholdMatrixFalseDiscoveryRate(BaseModel):
     Values contain statistical confidence intervals.
     """
 
-    api_95: Optional[EstimateThresholdMatrixFalseDiscoveryRate_95] = FieldInfo(alias="95", default=None)
+    api_95: Optional[RateConfidenceInterval] = FieldInfo(alias="95", default=None)
     """
     Confidence interval for a rate/proportion using Wald (normal approximation)
     method by default.
@@ -125,33 +64,6 @@ class EstimateThresholdMatrixFalseDiscoveryRate(BaseModel):
     Wald confidence intervals use the normal approximation to the binomial
     distribution. For extreme rates or small sample sizes, Wilson confidence
     intervals may be more appropriate.
-    """
-
-
-class EstimateThresholdMatrixFalsePositiveRate_95(BaseModel):
-    """
-    Confidence interval for a rate/proportion using Wald (normal approximation) method by default.
-
-    Wald confidence intervals use the normal approximation to the binomial distribution.
-    For extreme rates or small sample sizes, Wilson confidence intervals may be more appropriate.
-    """
-
-    current_sample: int = FieldInfo(alias="currentSample")
-    """Current number of samples/observations available"""
-
-    sample_needed: int = FieldInfo(alias="sampleNeeded")
-    """Minimum number of samples needed for reliable confidence interval calculation"""
-
-    ci_lower: Optional[float] = FieldInfo(alias="ciLower", default=None)
-    """Lower bound of the confidence interval (null if insufficient sample size)"""
-
-    ci_upper: Optional[float] = FieldInfo(alias="ciUpper", default=None)
-    """Upper bound of the confidence interval (null if insufficient sample size)"""
-
-    mid: Optional[float] = None
-    """
-    Point estimate (observed rate) at the center of the interval (null if
-    insufficient sample size)
     """
 
 
@@ -162,7 +74,7 @@ class EstimateThresholdMatrixFalsePositiveRate(BaseModel):
     Values contain statistical confidence intervals.
     """
 
-    api_95: Optional[EstimateThresholdMatrixFalsePositiveRate_95] = FieldInfo(alias="95", default=None)
+    api_95: Optional[RateConfidenceInterval] = FieldInfo(alias="95", default=None)
     """
     Confidence interval for a rate/proportion using Wald (normal approximation)
     method by default.
@@ -170,33 +82,6 @@ class EstimateThresholdMatrixFalsePositiveRate(BaseModel):
     Wald confidence intervals use the normal approximation to the binomial
     distribution. For extreme rates or small sample sizes, Wilson confidence
     intervals may be more appropriate.
-    """
-
-
-class EstimateThresholdMatrixPrecision_95(BaseModel):
-    """
-    Confidence interval for a rate/proportion using Wald (normal approximation) method by default.
-
-    Wald confidence intervals use the normal approximation to the binomial distribution.
-    For extreme rates or small sample sizes, Wilson confidence intervals may be more appropriate.
-    """
-
-    current_sample: int = FieldInfo(alias="currentSample")
-    """Current number of samples/observations available"""
-
-    sample_needed: int = FieldInfo(alias="sampleNeeded")
-    """Minimum number of samples needed for reliable confidence interval calculation"""
-
-    ci_lower: Optional[float] = FieldInfo(alias="ciLower", default=None)
-    """Lower bound of the confidence interval (null if insufficient sample size)"""
-
-    ci_upper: Optional[float] = FieldInfo(alias="ciUpper", default=None)
-    """Upper bound of the confidence interval (null if insufficient sample size)"""
-
-    mid: Optional[float] = None
-    """
-    Point estimate (observed rate) at the center of the interval (null if
-    insufficient sample size)
     """
 
 
@@ -207,7 +92,7 @@ class EstimateThresholdMatrixPrecision(BaseModel):
     Values contain statistical confidence intervals.
     """
 
-    api_95: Optional[EstimateThresholdMatrixPrecision_95] = FieldInfo(alias="95", default=None)
+    api_95: Optional[RateConfidenceInterval] = FieldInfo(alias="95", default=None)
     """
     Confidence interval for a rate/proportion using Wald (normal approximation)
     method by default.
@@ -218,33 +103,6 @@ class EstimateThresholdMatrixPrecision(BaseModel):
     """
 
 
-class EstimateThresholdMatrixRecall_95(BaseModel):
-    """
-    Confidence interval for a rate/proportion using Wald (normal approximation) method by default.
-
-    Wald confidence intervals use the normal approximation to the binomial distribution.
-    For extreme rates or small sample sizes, Wilson confidence intervals may be more appropriate.
-    """
-
-    current_sample: int = FieldInfo(alias="currentSample")
-    """Current number of samples/observations available"""
-
-    sample_needed: int = FieldInfo(alias="sampleNeeded")
-    """Minimum number of samples needed for reliable confidence interval calculation"""
-
-    ci_lower: Optional[float] = FieldInfo(alias="ciLower", default=None)
-    """Lower bound of the confidence interval (null if insufficient sample size)"""
-
-    ci_upper: Optional[float] = FieldInfo(alias="ciUpper", default=None)
-    """Upper bound of the confidence interval (null if insufficient sample size)"""
-
-    mid: Optional[float] = None
-    """
-    Point estimate (observed rate) at the center of the interval (null if
-    insufficient sample size)
-    """
-
-
 class EstimateThresholdMatrixRecall(BaseModel):
     """
     Recall confidence intervals by confidence level.
@@ -252,7 +110,7 @@ class EstimateThresholdMatrixRecall(BaseModel):
     Values contain statistical confidence intervals.
     """
 
-    api_95: Optional[EstimateThresholdMatrixRecall_95] = FieldInfo(alias="95", default=None)
+    api_95: Optional[RateConfidenceInterval] = FieldInfo(alias="95", default=None)
     """
     Confidence interval for a rate/proportion using Wald (normal approximation)
     method by default.
@@ -343,85 +201,6 @@ class Estimate(BaseModel):
     """Number of transformations not yet labeled"""
 
 
-class MetricsAggregateMetrics(BaseModel):
-    """Comprehensive performance metrics"""
-
-    accuracy: Optional[float] = None
-    """Overall accuracy"""
-
-    f1_score: Optional[float] = FieldInfo(alias="f1Score", default=None)
-    """F1 Score (harmonic mean of precision and recall)"""
-
-    fn: Optional[int] = None
-    """False Negatives"""
-
-    fp: Optional[int] = None
-    """False Positives"""
-
-    precision: Optional[float] = None
-    """Precision (TP / (TP + FP))"""
-
-    recall: Optional[float] = None
-    """Recall (TP / (TP + FN))"""
-
-    tn: Optional[int] = None
-    """True Negatives"""
-
-    tp: Optional[int] = None
-    """True Positives"""
-
-
-class MetricsFieldMetricMetrics(BaseModel):
-    """Comprehensive performance metrics"""
-
-    accuracy: Optional[float] = None
-    """Overall accuracy"""
-
-    f1_score: Optional[float] = FieldInfo(alias="f1Score", default=None)
-    """F1 Score (harmonic mean of precision and recall)"""
-
-    fn: Optional[int] = None
-    """False Negatives"""
-
-    fp: Optional[int] = None
-    """False Positives"""
-
-    precision: Optional[float] = None
-    """Precision (TP / (TP + FP))"""
-
-    recall: Optional[float] = None
-    """Recall (TP / (TP + FN))"""
-
-    tn: Optional[int] = None
-    """True Negatives"""
-
-    tp: Optional[int] = None
-    """True Positives"""
-
-
-class MetricsFieldMetric(BaseModel):
-    """Enhanced field metrics with comprehensive analytics"""
-
-    field_path: str = FieldInfo(alias="fieldPath")
-    """JSON path to the field"""
-
-    metrics: Optional[MetricsFieldMetricMetrics] = None
-    """Comprehensive performance metrics"""
-
-
-class Metrics(BaseModel):
-    """Detailed performance metrics and analysis"""
-
-    aggregate_metrics: Optional[MetricsAggregateMetrics] = FieldInfo(alias="aggregateMetrics", default=None)
-    """Comprehensive performance metrics"""
-
-    field_metrics: Optional[List[MetricsFieldMetric]] = FieldInfo(alias="fieldMetrics", default=None)
-    """Enhanced field metrics with comprehensive analytics"""
-
-    precision_recall_auc: Optional[float] = FieldInfo(alias="precisionRecallAuc", default=None)
-    """Area Under the Precision-Recall Curve"""
-
-
 class FunctionEstimateReviewRequirementsResponse(BaseModel):
     """Response containing review requirements estimate"""
 
@@ -434,5 +213,5 @@ class FunctionEstimateReviewRequirementsResponse(BaseModel):
     function_version_num: int = FieldInfo(alias="functionVersionNum")
     """Version number of the function that was analyzed"""
 
-    metrics: Optional[Metrics] = None
+    metrics: Optional[MetricsDetails] = None
     """Detailed performance metrics and analysis"""

@@ -9,10 +9,12 @@ from .._utils import PropertyInfo
 from .._models import BaseModel
 from .parse_config import ParseConfig
 from .enrich_config import EnrichConfig
+from .render_config import RenderConfig
 from .function_audit import FunctionAudit
 from .workflow_usage_info import WorkflowUsageInfo
 from .send_destination_type import SendDestinationType
 from .classification_list_item import ClassificationListItem
+from .parse_extra_function_config import ParseExtraFunctionConfig
 from .split_function_semantic_page_item_class import SplitFunctionSemanticPageItemClass
 
 __all__ = [
@@ -29,11 +31,7 @@ __all__ = [
     "PayloadShapingFunction",
     "EnrichFunction",
     "ParseFunction",
-    "ParseFunctionExtraConfig",
     "RenderFunction",
-    "RenderFunctionRenderConfig",
-    "RenderFunctionRenderConfigTemplate",
-    "RenderFunctionRenderConfigTemplatePlaceholders",
 ]
 
 
@@ -486,26 +484,6 @@ class EnrichFunction(BaseModel):
     """List of workflows that use this function."""
 
 
-class ParseFunctionExtraConfig(BaseModel):
-    """Cross-cutting toggles for Parse functions.
-
-    Mirrors the `extraConfig`
-    surface on Extract / Join — separated from `parseConfig` so the per-call
-    Parse output shape stays distinct from operator-level execution flags.
-    """
-
-    enable_bounding_boxes: Optional[bool] = FieldInfo(alias="enableBoundingBoxes", default=None)
-    """
-    When true, return per-section and per-entity-mention coordinates in the parse
-    event's `fieldBoundingBoxes` map (same shape as Extract: JSON Pointer key →
-    array of `{page, left, top, width, height}` with coordinates normalized to [0,
-    1]). Keys are `/sections/{N}` and `/entities/{N}/occurrences/{M}` into the parse
-    output. Only applies to the open-ended discovery path (no `schema`) and to
-    vision input types. Bedrock-backed parse functions silently return an empty map
-    (no native bbox support). Defaults to false.
-    """
-
-
 class ParseFunction(BaseModel):
     function_id: str = FieldInfo(alias="functionID")
     """Unique identifier of function."""
@@ -527,7 +505,7 @@ class ParseFunction(BaseModel):
     Human-readable name to help you identify the function.
     """
 
-    extra_config: Optional[ParseFunctionExtraConfig] = FieldInfo(alias="extraConfig", default=None)
+    extra_config: Optional[ParseExtraFunctionConfig] = FieldInfo(alias="extraConfig", default=None)
     """Cross-cutting toggles for Parse functions.
 
     Mirrors the `extraConfig` surface on Extract / Join — separated from
@@ -548,99 +526,6 @@ class ParseFunction(BaseModel):
 
     used_in_workflows: Optional[List[WorkflowUsageInfo]] = FieldInfo(alias="usedInWorkflows", default=None)
     """List of workflows that use this function."""
-
-
-class RenderFunctionRenderConfigTemplatePlaceholders(BaseModel):
-    """
-    The placeholder contract a Render template declares, grouped by how each
-    placeholder is filled. Derived from the template at create/update time by
-    scanning its `docxtpl` tags; not user-supplied.
-
-    - `stringKeys`: bare string placeholders (`{{ key }}`) filled with a single
-    value.
-    - `blockKeys`: wrapped-primitive placeholders (`{{p key }}`) — bind one core
-    primitive (paragraph, table, image, or list). The placeholder's own
-    paragraph dissolves and is replaced by the rendered subdocument's blocks,
-    rather than substituting text inline.
-    """
-
-    block_keys: List[str] = FieldInfo(alias="blockKeys")
-
-    string_keys: List[str] = FieldInfo(alias="stringKeys")
-
-
-class RenderFunctionRenderConfigTemplate(BaseModel):
-    """
-    The uploaded template: its filename, a short-lived presigned download URL,
-    and the placeholder/style contract derived from it. Absent on configs
-    created before template capture existed.
-    """
-
-    download_url: Optional[str] = FieldInfo(alias="downloadURL", default=None)
-    """Short-lived presigned URL to download the stored `.docx`.
-
-    The private storage location is never exposed.
-    """
-
-    list_kinds: Optional[List[Literal["decimal", "bullet"]]] = FieldInfo(alias="listKinds", default=None)
-    """
-    Supported list kinds (`decimal`, `bullet`) the template's `numbering.xml`
-    defines an `abstractNum` for. Empty means the template can hold no list, so any
-    list primitive will fail at render.
-    """
-
-    name: Optional[str] = None
-    """Original filename of the uploaded template (e.g.
-
-    `contract.docx`), echoed back for display. Absent on templates uploaded before
-    the filename was captured.
-    """
-
-    placeholders: Optional[RenderFunctionRenderConfigTemplatePlaceholders] = None
-    """
-    The placeholder contract a Render template declares, grouped by how each
-    placeholder is filled. Derived from the template at create/update time by
-    scanning its `docxtpl` tags; not user-supplied.
-
-    - `stringKeys`: bare string placeholders (`{{ key }}`) filled with a single
-      value.
-    - `blockKeys`: wrapped-primitive placeholders (`{{p key }}`) — bind one core
-      primitive (paragraph, table, image, or list). The placeholder's own paragraph
-      dissolves and is replaced by the rendered subdocument's blocks, rather than
-      substituting text inline.
-    """
-
-    style_ids: Optional[List[str]] = FieldInfo(alias="styleIds", default=None)
-    """
-    Paragraph/character style IDs the uploaded template defines and the rendered
-    output can reference. Derived from the template's `styles.xml` at create/update
-    time.
-    """
-
-    table_style_ids: Optional[List[str]] = FieldInfo(alias="tableStyleIds", default=None)
-    """
-    Style IDs whose type is table — the styles a `table` primitive's required
-    `styleId` can name. Empty means the template defines no table style, so any
-    table primitive will fail at render.
-    """
-
-
-class RenderFunctionRenderConfig(BaseModel):
-    """Per-version configuration for a Render function.
-
-    Render emits a `.docx` from schema-typed JSON by composing the JSON into a
-    `.docx` template. The template document is stored server-side; this response
-    exposes only the contract derived from it. Schema validation runs internally
-    in the ML service against the bundled core schema; no customer-supplied
-    schema rides this surface.
-    """
-
-    template: Optional[RenderFunctionRenderConfigTemplate] = None
-    """
-    The uploaded template: its filename, a short-lived presigned download URL, and
-    the placeholder/style contract derived from it. Absent on configs created before
-    template capture existed.
-    """
 
 
 class RenderFunction(BaseModel):
@@ -664,7 +549,7 @@ class RenderFunction(BaseModel):
     Human-readable name to help you identify the function.
     """
 
-    render_config: Optional[RenderFunctionRenderConfig] = FieldInfo(alias="renderConfig", default=None)
+    render_config: Optional[RenderConfig] = FieldInfo(alias="renderConfig", default=None)
     """Per-version configuration for a Render function.
 
     Render emits a `.docx` from schema-typed JSON by composing the JSON into a

@@ -19,6 +19,7 @@ InputType: TypeAlias = Literal[
     "mp4",
     "pdf",
     "png",
+    "pptx",
     "text",
     "wav",
     "webp",

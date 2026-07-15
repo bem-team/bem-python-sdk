@@ -6,10 +6,10 @@ from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
 
-__all__ = ["ReviewerAssignResponse"]
+__all__ = ["Reviewer"]
 
 
-class ReviewerAssignResponse(BaseModel):
+class Reviewer(BaseModel):
     """
     A reviewer assignment links a user to an entity type they are responsible
     for reviewing. The assignment is scoped to an account+environment and is

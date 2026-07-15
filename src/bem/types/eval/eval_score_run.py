@@ -6,38 +6,10 @@ from typing_extensions import Literal
 from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
+from .eval_match_config import EvalMatchConfig
+from .eval_score_run_status import EvalScoreRunStatus
 
-__all__ = ["ScoreRetrieveResponse", "MatchConfig", "PerPair", "PerPairFieldResult", "Progress", "Aggregate"]
-
-
-class MatchConfig(BaseModel):
-    """Comparator configuration. All fields optional; conservative defaults."""
-
-    array_match: Optional[Literal["by-index"]] = FieldInfo(alias="arrayMatch", default=None)
-    """P0 supports only `by-index`."""
-
-    fuzzy_threshold: Optional[float] = FieldInfo(alias="fuzzyThreshold", default=None)
-    """Levenshtein-ratio threshold used when `stringMatch == "fuzzy"`. Range `[0, 1]`.
-
-    Default `0.85`.
-    """
-
-    ignore_paths: Optional[List[str]] = FieldInfo(alias="ignorePaths", default=None)
-    """JSON Pointer paths to skip during comparison.
-
-    The asterisk character matches arbitrary object keys / array indices.
-
-    Example values: /metadata, /lineItems with asterisk segment, etc.
-    """
-
-    numeric_tolerance: Optional[float] = FieldInfo(alias="numericTolerance", default=None)
-    """Relative tolerance for numeric fields.
-
-    `0` (default) means exact equality; `0.01` means ±1%.
-    """
-
-    string_match: Optional[Literal["exact", "fuzzy"]] = FieldInfo(alias="stringMatch", default=None)
-    """`exact` (default) or `fuzzy`."""
+__all__ = ["EvalScoreRun", "PerPair", "PerPairFieldResult", "Progress", "Aggregate"]
 
 
 class PerPairFieldResult(BaseModel):
@@ -116,14 +88,14 @@ class Aggregate(BaseModel):
     within_tolerance: int = FieldInfo(alias="withinTolerance")
 
 
-class ScoreRetrieveResponse(BaseModel):
+class EvalScoreRun(BaseModel):
     """Full status payload returned by `GET /v3/eval/score/{scoreRunID}`."""
 
     function_name: str = FieldInfo(alias="functionName")
 
     function_version_num: int = FieldInfo(alias="functionVersionNum")
 
-    match_config: MatchConfig = FieldInfo(alias="matchConfig")
+    match_config: EvalMatchConfig = FieldInfo(alias="matchConfig")
     """Comparator configuration. All fields optional; conservative defaults."""
 
     per_pair: List[PerPair] = FieldInfo(alias="perPair")
@@ -134,7 +106,7 @@ class ScoreRetrieveResponse(BaseModel):
 
     score_run_id: str = FieldInfo(alias="scoreRunID")
 
-    status: Literal["pending", "initializing", "running", "completed", "error", "cancelled"]
+    status: EvalScoreRunStatus
     """Status values for an eval-score run."""
 
     aggregate: Optional[Aggregate] = None
