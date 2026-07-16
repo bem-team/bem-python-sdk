@@ -52,9 +52,9 @@ class Endpoint(BaseModel):
     """Natural-language instructions for LLM agent reasoning.
 
     When set, the candidates fetched from the endpoint are passed to an LLM with
-    these instructions, which selects the best match(es) and returns them with
-    confidence scores. Each injected result has the shape
-    `{ data, confidence, reasoning? }`.
+    these instructions, which selects the best match(es) and returns them ranked
+    best-first. Each injected result has the shape
+    `{ data, rank, confidence, reasoning? }` (rank is 1-based, 1 = best).
 
     When omitted, the raw fetched value is injected without any LLM involvement.
     """
