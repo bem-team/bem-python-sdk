@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.31.0 (2026-07-18)
+
+Full Changelog: [v0.30.0...v0.31.0](https://github.com/bem-team/bem-python-sdk/compare/v0.30.0...v0.31.0)
+
+### Features
+
+* **api:** api update ([ce7a120](https://github.com/bem-team/bem-python-sdk/commit/ce7a120f5ac5a10e4711c5d0d19375b439180769))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([fac6555](https://github.com/bem-team/bem-python-sdk/commit/fac6555c9eb249573233d55015a7ea2e93e07db0))
+
 ## 0.30.0 (2026-07-14)
 
 Full Changelog: [v0.29.0...v0.30.0](https://github.com/bem-team/bem-python-sdk/compare/v0.29.0...v0.30.0)
