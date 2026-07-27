@@ -105,6 +105,7 @@ class TestFunctions:
             ],
             description="description",
             display_name="displayName",
+            native_visual_input=True,
             tags=["string"],
         )
         assert_matches_type(FunctionResponse, function, path=["response"])
@@ -682,6 +683,7 @@ class TestFunctions:
             description="description",
             display_name="displayName",
             function_name="functionName",
+            native_visual_input=True,
             tags=["string"],
         )
         assert_matches_type(FunctionResponse, function, path=["response"])
@@ -1511,6 +1513,7 @@ class TestAsyncFunctions:
             ],
             description="description",
             display_name="displayName",
+            native_visual_input=True,
             tags=["string"],
         )
         assert_matches_type(FunctionResponse, function, path=["response"])
@@ -2088,6 +2091,7 @@ class TestAsyncFunctions:
             description="description",
             display_name="displayName",
             function_name="functionName",
+            native_visual_input=True,
             tags=["string"],
         )
         assert_matches_type(FunctionResponse, function, path=["response"])
