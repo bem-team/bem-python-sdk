@@ -261,6 +261,7 @@ class FunctionsResource(SyncAPIResource):
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         display_name: str | Omit = omit,
+        native_visual_input: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -302,6 +303,10 @@ class FunctionsResource(SyncAPIResource):
               classifier's purpose and expected inputs.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
+
+          native_visual_input: When true, image and PDF inputs are sent directly to the model for routing
+              instead of being OCR'd to text first. Defaults to true for new classify
+              functions and false for the legacy route type.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -819,6 +824,7 @@ class FunctionsResource(SyncAPIResource):
         tags: SequenceNotStr[str] | Omit = omit,
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
+        native_visual_input: bool | Omit = omit,
         destination_type: SendDestinationType | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
@@ -856,6 +862,7 @@ class FunctionsResource(SyncAPIResource):
                     "tags": tags,
                     "classifications": classifications,
                     "description": description,
+                    "native_visual_input": native_visual_input,
                     "destination_type": destination_type,
                     "google_drive_folder_id": google_drive_folder_id,
                     "s3_bucket": s3_bucket,
@@ -1005,6 +1012,7 @@ class FunctionsResource(SyncAPIResource):
         description: str | Omit = omit,
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
+        native_visual_input: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -1046,6 +1054,10 @@ class FunctionsResource(SyncAPIResource):
           display_name: Display name of function. Human-readable name to help you identify the function.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          native_visual_input: When true, image and PDF inputs are sent directly to the model for routing
+              instead of being OCR'd to text first. Defaults to true for new classify
+              functions and false for the legacy route type.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -1562,6 +1574,7 @@ class FunctionsResource(SyncAPIResource):
         tags: SequenceNotStr[str] | Omit = omit,
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
+        native_visual_input: bool | Omit = omit,
         destination_type: SendDestinationType | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
@@ -1601,6 +1614,7 @@ class FunctionsResource(SyncAPIResource):
                     "tags": tags,
                     "classifications": classifications,
                     "description": description,
+                    "native_visual_input": native_visual_input,
                     "destination_type": destination_type,
                     "google_drive_folder_id": google_drive_folder_id,
                     "s3_bucket": s3_bucket,
@@ -2197,6 +2211,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         display_name: str | Omit = omit,
+        native_visual_input: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -2238,6 +2253,10 @@ class AsyncFunctionsResource(AsyncAPIResource):
               classifier's purpose and expected inputs.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
+
+          native_visual_input: When true, image and PDF inputs are sent directly to the model for routing
+              instead of being OCR'd to text first. Defaults to true for new classify
+              functions and false for the legacy route type.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -2755,6 +2774,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         tags: SequenceNotStr[str] | Omit = omit,
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
+        native_visual_input: bool | Omit = omit,
         destination_type: SendDestinationType | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
@@ -2792,6 +2812,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "tags": tags,
                     "classifications": classifications,
                     "description": description,
+                    "native_visual_input": native_visual_input,
                     "destination_type": destination_type,
                     "google_drive_folder_id": google_drive_folder_id,
                     "s3_bucket": s3_bucket,
@@ -2941,6 +2962,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         description: str | Omit = omit,
         display_name: str | Omit = omit,
         function_name: str | Omit = omit,
+        native_visual_input: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -2982,6 +3004,10 @@ class AsyncFunctionsResource(AsyncAPIResource):
           display_name: Display name of function. Human-readable name to help you identify the function.
 
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
+
+          native_visual_input: When true, image and PDF inputs are sent directly to the model for routing
+              instead of being OCR'd to text first. Defaults to true for new classify
+              functions and false for the legacy route type.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -3498,6 +3524,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         tags: SequenceNotStr[str] | Omit = omit,
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
+        native_visual_input: bool | Omit = omit,
         destination_type: SendDestinationType | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
@@ -3537,6 +3564,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "tags": tags,
                     "classifications": classifications,
                     "description": description,
+                    "native_visual_input": native_visual_input,
                     "destination_type": destination_type,
                     "google_drive_folder_id": google_drive_folder_id,
                     "s3_bucket": s3_bucket,
