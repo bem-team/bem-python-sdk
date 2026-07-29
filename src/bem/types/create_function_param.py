@@ -103,6 +103,13 @@ class ClassifyFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
+    native_visual_input: Annotated[bool, PropertyInfo(alias="nativeVisualInput")]
+    """
+    When true, image and PDF inputs are sent directly to the model for routing
+    instead of being OCR'd to text first. Defaults to true for new classify
+    functions and false for the legacy route type.
+    """
+
     tags: SequenceNotStr[str]
     """Array of tags to categorize and organize functions."""
 
