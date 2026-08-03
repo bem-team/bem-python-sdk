@@ -197,7 +197,13 @@ class TransformEvent(BaseModel):
     """Array of transformation inputs with their types and S3 URLs."""
 
     input_type: Optional[InputType] = FieldInfo(alias="inputType", default=None)
-    """The input type of the content you're sending for transformation."""
+    """The input type of the content you're sending for transformation.
+
+    `jfif` is accepted as an alias for `jpeg` — JFIF is the same format under a
+    different extension — and is normalized to `jpeg`, so responses and webhooks
+    report `jpeg` for a JFIF upload. The undeclared alias `jpg` behaves the same
+    way.
+    """
 
     invalid_properties: Optional[List[str]] = FieldInfo(alias="invalidProperties", default=None)
     """List of properties that were invalid in the input."""
@@ -366,7 +372,13 @@ class ExtractEvent(BaseModel):
     """Array of transformation inputs with their types and S3 URLs."""
 
     input_type: Optional[InputType] = FieldInfo(alias="inputType", default=None)
-    """The input type of the content you're sending for transformation."""
+    """The input type of the content you're sending for transformation.
+
+    `jfif` is accepted as an alias for `jpeg` — JFIF is the same format under a
+    different extension — and is normalized to `jpeg`, so responses and webhooks
+    report `jpeg` for a JFIF upload. The undeclared alias `jpg` behaves the same
+    way.
+    """
 
     invalid_properties: Optional[List[str]] = FieldInfo(alias="invalidProperties", default=None)
     """List of properties that were invalid in the input."""
@@ -506,7 +518,13 @@ class ParseEvent(BaseModel):
     """Array of parse inputs with their types and S3 URLs."""
 
     input_type: Optional[InputType] = FieldInfo(alias="inputType", default=None)
-    """The input type of the content you're sending for transformation."""
+    """The input type of the content you're sending for transformation.
+
+    `jfif` is accepted as an alias for `jpeg` — JFIF is the same format under a
+    different extension — and is normalized to `jpeg`, so responses and webhooks
+    report `jpeg` for a JFIF upload. The undeclared alias `jpg` behaves the same
+    way.
+    """
 
     invalid_properties: Optional[List[str]] = FieldInfo(alias="invalidProperties", default=None)
     """List of properties that were invalid in the input."""
