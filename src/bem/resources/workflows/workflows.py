@@ -539,8 +539,9 @@ class WorkflowsResource(SyncAPIResource):
         **not** use `--wait true` (with a space) — the `true` will be parsed as an
         unexpected positional argument.
 
-        Supported `inputType` values: csv, docx, email, heic, heif, html, jpeg, json,
-        m4a, mp3, pdf, png, text, wav, webp, xls, xlsx, xml.
+        Supported `inputType` values: csv, docx, email, heic, heif, html, jfif, jpeg,
+        json, m4a, mp3, mov, mp4, pdf, png, pptx, text, wav, webp, xls, xlsx, xml.
+        `jfif` (and `jpg`) are normalized to `jpeg`.
 
         Args:
           input: Input file(s) for a call. Provide exactly one of `singleFile` or `batchFiles`.
@@ -1161,8 +1162,9 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         **not** use `--wait true` (with a space) — the `true` will be parsed as an
         unexpected positional argument.
 
-        Supported `inputType` values: csv, docx, email, heic, heif, html, jpeg, json,
-        m4a, mp3, pdf, png, text, wav, webp, xls, xlsx, xml.
+        Supported `inputType` values: csv, docx, email, heic, heif, html, jfif, jpeg,
+        json, m4a, mp3, mov, mp4, pdf, png, pptx, text, wav, webp, xls, xlsx, xml.
+        `jfif` (and `jpg`) are normalized to `jpeg`.
 
         Args:
           input: Input file(s) for a call. Provide exactly one of `singleFile` or `batchFiles`.

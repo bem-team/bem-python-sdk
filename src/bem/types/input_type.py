@@ -10,6 +10,7 @@ InputType: TypeAlias = Literal[
     "email",
     "heic",
     "html",
+    "jfif",
     "jpeg",
     "json",
     "heif",
