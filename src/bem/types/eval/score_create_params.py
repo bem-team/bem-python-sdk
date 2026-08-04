@@ -16,8 +16,14 @@ class ScoreCreateParams(TypedDict, total=False):
     function_name: Required[Annotated[str, PropertyInfo(alias="functionName")]]
     """Name of the function to score. Must be of type extract, transform, or analyze."""
 
-    pairs: Required[Iterable[Pair]]
-    """Up to 1000 pairs per request."""
+    dataset_id: Annotated[str, PropertyInfo(alias="datasetID")]
+    """A saved Golden Data Set (`gds_…`) to score against.
+
+    Mutually exclusive with `pairs`; provide exactly one. Its input / corrected /
+    schema columns are resolved by column role. When it carries a `schema`-role
+    column, scoring types each row against that ground-truth schema instead of the
+    function's own schema — so results hold up as functions/schemas evolve.
+    """
 
     function_version_num: Annotated[int, PropertyInfo(alias="functionVersionNum")]
     """Optional version number to score against.
@@ -28,6 +34,12 @@ class ScoreCreateParams(TypedDict, total=False):
 
     match_config: Annotated[EvalMatchConfigParam, PropertyInfo(alias="matchConfig")]
     """Comparator configuration. All fields optional; conservative defaults."""
+
+    pairs: Iterable[Pair]
+    """
+    Inline `(input, expected)` pairs to score, up to 1000 per request. Mutually
+    exclusive with `datasetID`; provide exactly one.
+    """
 
 
 class Pair(TypedDict, total=False):
