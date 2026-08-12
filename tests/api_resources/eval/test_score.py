@@ -32,13 +32,6 @@ class TestScore:
             function_name="functionName",
             dataset_id="datasetID",
             function_version_num=0,
-            match_config={
-                "array_match": "by-index",
-                "fuzzy_threshold": 0,
-                "ignore_paths": ["string"],
-                "numeric_tolerance": 0,
-                "string_match": "exact",
-            },
             pairs=[
                 {
                     "expected": {},
@@ -182,13 +175,6 @@ class TestAsyncScore:
             function_name="functionName",
             dataset_id="datasetID",
             function_version_num=0,
-            match_config={
-                "array_match": "by-index",
-                "fuzzy_threshold": 0,
-                "ignore_paths": ["string"],
-                "numeric_tolerance": 0,
-                "string_match": "exact",
-            },
             pairs=[
                 {
                     "expected": {},

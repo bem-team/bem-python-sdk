@@ -7,7 +7,6 @@ from typing_extensions import Required, Annotated, TypedDict
 
 from ..._utils import PropertyInfo
 from .file_input_param import FileInputParam
-from .eval_match_config_param import EvalMatchConfigParam
 
 __all__ = ["ScoreCreateParams", "Pair"]
 
@@ -31,9 +30,6 @@ class ScoreCreateParams(TypedDict, total=False):
     P0: only the function's current version is accepted; passing a different version
     returns 422.
     """
-
-    match_config: Annotated[EvalMatchConfigParam, PropertyInfo(alias="matchConfig")]
-    """Comparator configuration. All fields optional; conservative defaults."""
 
     pairs: Iterable[Pair]
     """
