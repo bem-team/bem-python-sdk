@@ -6,7 +6,6 @@ from typing_extensions import Literal
 from pydantic import Field as FieldInfo
 
 from ..._models import BaseModel
-from .eval_match_config import EvalMatchConfig
 from .eval_score_run_status import EvalScoreRunStatus
 
 __all__ = ["EvalScoreRun", "PerPair", "PerPairFieldResult", "Progress", "Aggregate"]
@@ -15,13 +14,14 @@ __all__ = ["EvalScoreRun", "PerPair", "PerPairFieldResult", "Progress", "Aggrega
 class PerPairFieldResult(BaseModel):
     """One leaf in `expected ∪ actual`."""
 
-    match: Literal["exact", "within_tolerance", "fuzzy_match", "miss", "extra"]
-    """Classification:
+    match: Literal["match", "mismatch", "missing", "extra"]
+    """
+    Classification, in the same vocabulary the model-comparison endpoint reports.
+    Comparison is exact — a value matches or it does not:
 
-    - `exact`: both present and deep-equal
-    - `within_tolerance`: both numbers, within configured tolerance
-    - `fuzzy_match`: both strings, Levenshtein ratio above threshold
-    - `miss`: expected present, actual absent or different
+    - `match`: both present and deep-equal
+    - `mismatch`: both present, different
+    - `missing`: expected present, actual absent
     - `extra`: actual present, expected absent
     """
 
@@ -31,9 +31,20 @@ class PerPairFieldResult(BaseModel):
     actual: Optional[object] = None
 
     delta: Optional[float] = None
-    """Populated for numeric comparisons; `actual - expected`."""
+    """Populated for every non-identical numeric pair; `actual - expected`.
+
+    Reported as evidence only — numbers have no threshold, so a delta tells you how
+    far off a value was without ever excusing it.
+    """
 
     expected: Optional[object] = None
+
+    similarity: Optional[float] = None
+    """
+    Populated for every non-identical string pair; the Levenshtein ratio in
+    `[0, 1]`. Reported as evidence: it says how close a wrong value was, which never
+    makes it right.
+    """
 
 
 class PerPair(BaseModel):
@@ -67,15 +78,15 @@ class Progress(BaseModel):
 class Aggregate(BaseModel):
     """Aggregate accuracy metrics."""
 
-    exact_matches: int = FieldInfo(alias="exactMatches")
-
     extras: int
 
     f1: float
 
-    fuzzy_matches: int = FieldInfo(alias="fuzzyMatches")
+    matches: int
 
-    misses: int
+    mismatches: int
+
+    missing: int
 
     precision: float
 
@@ -85,21 +96,21 @@ class Aggregate(BaseModel):
 
     total_fields_expected: int = FieldInfo(alias="totalFieldsExpected")
 
-    within_tolerance: int = FieldInfo(alias="withinTolerance")
-
 
 class EvalScoreRun(BaseModel):
-    """Full status payload returned by `GET /v3/eval/score/{scoreRunID}`."""
+    """Full status payload returned by `GET /v3/eval/score/{scoreRunID}`.
+
+    Scoring takes no configuration: a value matches the expected one or it is a miss.
+    The comparison is still recomputed on every read from the stored JSON, so the
+    numbers reflect the data as it is now rather than as it was when the run executed.
+    """
 
     function_name: str = FieldInfo(alias="functionName")
 
     function_version_num: int = FieldInfo(alias="functionVersionNum")
 
-    match_config: EvalMatchConfig = FieldInfo(alias="matchConfig")
-    """Comparator configuration. All fields optional; conservative defaults."""
-
     per_pair: List[PerPair] = FieldInfo(alias="perPair")
-    """Per-pair results. `fieldResults` appears once a pair has been compared."""
+    """Per-pair results. `fieldResults` appears once a pair has an output to compare."""
 
     progress: Progress
     """Counts across all pairs."""

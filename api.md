@@ -294,13 +294,7 @@ Methods:
 Types:
 
 ```python
-from bem.types.eval import (
-    EvalMatchConfig,
-    EvalScoreRun,
-    EvalScoreRunStatus,
-    FileInput,
-    ScoreCreateResponse,
-)
+from bem.types.eval import EvalScoreRun, EvalScoreRunStatus, FileInput, ScoreCreateResponse
 ```
 
 Methods:

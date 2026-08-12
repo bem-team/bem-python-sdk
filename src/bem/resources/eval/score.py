@@ -20,7 +20,6 @@ from ...types.eval import score_create_params
 from ..._base_client import make_request_options
 from ...types.eval.eval_score_run import EvalScoreRun
 from ...types.eval.score_create_response import ScoreCreateResponse
-from ...types.eval.eval_match_config_param import EvalMatchConfigParam
 
 __all__ = ["ScoreResource", "AsyncScoreResource"]
 
@@ -97,7 +96,6 @@ class ScoreResource(SyncAPIResource):
         function_name: str,
         dataset_id: str | Omit = omit,
         function_version_num: int | Omit = omit,
-        match_config: EvalMatchConfigParam | Omit = omit,
         pairs: Iterable[score_create_params.Pair] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -117,12 +115,8 @@ class ScoreResource(SyncAPIResource):
         `GET /v3/eval/score/{scoreRunID}` until `status` is one of `completed`, `error`,
         or `cancelled`.
 
-        `matchConfig` controls comparator behavior:
-
-        - `numericTolerance`: relative tolerance for numeric fields (0 = exact)
-        - `stringMatch`: `exact` (default) or `fuzzy` (Levenshtein ratio)
-        - `arrayMatch`: `by-index` (default; only mode in P0)
-        - `ignorePaths`: JSON Pointer paths to skip, supports `*` wildcards
+        This request says only _what to extract_. How the output is compared against the
+        expected value happens on the GET, recomputed from stored JSON each time.
 
         Args:
           function_name: Name of the function to score. Must be of type extract, transform, or analyze.
@@ -135,8 +129,6 @@ class ScoreResource(SyncAPIResource):
 
           function_version_num: Optional version number to score against. P0: only the function's current
               version is accepted; passing a different version returns 422.
-
-          match_config: Comparator configuration. All fields optional; conservative defaults.
 
           pairs: Inline `(input, expected)` pairs to score, up to 1000 per request. Mutually
               exclusive with `datasetID`; provide exactly one.
@@ -156,7 +148,6 @@ class ScoreResource(SyncAPIResource):
                     "function_name": function_name,
                     "dataset_id": dataset_id,
                     "function_version_num": function_version_num,
-                    "match_config": match_config,
                     "pairs": pairs,
                 },
                 score_create_params.ScoreCreateParams,
@@ -181,7 +172,16 @@ class ScoreResource(SyncAPIResource):
         """
         **Get the status and per-pair results of a score run.**
 
-        Returns `aggregate` only once `status` reaches `completed`. `perPair` is
+        The comparison happens here, not in the run: the function's output is compared
+        against the expected value on every read, under the configuration supplied
+        below. Re-reading the same run with different settings returns different metrics
+        and costs nothing — no model calls are repeated.
+
+        Comparison is exact and takes no configuration: a value matches the expected one
+        or it is a miss. It is still redone on every read, so the numbers reflect the
+        stored data as it is now.
+
+        Returns `aggregate` once `status` reaches `completed` or `error`. `perPair` is
         populated incrementally — each pair's `fieldResults` appears as its underlying
         function call terminates.
 
@@ -315,7 +315,6 @@ class AsyncScoreResource(AsyncAPIResource):
         function_name: str,
         dataset_id: str | Omit = omit,
         function_version_num: int | Omit = omit,
-        match_config: EvalMatchConfigParam | Omit = omit,
         pairs: Iterable[score_create_params.Pair] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -335,12 +334,8 @@ class AsyncScoreResource(AsyncAPIResource):
         `GET /v3/eval/score/{scoreRunID}` until `status` is one of `completed`, `error`,
         or `cancelled`.
 
-        `matchConfig` controls comparator behavior:
-
-        - `numericTolerance`: relative tolerance for numeric fields (0 = exact)
-        - `stringMatch`: `exact` (default) or `fuzzy` (Levenshtein ratio)
-        - `arrayMatch`: `by-index` (default; only mode in P0)
-        - `ignorePaths`: JSON Pointer paths to skip, supports `*` wildcards
+        This request says only _what to extract_. How the output is compared against the
+        expected value happens on the GET, recomputed from stored JSON each time.
 
         Args:
           function_name: Name of the function to score. Must be of type extract, transform, or analyze.
@@ -353,8 +348,6 @@ class AsyncScoreResource(AsyncAPIResource):
 
           function_version_num: Optional version number to score against. P0: only the function's current
               version is accepted; passing a different version returns 422.
-
-          match_config: Comparator configuration. All fields optional; conservative defaults.
 
           pairs: Inline `(input, expected)` pairs to score, up to 1000 per request. Mutually
               exclusive with `datasetID`; provide exactly one.
@@ -374,7 +367,6 @@ class AsyncScoreResource(AsyncAPIResource):
                     "function_name": function_name,
                     "dataset_id": dataset_id,
                     "function_version_num": function_version_num,
-                    "match_config": match_config,
                     "pairs": pairs,
                 },
                 score_create_params.ScoreCreateParams,
@@ -399,7 +391,16 @@ class AsyncScoreResource(AsyncAPIResource):
         """
         **Get the status and per-pair results of a score run.**
 
-        Returns `aggregate` only once `status` reaches `completed`. `perPair` is
+        The comparison happens here, not in the run: the function's output is compared
+        against the expected value on every read, under the configuration supplied
+        below. Re-reading the same run with different settings returns different metrics
+        and costs nothing — no model calls are repeated.
+
+        Comparison is exact and takes no configuration: a value matches the expected one
+        or it is a miss. It is still redone on every read, so the numbers reflect the
+        stored data as it is now.
+
+        Returns `aggregate` once `status` reaches `completed` or `error`. `perPair` is
         populated incrementally — each pair's `fieldResults` appears as its underlying
         function call terminates.
 
