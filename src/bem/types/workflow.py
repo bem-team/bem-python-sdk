@@ -71,6 +71,15 @@ class Workflow(BaseModel):
     nodes: List[WorkflowNodeResponse]
     """All call-site nodes in this workflow version's DAG."""
 
+    restricted: bool
+    """
+    Whether this workflow is hidden from other members of the account in the bem web
+    app. When true, only account owners and admins and explicitly granted users see
+    the workflow and its calls, outputs, and errors in the app. This is a
+    UI-visibility control: API keys are not scoped to workflows, so an environment
+    API key still reads a restricted workflow and its data.
+    """
+
     updated_at: datetime = FieldInfo(alias="updatedAt")
     """The date and time the workflow was last updated."""
 

@@ -58,6 +58,12 @@ class EnrichWebhookEvent(BaseModel):
     function_version_num: Optional[int] = FieldInfo(alias="functionVersionNum", default=None)
     """Version number of function that this event is associated with."""
 
+    ground_truth: Optional[object] = FieldInfo(alias="groundTruth", default=None)
+    """
+    The client-submitted ground-truth re-ranking of this output's candidates, if any
+    (see `POST /v3/events/{eventID}/enrich-feedback`). Omitted when not set.
+    """
+
     inbound_email: Optional[InboundEmailEvent] = FieldInfo(alias="inboundEmail", default=None)
     """The inbound email that triggered this event."""
 

@@ -22,15 +22,6 @@ class TestScore:
     def test_method_create(self, client: Bem) -> None:
         score = client.eval.score.create(
             function_name="functionName",
-            pairs=[
-                {
-                    "expected": {},
-                    "input": {
-                        "input_content": "inputContent",
-                        "input_type": "csv",
-                    },
-                }
-            ],
         )
         assert_matches_type(ScoreCreateResponse, score, path=["response"])
 
@@ -39,6 +30,8 @@ class TestScore:
     def test_method_create_with_all_params(self, client: Bem) -> None:
         score = client.eval.score.create(
             function_name="functionName",
+            dataset_id="datasetID",
+            function_version_num=0,
             pairs=[
                 {
                     "expected": {},
@@ -48,14 +41,6 @@ class TestScore:
                     },
                 }
             ],
-            function_version_num=0,
-            match_config={
-                "array_match": "by-index",
-                "fuzzy_threshold": 0,
-                "ignore_paths": ["string"],
-                "numeric_tolerance": 0,
-                "string_match": "exact",
-            },
         )
         assert_matches_type(ScoreCreateResponse, score, path=["response"])
 
@@ -64,15 +49,6 @@ class TestScore:
     def test_raw_response_create(self, client: Bem) -> None:
         response = client.eval.score.with_raw_response.create(
             function_name="functionName",
-            pairs=[
-                {
-                    "expected": {},
-                    "input": {
-                        "input_content": "inputContent",
-                        "input_type": "csv",
-                    },
-                }
-            ],
         )
 
         assert response.is_closed is True
@@ -85,15 +61,6 @@ class TestScore:
     def test_streaming_response_create(self, client: Bem) -> None:
         with client.eval.score.with_streaming_response.create(
             function_name="functionName",
-            pairs=[
-                {
-                    "expected": {},
-                    "input": {
-                        "input_content": "inputContent",
-                        "input_type": "csv",
-                    },
-                }
-            ],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -198,15 +165,6 @@ class TestAsyncScore:
     async def test_method_create(self, async_client: AsyncBem) -> None:
         score = await async_client.eval.score.create(
             function_name="functionName",
-            pairs=[
-                {
-                    "expected": {},
-                    "input": {
-                        "input_content": "inputContent",
-                        "input_type": "csv",
-                    },
-                }
-            ],
         )
         assert_matches_type(ScoreCreateResponse, score, path=["response"])
 
@@ -215,6 +173,8 @@ class TestAsyncScore:
     async def test_method_create_with_all_params(self, async_client: AsyncBem) -> None:
         score = await async_client.eval.score.create(
             function_name="functionName",
+            dataset_id="datasetID",
+            function_version_num=0,
             pairs=[
                 {
                     "expected": {},
@@ -224,14 +184,6 @@ class TestAsyncScore:
                     },
                 }
             ],
-            function_version_num=0,
-            match_config={
-                "array_match": "by-index",
-                "fuzzy_threshold": 0,
-                "ignore_paths": ["string"],
-                "numeric_tolerance": 0,
-                "string_match": "exact",
-            },
         )
         assert_matches_type(ScoreCreateResponse, score, path=["response"])
 
@@ -240,15 +192,6 @@ class TestAsyncScore:
     async def test_raw_response_create(self, async_client: AsyncBem) -> None:
         response = await async_client.eval.score.with_raw_response.create(
             function_name="functionName",
-            pairs=[
-                {
-                    "expected": {},
-                    "input": {
-                        "input_content": "inputContent",
-                        "input_type": "csv",
-                    },
-                }
-            ],
         )
 
         assert response.is_closed is True
@@ -261,15 +204,6 @@ class TestAsyncScore:
     async def test_streaming_response_create(self, async_client: AsyncBem) -> None:
         async with async_client.eval.score.with_streaming_response.create(
             function_name="functionName",
-            pairs=[
-                {
-                    "expected": {},
-                    "input": {
-                        "input_content": "inputContent",
-                        "input_type": "csv",
-                    },
-                }
-            ],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
