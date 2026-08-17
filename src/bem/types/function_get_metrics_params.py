@@ -13,6 +13,9 @@ __all__ = ["FunctionGetMetricsParams"]
 
 
 class FunctionGetMetricsParams(TypedDict, total=False):
+    display_name: Annotated[str, PropertyInfo(alias="displayName")]
+    """Case-insensitive substring match on the function display name."""
+
     ending_before: Annotated[str, PropertyInfo(alias="endingBefore")]
     """Cursor — a `functionID` defining your place in the list."""
 
@@ -32,4 +35,25 @@ class FunctionGetMetricsParams(TypedDict, total=False):
     starting_after: Annotated[str, PropertyInfo(alias="startingAfter")]
     """Cursor — a `functionID` defining your place in the list."""
 
+    tags: SequenceNotStr[str]
+    """Returns metrics for functions tagged with any of the supplied tags."""
+
     types: List[FunctionType]
+
+    workflow_ids: Annotated[SequenceNotStr[str], PropertyInfo(alias="workflowIDs")]
+    """Returns metrics only for functions referenced by the named workflows."""
+
+    workflow_id_version_nums: Annotated[SequenceNotStr[str], PropertyInfo(alias="workflowIDVersionNums")]
+    """Narrow the workflow filter to a specific workflow version.
+
+    Each entry is `<workflowID>.<versionNum>`.
+    """
+
+    workflow_names: Annotated[SequenceNotStr[str], PropertyInfo(alias="workflowNames")]
+    """Returns metrics only for functions referenced by the named workflows."""
+
+    workflow_name_version_nums: Annotated[SequenceNotStr[str], PropertyInfo(alias="workflowNameVersionNums")]
+    """
+    Narrow the workflow filter to a specific workflow version, keyed by workflow
+    name. Each entry is `<workflowName>.<versionNum>`.
+    """

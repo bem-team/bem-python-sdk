@@ -4,8 +4,10 @@ from __future__ import annotations
 
 from .function_version import FunctionVersion as FunctionVersion
 from .copy_create_params import CopyCreateParams as CopyCreateParams
+from .version_list_params import VersionListParams as VersionListParams
 from .regression_run_params import RegressionRunParams as RegressionRunParams
 from .regression_run_response import RegressionRunResponse as RegressionRunResponse
+from .version_retrieve_params import VersionRetrieveParams as VersionRetrieveParams
 from .version_retrieve_response import VersionRetrieveResponse as VersionRetrieveResponse
 from .list_function_versions_response import ListFunctionVersionsResponse as ListFunctionVersionsResponse
 from .regression_apply_corrections_params import RegressionApplyCorrectionsParams as RegressionApplyCorrectionsParams

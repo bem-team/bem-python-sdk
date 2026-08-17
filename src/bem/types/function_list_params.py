@@ -21,6 +21,13 @@ class FunctionListParams(TypedDict, total=False):
 
     function_names: Annotated[SequenceNotStr[str], PropertyInfo(alias="functionNames")]
 
+    include_extra_settings: Annotated[bool, PropertyInfo(alias="includeExtraSettings")]
+    """Populate each function's `extraConfig` block.
+
+    Omitted or `false` by default, in which case `extraConfig` is absent from the
+    response.
+    """
+
     limit: int
 
     sort_order: Annotated[Literal["asc", "desc"], PropertyInfo(alias="sortOrder")]
@@ -33,4 +40,18 @@ class FunctionListParams(TypedDict, total=False):
 
     workflow_ids: Annotated[SequenceNotStr[str], PropertyInfo(alias="workflowIDs")]
 
+    workflow_id_version_nums: Annotated[SequenceNotStr[str], PropertyInfo(alias="workflowIDVersionNums")]
+    """Return only functions referenced by a specific workflow version.
+
+    Each entry is `<workflowID>.<versionNum>` — for example
+    `wf_2c9AXIj48cUYJtCuv1gsQtHGDzK.3`.
+    """
+
     workflow_names: Annotated[SequenceNotStr[str], PropertyInfo(alias="workflowNames")]
+
+    workflow_name_version_nums: Annotated[SequenceNotStr[str], PropertyInfo(alias="workflowNameVersionNums")]
+    """
+    Return only functions referenced by a specific workflow version, keyed by
+    workflow name. Each entry is `<workflowName>.<versionNum>` — for example
+    `invoice-pipeline.3`.
+    """

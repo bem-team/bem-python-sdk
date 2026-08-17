@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+from typing_extensions import Literal
+
 import httpx
 
-from ..._types import Body, Query, Headers, NotGiven, not_given
-from ..._utils import path_template
+from ..._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
+from ..._utils import path_template, maybe_transform, async_maybe_transform
 from ..._compat import cached_property
 from ..._resource import SyncAPIResource, AsyncAPIResource
 from ..._response import (
@@ -15,6 +17,7 @@ from ..._response import (
     async_to_streamed_response_wrapper,
 )
 from ..._base_client import make_request_options
+from ...types.functions import version_list_params, version_retrieve_params
 from ...types.functions.version_retrieve_response import VersionRetrieveResponse
 from ...types.functions.list_function_versions_response import ListFunctionVersionsResponse
 
@@ -62,6 +65,7 @@ class VersionsResource(SyncAPIResource):
         version_num: int,
         *,
         function_name: str,
+        include_extra_settings: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -77,6 +81,9 @@ class VersionsResource(SyncAPIResource):
         records the function version it ran against.
 
         Args:
+          include_extra_settings: Populate the version's `extraConfig` block. Omitted or `false` by default, in
+              which case `extraConfig` is absent from the response.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -94,7 +101,13 @@ class VersionsResource(SyncAPIResource):
                 version_num=version_num,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {"include_extra_settings": include_extra_settings}, version_retrieve_params.VersionRetrieveParams
+                ),
             ),
             cast_to=VersionRetrieveResponse,
         )
@@ -103,6 +116,10 @@ class VersionsResource(SyncAPIResource):
         self,
         function_name: str,
         *,
+        ending_before: int | Omit = omit,
+        limit: int | Omit = omit,
+        sort_order: Literal["asc", "desc"] | Omit = omit,
+        starting_after: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -132,7 +149,19 @@ class VersionsResource(SyncAPIResource):
         return self._get(
             path_template("/v3/functions/{function_name}/versions", function_name=function_name),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "ending_before": ending_before,
+                        "limit": limit,
+                        "sort_order": sort_order,
+                        "starting_after": starting_after,
+                    },
+                    version_list_params.VersionListParams,
+                ),
             ),
             cast_to=ListFunctionVersionsResponse,
         )
@@ -179,6 +208,7 @@ class AsyncVersionsResource(AsyncAPIResource):
         version_num: int,
         *,
         function_name: str,
+        include_extra_settings: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -194,6 +224,9 @@ class AsyncVersionsResource(AsyncAPIResource):
         records the function version it ran against.
 
         Args:
+          include_extra_settings: Populate the version's `extraConfig` block. Omitted or `false` by default, in
+              which case `extraConfig` is absent from the response.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -211,7 +244,13 @@ class AsyncVersionsResource(AsyncAPIResource):
                 version_num=version_num,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {"include_extra_settings": include_extra_settings}, version_retrieve_params.VersionRetrieveParams
+                ),
             ),
             cast_to=VersionRetrieveResponse,
         )
@@ -220,6 +259,10 @@ class AsyncVersionsResource(AsyncAPIResource):
         self,
         function_name: str,
         *,
+        ending_before: int | Omit = omit,
+        limit: int | Omit = omit,
+        sort_order: Literal["asc", "desc"] | Omit = omit,
+        starting_after: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -249,7 +292,19 @@ class AsyncVersionsResource(AsyncAPIResource):
         return await self._get(
             path_template("/v3/functions/{function_name}/versions", function_name=function_name),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {
+                        "ending_before": ending_before,
+                        "limit": limit,
+                        "sort_order": sort_order,
+                        "starting_after": starting_after,
+                    },
+                    version_list_params.VersionListParams,
+                ),
             ),
             cast_to=ListFunctionVersionsResponse,
         )

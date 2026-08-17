@@ -36,7 +36,7 @@ from bem.types import (
 Methods:
 
 - <code title="post /v3/functions">client.functions.<a href="./src/bem/resources/functions/functions.py">create</a>(\*\*<a href="src/bem/types/function_create_params.py">params</a>) -> <a href="./src/bem/types/function_response.py">FunctionResponse</a></code>
-- <code title="get /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">retrieve</a>(function_name) -> <a href="./src/bem/types/function_response.py">FunctionResponse</a></code>
+- <code title="get /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">retrieve</a>(function_name, \*\*<a href="src/bem/types/function_retrieve_params.py">params</a>) -> <a href="./src/bem/types/function_response.py">FunctionResponse</a></code>
 - <code title="patch /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">update</a>(path_function_name, \*\*<a href="src/bem/types/function_update_params.py">params</a>) -> <a href="./src/bem/types/function_response.py">FunctionResponse</a></code>
 - <code title="get /v3/functions">client.functions.<a href="./src/bem/resources/functions/functions.py">list</a>(\*\*<a href="src/bem/types/function_list_params.py">params</a>) -> <a href="./src/bem/types/function.py">SyncFunctionsPage[Function]</a></code>
 - <code title="delete /v3/functions/{functionName}">client.functions.<a href="./src/bem/resources/functions/functions.py">delete</a>(function_name) -> None</code>
@@ -70,8 +70,8 @@ from bem.types.functions import (
 
 Methods:
 
-- <code title="get /v3/functions/{functionName}/versions/{versionNum}">client.functions.versions.<a href="./src/bem/resources/functions/versions.py">retrieve</a>(version_num, \*, function_name) -> <a href="./src/bem/types/functions/version_retrieve_response.py">VersionRetrieveResponse</a></code>
-- <code title="get /v3/functions/{functionName}/versions">client.functions.versions.<a href="./src/bem/resources/functions/versions.py">list</a>(function_name) -> <a href="./src/bem/types/functions/list_function_versions_response.py">ListFunctionVersionsResponse</a></code>
+- <code title="get /v3/functions/{functionName}/versions/{versionNum}">client.functions.versions.<a href="./src/bem/resources/functions/versions.py">retrieve</a>(version_num, \*, function_name, \*\*<a href="src/bem/types/functions/version_retrieve_params.py">params</a>) -> <a href="./src/bem/types/functions/version_retrieve_response.py">VersionRetrieveResponse</a></code>
+- <code title="get /v3/functions/{functionName}/versions">client.functions.versions.<a href="./src/bem/resources/functions/versions.py">list</a>(function_name, \*\*<a href="src/bem/types/functions/version_list_params.py">params</a>) -> <a href="./src/bem/types/functions/list_function_versions_response.py">ListFunctionVersionsResponse</a></code>
 
 ## Regression
 
@@ -144,6 +144,7 @@ from bem.types import (
     WorkflowNodeResponse,
     WorkflowRetrieveResponse,
     WorkflowUpdateResponse,
+    WorkflowDeleteResponse,
     WorkflowCopyResponse,
 )
 ```
@@ -154,7 +155,7 @@ Methods:
 - <code title="get /v3/workflows/{workflowName}">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">retrieve</a>(workflow_name) -> <a href="./src/bem/types/workflow_retrieve_response.py">WorkflowRetrieveResponse</a></code>
 - <code title="patch /v3/workflows/{workflowName}">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">update</a>(workflow_name, \*\*<a href="src/bem/types/workflow_update_params.py">params</a>) -> <a href="./src/bem/types/workflow_update_response.py">WorkflowUpdateResponse</a></code>
 - <code title="get /v3/workflows">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">list</a>(\*\*<a href="src/bem/types/workflow_list_params.py">params</a>) -> <a href="./src/bem/types/workflow.py">SyncWorkflowsPage[Workflow]</a></code>
-- <code title="delete /v3/workflows/{workflowName}">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">delete</a>(workflow_name) -> None</code>
+- <code title="delete /v3/workflows/{workflowName}">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">delete</a>(workflow_name) -> <a href="./src/bem/types/workflow_delete_response.py">WorkflowDeleteResponse</a></code>
 - <code title="post /v3/workflows/{workflowName}/call">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">call</a>(workflow_name, \*\*<a href="src/bem/types/workflow_call_params.py">params</a>) -> <a href="./src/bem/types/call_get_response.py">CallGetResponse</a></code>
 - <code title="post /v3/workflows/copy">client.workflows.<a href="./src/bem/resources/workflows/workflows.py">copy</a>(\*\*<a href="src/bem/types/workflow_copy_params.py">params</a>) -> <a href="./src/bem/types/workflow_copy_response.py">WorkflowCopyResponse</a></code>
 
@@ -432,30 +433,15 @@ Methods:
 Types:
 
 ```python
-from bem.types import EntityType, EntityTypeListResponse
+from bem.types import EntityType
 ```
 
 Methods:
 
-- <code title="post /v3/entity-types">client.entity_types.<a href="./src/bem/resources/entity_types/entity_types.py">create</a>(\*\*<a href="src/bem/types/entity_type_create_params.py">params</a>) -> <a href="./src/bem/types/entity_type.py">EntityType</a></code>
-- <code title="get /v3/entity-types/{typeID}">client.entity_types.<a href="./src/bem/resources/entity_types/entity_types.py">retrieve</a>(type_id) -> <a href="./src/bem/types/entity_type.py">EntityType</a></code>
-- <code title="patch /v3/entity-types/{typeID}">client.entity_types.<a href="./src/bem/resources/entity_types/entity_types.py">update</a>(type_id, \*\*<a href="src/bem/types/entity_type_update_params.py">params</a>) -> <a href="./src/bem/types/entity_type.py">EntityType</a></code>
-- <code title="get /v3/entity-types">client.entity_types.<a href="./src/bem/resources/entity_types/entity_types.py">list</a>(\*\*<a href="src/bem/types/entity_type_list_params.py">params</a>) -> <a href="./src/bem/types/entity_type_list_response.py">EntityTypeListResponse</a></code>
-- <code title="delete /v3/entity-types/{typeID}">client.entity_types.<a href="./src/bem/resources/entity_types/entity_types.py">delete</a>(type_id) -> None</code>
-
-## Reviewers
-
-Types:
-
-```python
-from bem.types.entity_types import Reviewer, ReviewerListResponse
-```
-
-Methods:
-
-- <code title="get /v3/entity-types/{typeID}/reviewers">client.entity_types.reviewers.<a href="./src/bem/resources/entity_types/reviewers.py">list</a>(type_id) -> <a href="./src/bem/types/entity_types/reviewer_list_response.py">ReviewerListResponse</a></code>
-- <code title="post /v3/entity-types/{typeID}/reviewers">client.entity_types.reviewers.<a href="./src/bem/resources/entity_types/reviewers.py">assign</a>(type_id, \*\*<a href="src/bem/types/entity_types/reviewer_assign_params.py">params</a>) -> <a href="./src/bem/types/entity_types/reviewer.py">Reviewer</a></code>
-- <code title="delete /v3/entity-types/{typeID}/reviewers/{userID}">client.entity_types.reviewers.<a href="./src/bem/resources/entity_types/reviewers.py">remove</a>(user_id, \*, type_id) -> None</code>
+- <code title="post /v3/entity-types">client.entity_types.<a href="./src/bem/resources/entity_types.py">create</a>(\*\*<a href="src/bem/types/entity_type_create_params.py">params</a>) -> <a href="./src/bem/types/entity_type.py">EntityType</a></code>
+- <code title="get /v3/entity-types/{typeID}">client.entity_types.<a href="./src/bem/resources/entity_types.py">retrieve</a>(type_id) -> <a href="./src/bem/types/entity_type.py">EntityType</a></code>
+- <code title="patch /v3/entity-types/{typeID}">client.entity_types.<a href="./src/bem/resources/entity_types.py">update</a>(type_id, \*\*<a href="src/bem/types/entity_type_update_params.py">params</a>) -> <a href="./src/bem/types/entity_type.py">EntityType</a></code>
+- <code title="delete /v3/entity-types/{typeID}">client.entity_types.<a href="./src/bem/resources/entity_types.py">delete</a>(type_id) -> None</code>
 
 # KnowledgeGraph
 
@@ -468,27 +454,3 @@ from bem.types import KnowledgeGraphRetrieveResponse
 Methods:
 
 - <code title="get /v3/knowledge-graph">client.knowledge_graph.<a href="./src/bem/resources/knowledge_graph.py">retrieve</a>(\*\*<a href="src/bem/types/knowledge_graph_retrieve_params.py">params</a>) -> <a href="./src/bem/types/knowledge_graph_retrieve_response.py">KnowledgeGraphRetrieveResponse</a></code>
-
-# ReviewQueue
-
-Types:
-
-```python
-from bem.types import ReviewQueueListResponse
-```
-
-Methods:
-
-- <code title="get /v3/review-queue">client.review_queue.<a href="./src/bem/resources/review_queue.py">list</a>(\*\*<a href="src/bem/types/review_queue_list_params.py">params</a>) -> <a href="./src/bem/types/review_queue_list_response.py">ReviewQueueListResponse</a></code>
-
-# Users
-
-Types:
-
-```python
-from bem.types import UserListReviewerAssignmentsResponse
-```
-
-Methods:
-
-- <code title="get /v3/users/{userID}/reviewer-assignments">client.users.<a href="./src/bem/resources/users.py">list_reviewer_assignments</a>(user_id) -> <a href="./src/bem/types/user_list_reviewer_assignments_response.py">UserListReviewerAssignmentsResponse</a></code>

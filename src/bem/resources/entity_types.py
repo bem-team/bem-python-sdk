@@ -4,28 +4,19 @@ from __future__ import annotations
 
 import httpx
 
-from ...types import entity_type_list_params, entity_type_create_params, entity_type_update_params
-from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
-from ..._utils import path_template, maybe_transform, async_maybe_transform
-from ..._compat import cached_property
-from .reviewers import (
-    ReviewersResource,
-    AsyncReviewersResource,
-    ReviewersResourceWithRawResponse,
-    AsyncReviewersResourceWithRawResponse,
-    ReviewersResourceWithStreamingResponse,
-    AsyncReviewersResourceWithStreamingResponse,
-)
-from ..._resource import SyncAPIResource, AsyncAPIResource
-from ..._response import (
+from ..types import entity_type_create_params, entity_type_update_params
+from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
+from .._utils import path_template, maybe_transform, async_maybe_transform
+from .._compat import cached_property
+from .._resource import SyncAPIResource, AsyncAPIResource
+from .._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
-from ...types.entity_type import EntityType
-from ...types.entity_type_list_response import EntityTypeListResponse
+from .._base_client import make_request_options
+from ..types.entity_type import EntityType
 
 __all__ = ["EntityTypesResource", "AsyncEntityTypesResource"]
 
@@ -51,29 +42,6 @@ class EntityTypesResource(SyncAPIResource):
       is rejected with `409 Conflict` while any live entity is assigned to
       the type or any live child type points at it.
     """
-
-    @cached_property
-    def reviewers(self) -> ReviewersResource:
-        """
-        Reviewer assignments link users to the entity types they are responsible
-        for reviewing, scoped to an account+environment. These are dashboard-only
-        endpoints: an assignment needs a user identity, which only the dashboard
-        (JWT) surface carries.
-
-        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
-          reviewer of the type. The assignment is idempotent: re-assigning an
-          existing reviewer returns the existing assignment. Requires the `admin`
-          role.
-        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
-          to review the type, with each user's email and role. Requires the
-          `operator` role.
-        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
-          assignment. Requires the `admin` role.
-        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
-          the entity types a user reviews. A user may read their own assignments;
-          reading another user's assignments requires the `admin` role.
-        """
-        return ReviewersResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> EntityTypesResourceWithRawResponse:
@@ -232,60 +200,6 @@ class EntityTypesResource(SyncAPIResource):
             cast_to=EntityType,
         )
 
-    def list(
-        self,
-        *,
-        ending_before: str | Omit = omit,
-        limit: int | Omit = omit,
-        parent_type_id: str | Omit = omit,
-        starting_after: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> EntityTypeListResponse:
-        """
-        List Entity Types
-
-        Args:
-          ending_before: Cursor: return types whose `typeID` sorts before this value.
-
-          limit: Maximum number of entity types to return (default 50, max 200).
-
-          parent_type_id: Filter to the direct children of this parent type (`ety_...`).
-
-          starting_after: Cursor: return types whose `typeID` sorts after this value.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get(
-            "/v3/entity-types",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "ending_before": ending_before,
-                        "limit": limit,
-                        "parent_type_id": parent_type_id,
-                        "starting_after": starting_after,
-                    },
-                    entity_type_list_params.EntityTypeListParams,
-                ),
-            ),
-            cast_to=EntityTypeListResponse,
-        )
-
     def delete(
         self,
         type_id: str,
@@ -342,29 +256,6 @@ class AsyncEntityTypesResource(AsyncAPIResource):
       is rejected with `409 Conflict` while any live entity is assigned to
       the type or any live child type points at it.
     """
-
-    @cached_property
-    def reviewers(self) -> AsyncReviewersResource:
-        """
-        Reviewer assignments link users to the entity types they are responsible
-        for reviewing, scoped to an account+environment. These are dashboard-only
-        endpoints: an assignment needs a user identity, which only the dashboard
-        (JWT) surface carries.
-
-        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
-          reviewer of the type. The assignment is idempotent: re-assigning an
-          existing reviewer returns the existing assignment. Requires the `admin`
-          role.
-        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
-          to review the type, with each user's email and role. Requires the
-          `operator` role.
-        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
-          assignment. Requires the `admin` role.
-        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
-          the entity types a user reviews. A user may read their own assignments;
-          reading another user's assignments requires the `admin` role.
-        """
-        return AsyncReviewersResource(self._client)
 
     @cached_property
     def with_raw_response(self) -> AsyncEntityTypesResourceWithRawResponse:
@@ -523,60 +414,6 @@ class AsyncEntityTypesResource(AsyncAPIResource):
             cast_to=EntityType,
         )
 
-    async def list(
-        self,
-        *,
-        ending_before: str | Omit = omit,
-        limit: int | Omit = omit,
-        parent_type_id: str | Omit = omit,
-        starting_after: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> EntityTypeListResponse:
-        """
-        List Entity Types
-
-        Args:
-          ending_before: Cursor: return types whose `typeID` sorts before this value.
-
-          limit: Maximum number of entity types to return (default 50, max 200).
-
-          parent_type_id: Filter to the direct children of this parent type (`ety_...`).
-
-          starting_after: Cursor: return types whose `typeID` sorts after this value.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._get(
-            "/v3/entity-types",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "ending_before": ending_before,
-                        "limit": limit,
-                        "parent_type_id": parent_type_id,
-                        "starting_after": starting_after,
-                    },
-                    entity_type_list_params.EntityTypeListParams,
-                ),
-            ),
-            cast_to=EntityTypeListResponse,
-        )
-
     async def delete(
         self,
         type_id: str,
@@ -625,35 +462,9 @@ class EntityTypesResourceWithRawResponse:
         self.update = to_raw_response_wrapper(
             entity_types.update,
         )
-        self.list = to_raw_response_wrapper(
-            entity_types.list,
-        )
         self.delete = to_raw_response_wrapper(
             entity_types.delete,
         )
-
-    @cached_property
-    def reviewers(self) -> ReviewersResourceWithRawResponse:
-        """
-        Reviewer assignments link users to the entity types they are responsible
-        for reviewing, scoped to an account+environment. These are dashboard-only
-        endpoints: an assignment needs a user identity, which only the dashboard
-        (JWT) surface carries.
-
-        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
-          reviewer of the type. The assignment is idempotent: re-assigning an
-          existing reviewer returns the existing assignment. Requires the `admin`
-          role.
-        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
-          to review the type, with each user's email and role. Requires the
-          `operator` role.
-        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
-          assignment. Requires the `admin` role.
-        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
-          the entity types a user reviews. A user may read their own assignments;
-          reading another user's assignments requires the `admin` role.
-        """
-        return ReviewersResourceWithRawResponse(self._entity_types.reviewers)
 
 
 class AsyncEntityTypesResourceWithRawResponse:
@@ -669,35 +480,9 @@ class AsyncEntityTypesResourceWithRawResponse:
         self.update = async_to_raw_response_wrapper(
             entity_types.update,
         )
-        self.list = async_to_raw_response_wrapper(
-            entity_types.list,
-        )
         self.delete = async_to_raw_response_wrapper(
             entity_types.delete,
         )
-
-    @cached_property
-    def reviewers(self) -> AsyncReviewersResourceWithRawResponse:
-        """
-        Reviewer assignments link users to the entity types they are responsible
-        for reviewing, scoped to an account+environment. These are dashboard-only
-        endpoints: an assignment needs a user identity, which only the dashboard
-        (JWT) surface carries.
-
-        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
-          reviewer of the type. The assignment is idempotent: re-assigning an
-          existing reviewer returns the existing assignment. Requires the `admin`
-          role.
-        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
-          to review the type, with each user's email and role. Requires the
-          `operator` role.
-        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
-          assignment. Requires the `admin` role.
-        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
-          the entity types a user reviews. A user may read their own assignments;
-          reading another user's assignments requires the `admin` role.
-        """
-        return AsyncReviewersResourceWithRawResponse(self._entity_types.reviewers)
 
 
 class EntityTypesResourceWithStreamingResponse:
@@ -713,35 +498,9 @@ class EntityTypesResourceWithStreamingResponse:
         self.update = to_streamed_response_wrapper(
             entity_types.update,
         )
-        self.list = to_streamed_response_wrapper(
-            entity_types.list,
-        )
         self.delete = to_streamed_response_wrapper(
             entity_types.delete,
         )
-
-    @cached_property
-    def reviewers(self) -> ReviewersResourceWithStreamingResponse:
-        """
-        Reviewer assignments link users to the entity types they are responsible
-        for reviewing, scoped to an account+environment. These are dashboard-only
-        endpoints: an assignment needs a user identity, which only the dashboard
-        (JWT) surface carries.
-
-        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
-          reviewer of the type. The assignment is idempotent: re-assigning an
-          existing reviewer returns the existing assignment. Requires the `admin`
-          role.
-        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
-          to review the type, with each user's email and role. Requires the
-          `operator` role.
-        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
-          assignment. Requires the `admin` role.
-        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
-          the entity types a user reviews. A user may read their own assignments;
-          reading another user's assignments requires the `admin` role.
-        """
-        return ReviewersResourceWithStreamingResponse(self._entity_types.reviewers)
 
 
 class AsyncEntityTypesResourceWithStreamingResponse:
@@ -757,32 +516,6 @@ class AsyncEntityTypesResourceWithStreamingResponse:
         self.update = async_to_streamed_response_wrapper(
             entity_types.update,
         )
-        self.list = async_to_streamed_response_wrapper(
-            entity_types.list,
-        )
         self.delete = async_to_streamed_response_wrapper(
             entity_types.delete,
         )
-
-    @cached_property
-    def reviewers(self) -> AsyncReviewersResourceWithStreamingResponse:
-        """
-        Reviewer assignments link users to the entity types they are responsible
-        for reviewing, scoped to an account+environment. These are dashboard-only
-        endpoints: an assignment needs a user identity, which only the dashboard
-        (JWT) surface carries.
-
-        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
-          reviewer of the type. The assignment is idempotent: re-assigning an
-          existing reviewer returns the existing assignment. Requires the `admin`
-          role.
-        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
-          to review the type, with each user's email and role. Requires the
-          `operator` role.
-        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
-          assignment. Requires the `admin` role.
-        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
-          the entity types a user reviews. A user may read their own assignments;
-          reading another user's assignments requires the `admin` role.
-        """
-        return AsyncReviewersResourceWithStreamingResponse(self._entity_types.reviewers)

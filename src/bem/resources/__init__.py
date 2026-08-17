@@ -24,14 +24,6 @@ from .calls import (
     CallsResourceWithStreamingResponse,
     AsyncCallsResourceWithStreamingResponse,
 )
-from .users import (
-    UsersResource,
-    AsyncUsersResource,
-    UsersResourceWithRawResponse,
-    AsyncUsersResourceWithRawResponse,
-    UsersResourceWithStreamingResponse,
-    AsyncUsersResourceWithStreamingResponse,
-)
 from .views import (
     ViewsResource,
     AsyncViewsResource,
@@ -128,14 +120,6 @@ from .infer_schema import (
     AsyncInferSchemaResourceWithRawResponse,
     InferSchemaResourceWithStreamingResponse,
     AsyncInferSchemaResourceWithStreamingResponse,
-)
-from .review_queue import (
-    ReviewQueueResource,
-    AsyncReviewQueueResource,
-    ReviewQueueResourceWithRawResponse,
-    AsyncReviewQueueResourceWithRawResponse,
-    ReviewQueueResourceWithStreamingResponse,
-    AsyncReviewQueueResourceWithStreamingResponse,
 )
 from .subscriptions import (
     SubscriptionsResource,
@@ -273,16 +257,4 @@ __all__ = [
     "AsyncKnowledgeGraphResourceWithRawResponse",
     "KnowledgeGraphResourceWithStreamingResponse",
     "AsyncKnowledgeGraphResourceWithStreamingResponse",
-    "ReviewQueueResource",
-    "AsyncReviewQueueResource",
-    "ReviewQueueResourceWithRawResponse",
-    "AsyncReviewQueueResourceWithRawResponse",
-    "ReviewQueueResourceWithStreamingResponse",
-    "AsyncReviewQueueResourceWithStreamingResponse",
-    "UsersResource",
-    "AsyncUsersResource",
-    "UsersResourceWithRawResponse",
-    "AsyncUsersResourceWithRawResponse",
-    "UsersResourceWithStreamingResponse",
-    "AsyncUsersResourceWithStreamingResponse",
 ]

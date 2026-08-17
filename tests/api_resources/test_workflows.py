@@ -12,6 +12,7 @@ from bem.types import (
     Workflow,
     CallGetResponse,
     WorkflowCopyResponse,
+    WorkflowDeleteResponse,
     WorkflowUpdateResponse,
     WorkflowRetrieveResponse,
 )
@@ -244,7 +245,9 @@ class TestWorkflows:
             display_name="displayName",
             ending_before="endingBefore",
             function_ids=["string"],
+            function_id_version_nums=["string"],
             function_names=["string"],
+            function_name_version_nums=["string"],
             limit=1,
             sort_order="asc",
             starting_after="startingAfter",
@@ -282,7 +285,7 @@ class TestWorkflows:
         workflow = client.workflows.delete(
             "workflowName",
         )
-        assert workflow is None
+        assert_matches_type(WorkflowDeleteResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -294,7 +297,7 @@ class TestWorkflows:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         workflow = response.parse()
-        assert workflow is None
+        assert_matches_type(WorkflowDeleteResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -306,7 +309,7 @@ class TestWorkflows:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             workflow = response.parse()
-            assert workflow is None
+            assert_matches_type(WorkflowDeleteResponse, workflow, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -667,7 +670,9 @@ class TestAsyncWorkflows:
             display_name="displayName",
             ending_before="endingBefore",
             function_ids=["string"],
+            function_id_version_nums=["string"],
             function_names=["string"],
+            function_name_version_nums=["string"],
             limit=1,
             sort_order="asc",
             starting_after="startingAfter",
@@ -705,7 +710,7 @@ class TestAsyncWorkflows:
         workflow = await async_client.workflows.delete(
             "workflowName",
         )
-        assert workflow is None
+        assert_matches_type(WorkflowDeleteResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -717,7 +722,7 @@ class TestAsyncWorkflows:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         workflow = await response.parse()
-        assert workflow is None
+        assert_matches_type(WorkflowDeleteResponse, workflow, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -729,7 +734,7 @@ class TestAsyncWorkflows:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             workflow = await response.parse()
-            assert workflow is None
+            assert_matches_type(WorkflowDeleteResponse, workflow, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
