@@ -16,6 +16,9 @@ class EntityTypeListParams(TypedDict, total=False):
     limit: int
     """Maximum number of entity types to return (default 50, max 200)."""
 
+    name: str
+    """Case-insensitive substring match on the entity type name."""
+
     parent_type_id: Annotated[str, PropertyInfo(alias="parentTypeId")]
     """Filter to the direct children of this parent type (`ety_...`)."""
 

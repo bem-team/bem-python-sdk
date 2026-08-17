@@ -553,7 +553,16 @@ class TestFunctions:
     @parametrize
     def test_method_retrieve(self, client: Bem) -> None:
         function = client.functions.retrieve(
-            "functionName",
+            function_name="functionName",
+        )
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_retrieve_with_all_params(self, client: Bem) -> None:
+        function = client.functions.retrieve(
+            function_name="functionName",
+            include_extra_settings=True,
         )
         assert_matches_type(FunctionResponse, function, path=["response"])
 
@@ -561,7 +570,7 @@ class TestFunctions:
     @parametrize
     def test_raw_response_retrieve(self, client: Bem) -> None:
         response = client.functions.with_raw_response.retrieve(
-            "functionName",
+            function_name="functionName",
         )
 
         assert response.is_closed is True
@@ -573,7 +582,7 @@ class TestFunctions:
     @parametrize
     def test_streaming_response_retrieve(self, client: Bem) -> None:
         with client.functions.with_streaming_response.retrieve(
-            "functionName",
+            function_name="functionName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -588,7 +597,7 @@ class TestFunctions:
     def test_path_params_retrieve(self, client: Bem) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `function_name` but received ''"):
             client.functions.with_raw_response.retrieve(
-                "",
+                function_name="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -1214,13 +1223,16 @@ class TestFunctions:
             ending_before="endingBefore",
             function_ids=["string"],
             function_names=["string"],
+            include_extra_settings=True,
             limit=1,
             sort_order="asc",
             starting_after="startingAfter",
             tags=["string"],
             types=["transform"],
             workflow_ids=["string"],
+            workflow_id_version_nums=["string"],
             workflow_names=["string"],
+            workflow_name_version_nums=["string"],
         )
         assert_matches_type(SyncFunctionsPage[Function], function, path=["response"])
 
@@ -1394,13 +1406,19 @@ class TestFunctions:
     @parametrize
     def test_method_get_metrics_with_all_params(self, client: Bem) -> None:
         function = client.functions.get_metrics(
+            display_name="displayName",
             ending_before="endingBefore",
             function_ids=["string"],
             function_names=["string"],
             limit=1,
             sort_order="asc",
             starting_after="startingAfter",
+            tags=["string"],
             types=["transform"],
+            workflow_ids=["string"],
+            workflow_id_version_nums=["string"],
+            workflow_names=["string"],
+            workflow_name_version_nums=["string"],
         )
         assert_matches_type(FunctionGetMetricsResponse, function, path=["response"])
 
@@ -1961,7 +1979,16 @@ class TestAsyncFunctions:
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncBem) -> None:
         function = await async_client.functions.retrieve(
-            "functionName",
+            function_name="functionName",
+        )
+        assert_matches_type(FunctionResponse, function, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_retrieve_with_all_params(self, async_client: AsyncBem) -> None:
+        function = await async_client.functions.retrieve(
+            function_name="functionName",
+            include_extra_settings=True,
         )
         assert_matches_type(FunctionResponse, function, path=["response"])
 
@@ -1969,7 +1996,7 @@ class TestAsyncFunctions:
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncBem) -> None:
         response = await async_client.functions.with_raw_response.retrieve(
-            "functionName",
+            function_name="functionName",
         )
 
         assert response.is_closed is True
@@ -1981,7 +2008,7 @@ class TestAsyncFunctions:
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncBem) -> None:
         async with async_client.functions.with_streaming_response.retrieve(
-            "functionName",
+            function_name="functionName",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -1996,7 +2023,7 @@ class TestAsyncFunctions:
     async def test_path_params_retrieve(self, async_client: AsyncBem) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `function_name` but received ''"):
             await async_client.functions.with_raw_response.retrieve(
-                "",
+                function_name="",
             )
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
@@ -2622,13 +2649,16 @@ class TestAsyncFunctions:
             ending_before="endingBefore",
             function_ids=["string"],
             function_names=["string"],
+            include_extra_settings=True,
             limit=1,
             sort_order="asc",
             starting_after="startingAfter",
             tags=["string"],
             types=["transform"],
             workflow_ids=["string"],
+            workflow_id_version_nums=["string"],
             workflow_names=["string"],
+            workflow_name_version_nums=["string"],
         )
         assert_matches_type(AsyncFunctionsPage[Function], function, path=["response"])
 
@@ -2802,13 +2832,19 @@ class TestAsyncFunctions:
     @parametrize
     async def test_method_get_metrics_with_all_params(self, async_client: AsyncBem) -> None:
         function = await async_client.functions.get_metrics(
+            display_name="displayName",
             ending_before="endingBefore",
             function_ids=["string"],
             function_names=["string"],
             limit=1,
             sort_order="asc",
             starting_after="startingAfter",
+            tags=["string"],
             types=["transform"],
+            workflow_ids=["string"],
+            workflow_id_version_nums=["string"],
+            workflow_names=["string"],
+            workflow_name_version_nums=["string"],
         )
         assert_matches_type(FunctionGetMetricsResponse, function, path=["response"])
 

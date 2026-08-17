@@ -172,6 +172,7 @@ class TestEntityTypes:
         entity_type = client.entity_types.list(
             ending_before="endingBefore",
             limit=0,
+            name="name",
             parent_type_id="parentTypeId",
             starting_after="startingAfter",
         )
@@ -399,6 +400,7 @@ class TestAsyncEntityTypes:
         entity_type = await async_client.entity_types.list(
             ending_before="endingBefore",
             limit=0,
+            name="name",
             parent_type_id="parentTypeId",
             starting_after="startingAfter",
         )

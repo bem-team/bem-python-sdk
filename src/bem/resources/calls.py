@@ -114,7 +114,10 @@ class CallsResource(SyncAPIResource):
         self,
         *,
         call_ids: SequenceNotStr[str] | Omit = omit,
+        call_types: List[Literal["workflow", "direct_function", "adhoc_function"]] | Omit = omit,
         ending_before: str | Omit = omit,
+        function_ids: SequenceNotStr[str] | Omit = omit,
+        function_names: SequenceNotStr[str] | Omit = omit,
         limit: int | Omit = omit,
         reference_ids: SequenceNotStr[str] | Omit = omit,
         reference_id_substring: str | Omit = omit,
@@ -140,12 +143,21 @@ class CallsResource(SyncAPIResource):
         - `callIDs`: Specific call identifiers
         - `referenceIDs`: Your custom reference IDs
         - `workflowIDs` / `workflowNames`: Filter by workflow
+        - `functionIDs` / `functionNames`: Filter by function (function calls only)
+        - `callTypes`: Restrict to workflow calls or to function calls
 
         ## Pagination
 
         Use `startingAfter` and `endingBefore` cursors with a default limit of 50.
 
         Args:
+          call_types: Filter by call type. Omit to return every call regardless of type.
+
+          function_ids: Filter by function API ID. Only matches function calls — workflow calls carry no
+              function reference of their own.
+
+          function_names: Filter by function name. Only matches function calls.
+
           reference_id_substring: Case-insensitive substring match against `callReferenceID`.
 
           statuses: Filter by one or more statuses.
@@ -169,7 +181,10 @@ class CallsResource(SyncAPIResource):
                 query=maybe_transform(
                     {
                         "call_ids": call_ids,
+                        "call_types": call_types,
                         "ending_before": ending_before,
+                        "function_ids": function_ids,
+                        "function_names": function_names,
                         "limit": limit,
                         "reference_ids": reference_ids,
                         "reference_id_substring": reference_id_substring,
@@ -323,7 +338,10 @@ class AsyncCallsResource(AsyncAPIResource):
         self,
         *,
         call_ids: SequenceNotStr[str] | Omit = omit,
+        call_types: List[Literal["workflow", "direct_function", "adhoc_function"]] | Omit = omit,
         ending_before: str | Omit = omit,
+        function_ids: SequenceNotStr[str] | Omit = omit,
+        function_names: SequenceNotStr[str] | Omit = omit,
         limit: int | Omit = omit,
         reference_ids: SequenceNotStr[str] | Omit = omit,
         reference_id_substring: str | Omit = omit,
@@ -349,12 +367,21 @@ class AsyncCallsResource(AsyncAPIResource):
         - `callIDs`: Specific call identifiers
         - `referenceIDs`: Your custom reference IDs
         - `workflowIDs` / `workflowNames`: Filter by workflow
+        - `functionIDs` / `functionNames`: Filter by function (function calls only)
+        - `callTypes`: Restrict to workflow calls or to function calls
 
         ## Pagination
 
         Use `startingAfter` and `endingBefore` cursors with a default limit of 50.
 
         Args:
+          call_types: Filter by call type. Omit to return every call regardless of type.
+
+          function_ids: Filter by function API ID. Only matches function calls — workflow calls carry no
+              function reference of their own.
+
+          function_names: Filter by function name. Only matches function calls.
+
           reference_id_substring: Case-insensitive substring match against `callReferenceID`.
 
           statuses: Filter by one or more statuses.
@@ -378,7 +405,10 @@ class AsyncCallsResource(AsyncAPIResource):
                 query=maybe_transform(
                     {
                         "call_ids": call_ids,
+                        "call_types": call_types,
                         "ending_before": ending_before,
+                        "function_ids": function_ids,
+                        "function_names": function_names,
                         "limit": limit,
                         "reference_ids": reference_ids,
                         "reference_id_substring": reference_id_substring,

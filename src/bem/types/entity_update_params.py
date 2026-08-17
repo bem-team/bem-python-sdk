@@ -11,6 +11,12 @@ __all__ = ["EntityUpdateParams"]
 
 
 class EntityUpdateParams(TypedDict, total=False):
+    bucket: str
+    """Optional bucket public ID (`bkt_...`) to scope the lookup to.
+
+    Omit for the default bucket.
+    """
+
     add_synonyms: Annotated[SequenceNotStr[str], PropertyInfo(alias="addSynonyms")]
     """Surface forms to attach as `customer_defined` synonyms."""
 

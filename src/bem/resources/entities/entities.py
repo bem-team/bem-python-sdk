@@ -86,6 +86,7 @@ class EntitiesResource(SyncAPIResource):
         self,
         id: str,
         *,
+        bucket: str | Omit = omit,
         add_synonyms: SequenceNotStr[str] | Omit = omit,
         assigned_type_id: str | Omit = omit,
         canonical: str | Omit = omit,
@@ -103,6 +104,9 @@ class EntitiesResource(SyncAPIResource):
         Update Entity
 
         Args:
+          bucket: Optional bucket public ID (`bkt_...`) to scope the lookup to. Omit for the
+              default bucket.
+
           add_synonyms: Surface forms to attach as `customer_defined` synonyms.
 
           assigned_type_id: The `ety_...` public ID of the type to assign (overriding the bem-inferred
@@ -143,7 +147,11 @@ class EntitiesResource(SyncAPIResource):
                 entity_update_params.EntityUpdateParams,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"bucket": bucket}, entity_update_params.EntityUpdateParams),
             ),
             cast_to=EntityUpdateResponse,
         )
@@ -204,6 +212,7 @@ class EntitiesResource(SyncAPIResource):
         *,
         entity_ids: SequenceNotStr[str],
         status: Literal["approved", "rejected"],
+        bucket: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -219,6 +228,9 @@ class EntitiesResource(SyncAPIResource):
         Must be non-empty.
 
           status: Terminal status to apply to every entity.
+
+          bucket: Optional bucket public ID (`bkt_...`) to scope the lookup to. Omit for the
+              default bucket.
 
           extra_headers: Send extra headers
 
@@ -238,7 +250,11 @@ class EntitiesResource(SyncAPIResource):
                 entity_bulk_validate_params.EntityBulkValidateParams,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"bucket": bucket}, entity_bulk_validate_params.EntityBulkValidateParams),
             ),
             cast_to=EntityBulkValidateResponse,
         )
@@ -384,6 +400,7 @@ class AsyncEntitiesResource(AsyncAPIResource):
         self,
         id: str,
         *,
+        bucket: str | Omit = omit,
         add_synonyms: SequenceNotStr[str] | Omit = omit,
         assigned_type_id: str | Omit = omit,
         canonical: str | Omit = omit,
@@ -401,6 +418,9 @@ class AsyncEntitiesResource(AsyncAPIResource):
         Update Entity
 
         Args:
+          bucket: Optional bucket public ID (`bkt_...`) to scope the lookup to. Omit for the
+              default bucket.
+
           add_synonyms: Surface forms to attach as `customer_defined` synonyms.
 
           assigned_type_id: The `ety_...` public ID of the type to assign (overriding the bem-inferred
@@ -441,7 +461,11 @@ class AsyncEntitiesResource(AsyncAPIResource):
                 entity_update_params.EntityUpdateParams,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform({"bucket": bucket}, entity_update_params.EntityUpdateParams),
             ),
             cast_to=EntityUpdateResponse,
         )
@@ -502,6 +526,7 @@ class AsyncEntitiesResource(AsyncAPIResource):
         *,
         entity_ids: SequenceNotStr[str],
         status: Literal["approved", "rejected"],
+        bucket: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -517,6 +542,9 @@ class AsyncEntitiesResource(AsyncAPIResource):
         Must be non-empty.
 
           status: Terminal status to apply to every entity.
+
+          bucket: Optional bucket public ID (`bkt_...`) to scope the lookup to. Omit for the
+              default bucket.
 
           extra_headers: Send extra headers
 
@@ -536,7 +564,13 @@ class AsyncEntitiesResource(AsyncAPIResource):
                 entity_bulk_validate_params.EntityBulkValidateParams,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {"bucket": bucket}, entity_bulk_validate_params.EntityBulkValidateParams
+                ),
             ),
             cast_to=EntityBulkValidateResponse,
         )

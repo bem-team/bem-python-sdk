@@ -188,7 +188,6 @@ class TestSubscriptions:
             ending_before="endingBefore",
             function_names=["string"],
             limit=1,
-            sort_order="asc",
             starting_after="startingAfter",
         )
         assert_matches_type(SubscriptionListResponse, subscription, path=["response"])
@@ -431,7 +430,6 @@ class TestAsyncSubscriptions:
             ending_before="endingBefore",
             function_names=["string"],
             limit=1,
-            sort_order="asc",
             starting_after="startingAfter",
         )
         assert_matches_type(SubscriptionListResponse, subscription, path=["response"])

@@ -16,3 +16,9 @@ class EntityBulkValidateParams(TypedDict, total=False):
 
     status: Required[Literal["approved", "rejected"]]
     """Terminal status to apply to every entity."""
+
+    bucket: str
+    """Optional bucket public ID (`bkt_...`) to scope the lookup to.
+
+    Omit for the default bucket.
+    """

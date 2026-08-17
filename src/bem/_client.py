@@ -40,7 +40,6 @@ if TYPE_CHECKING:
         fs,
         eval,
         calls,
-        users,
         views,
         errors,
         events,
@@ -53,14 +52,12 @@ if TYPE_CHECKING:
         collections,
         entity_types,
         infer_schema,
-        review_queue,
         subscriptions,
         webhook_secret,
         knowledge_graph,
     )
     from .resources.fs import FsResource, AsyncFsResource
     from .resources.calls import CallsResource, AsyncCallsResource
-    from .resources.users import UsersResource, AsyncUsersResource
     from .resources.views import ViewsResource, AsyncViewsResource
     from .resources.errors import ErrorsResource, AsyncErrorsResource
     from .resources.events import EventsResource, AsyncEventsResource
@@ -69,8 +66,8 @@ if TYPE_CHECKING:
     from .resources.webhooks import WebhooksResource, AsyncWebhooksResource
     from .resources.eval.eval import EvalResource, AsyncEvalResource
     from .resources.connectors import ConnectorsResource, AsyncConnectorsResource
+    from .resources.entity_types import EntityTypesResource, AsyncEntityTypesResource
     from .resources.infer_schema import InferSchemaResource, AsyncInferSchemaResource
-    from .resources.review_queue import ReviewQueueResource, AsyncReviewQueueResource
     from .resources.subscriptions import SubscriptionsResource, AsyncSubscriptionsResource
     from .resources.webhook_secret import WebhookSecretResource, AsyncWebhookSecretResource
     from .resources.knowledge_graph import KnowledgeGraphResource, AsyncKnowledgeGraphResource
@@ -78,7 +75,6 @@ if TYPE_CHECKING:
     from .resources.functions.functions import FunctionsResource, AsyncFunctionsResource
     from .resources.workflows.workflows import WorkflowsResource, AsyncWorkflowsResource
     from .resources.collections.collections import CollectionsResource, AsyncCollectionsResource
-    from .resources.entity_types.entity_types import EntityTypesResource, AsyncEntityTypesResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Bem", "AsyncBem", "Client", "AsyncClient"]
 
@@ -605,55 +601,6 @@ class Bem(SyncAPIClient):
         from .resources.knowledge_graph import KnowledgeGraphResource
 
         return KnowledgeGraphResource(self)
-
-    @cached_property
-    def review_queue(self) -> ReviewQueueResource:
-        """
-        The reviewer-facing read surface for entity curation, available on the
-        dashboard (JWT) only.
-
-        - **`GET /v3/review-queue`** returns a cursor-paginated set of entities
-          awaiting curation, scoped to your account+environment (and optional
-          `bucket`). Each row is a full entity plus a small preview (up to 2) of
-          its first mentions, so a reviewer can triage without opening every
-          entity.
-
-        Filters AND together. `status` (repeatable) defaults to the pre-terminal
-        states `extracted` + `proposed` when omitted. `type` (repeatable `ety_…`
-        IDs) matches the entity's *effective* type — its assigned type id, or, for
-        entities with no assigned type, its bem-inferred type name. `assignedTo`
-        (`me` or a `usr_…` ID) restricts to entities whose effective type the user
-        reviews. `since` (RFC3339) filters by creation time. Pagination is
-        cursor-based on `entityID` ascending; default limit 50, maximum 200.
-        """
-        from .resources.review_queue import ReviewQueueResource
-
-        return ReviewQueueResource(self)
-
-    @cached_property
-    def users(self) -> UsersResource:
-        """
-        Reviewer assignments link users to the entity types they are responsible
-        for reviewing, scoped to an account+environment. These are dashboard-only
-        endpoints: an assignment needs a user identity, which only the dashboard
-        (JWT) surface carries.
-
-        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
-          reviewer of the type. The assignment is idempotent: re-assigning an
-          existing reviewer returns the existing assignment. Requires the `admin`
-          role.
-        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
-          to review the type, with each user's email and role. Requires the
-          `operator` role.
-        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
-          assignment. Requires the `admin` role.
-        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
-          the entity types a user reviews. A user may read their own assignments;
-          reading another user's assignments requires the `admin` role.
-        """
-        from .resources.users import UsersResource
-
-        return UsersResource(self)
 
     @cached_property
     def with_raw_response(self) -> BemWithRawResponse:
@@ -1299,55 +1246,6 @@ class AsyncBem(AsyncAPIClient):
         return AsyncKnowledgeGraphResource(self)
 
     @cached_property
-    def review_queue(self) -> AsyncReviewQueueResource:
-        """
-        The reviewer-facing read surface for entity curation, available on the
-        dashboard (JWT) only.
-
-        - **`GET /v3/review-queue`** returns a cursor-paginated set of entities
-          awaiting curation, scoped to your account+environment (and optional
-          `bucket`). Each row is a full entity plus a small preview (up to 2) of
-          its first mentions, so a reviewer can triage without opening every
-          entity.
-
-        Filters AND together. `status` (repeatable) defaults to the pre-terminal
-        states `extracted` + `proposed` when omitted. `type` (repeatable `ety_…`
-        IDs) matches the entity's *effective* type — its assigned type id, or, for
-        entities with no assigned type, its bem-inferred type name. `assignedTo`
-        (`me` or a `usr_…` ID) restricts to entities whose effective type the user
-        reviews. `since` (RFC3339) filters by creation time. Pagination is
-        cursor-based on `entityID` ascending; default limit 50, maximum 200.
-        """
-        from .resources.review_queue import AsyncReviewQueueResource
-
-        return AsyncReviewQueueResource(self)
-
-    @cached_property
-    def users(self) -> AsyncUsersResource:
-        """
-        Reviewer assignments link users to the entity types they are responsible
-        for reviewing, scoped to an account+environment. These are dashboard-only
-        endpoints: an assignment needs a user identity, which only the dashboard
-        (JWT) surface carries.
-
-        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
-          reviewer of the type. The assignment is idempotent: re-assigning an
-          existing reviewer returns the existing assignment. Requires the `admin`
-          role.
-        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
-          to review the type, with each user's email and role. Requires the
-          `operator` role.
-        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
-          assignment. Requires the `admin` role.
-        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
-          the entity types a user reviews. A user may read their own assignments;
-          reading another user's assignments requires the `admin` role.
-        """
-        from .resources.users import AsyncUsersResource
-
-        return AsyncUsersResource(self)
-
-    @cached_property
     def with_raw_response(self) -> AsyncBemWithRawResponse:
         return AsyncBemWithRawResponse(self)
 
@@ -1926,55 +1824,6 @@ class BemWithRawResponse:
 
         return KnowledgeGraphResourceWithRawResponse(self._client.knowledge_graph)
 
-    @cached_property
-    def review_queue(self) -> review_queue.ReviewQueueResourceWithRawResponse:
-        """
-        The reviewer-facing read surface for entity curation, available on the
-        dashboard (JWT) only.
-
-        - **`GET /v3/review-queue`** returns a cursor-paginated set of entities
-          awaiting curation, scoped to your account+environment (and optional
-          `bucket`). Each row is a full entity plus a small preview (up to 2) of
-          its first mentions, so a reviewer can triage without opening every
-          entity.
-
-        Filters AND together. `status` (repeatable) defaults to the pre-terminal
-        states `extracted` + `proposed` when omitted. `type` (repeatable `ety_…`
-        IDs) matches the entity's *effective* type — its assigned type id, or, for
-        entities with no assigned type, its bem-inferred type name. `assignedTo`
-        (`me` or a `usr_…` ID) restricts to entities whose effective type the user
-        reviews. `since` (RFC3339) filters by creation time. Pagination is
-        cursor-based on `entityID` ascending; default limit 50, maximum 200.
-        """
-        from .resources.review_queue import ReviewQueueResourceWithRawResponse
-
-        return ReviewQueueResourceWithRawResponse(self._client.review_queue)
-
-    @cached_property
-    def users(self) -> users.UsersResourceWithRawResponse:
-        """
-        Reviewer assignments link users to the entity types they are responsible
-        for reviewing, scoped to an account+environment. These are dashboard-only
-        endpoints: an assignment needs a user identity, which only the dashboard
-        (JWT) surface carries.
-
-        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
-          reviewer of the type. The assignment is idempotent: re-assigning an
-          existing reviewer returns the existing assignment. Requires the `admin`
-          role.
-        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
-          to review the type, with each user's email and role. Requires the
-          `operator` role.
-        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
-          assignment. Requires the `admin` role.
-        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
-          the entity types a user reviews. A user may read their own assignments;
-          reading another user's assignments requires the `admin` role.
-        """
-        from .resources.users import UsersResourceWithRawResponse
-
-        return UsersResourceWithRawResponse(self._client.users)
-
 
 class AsyncBemWithRawResponse:
     _client: AsyncBem
@@ -2434,55 +2283,6 @@ class AsyncBemWithRawResponse:
         from .resources.knowledge_graph import AsyncKnowledgeGraphResourceWithRawResponse
 
         return AsyncKnowledgeGraphResourceWithRawResponse(self._client.knowledge_graph)
-
-    @cached_property
-    def review_queue(self) -> review_queue.AsyncReviewQueueResourceWithRawResponse:
-        """
-        The reviewer-facing read surface for entity curation, available on the
-        dashboard (JWT) only.
-
-        - **`GET /v3/review-queue`** returns a cursor-paginated set of entities
-          awaiting curation, scoped to your account+environment (and optional
-          `bucket`). Each row is a full entity plus a small preview (up to 2) of
-          its first mentions, so a reviewer can triage without opening every
-          entity.
-
-        Filters AND together. `status` (repeatable) defaults to the pre-terminal
-        states `extracted` + `proposed` when omitted. `type` (repeatable `ety_…`
-        IDs) matches the entity's *effective* type — its assigned type id, or, for
-        entities with no assigned type, its bem-inferred type name. `assignedTo`
-        (`me` or a `usr_…` ID) restricts to entities whose effective type the user
-        reviews. `since` (RFC3339) filters by creation time. Pagination is
-        cursor-based on `entityID` ascending; default limit 50, maximum 200.
-        """
-        from .resources.review_queue import AsyncReviewQueueResourceWithRawResponse
-
-        return AsyncReviewQueueResourceWithRawResponse(self._client.review_queue)
-
-    @cached_property
-    def users(self) -> users.AsyncUsersResourceWithRawResponse:
-        """
-        Reviewer assignments link users to the entity types they are responsible
-        for reviewing, scoped to an account+environment. These are dashboard-only
-        endpoints: an assignment needs a user identity, which only the dashboard
-        (JWT) surface carries.
-
-        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
-          reviewer of the type. The assignment is idempotent: re-assigning an
-          existing reviewer returns the existing assignment. Requires the `admin`
-          role.
-        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
-          to review the type, with each user's email and role. Requires the
-          `operator` role.
-        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
-          assignment. Requires the `admin` role.
-        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
-          the entity types a user reviews. A user may read their own assignments;
-          reading another user's assignments requires the `admin` role.
-        """
-        from .resources.users import AsyncUsersResourceWithRawResponse
-
-        return AsyncUsersResourceWithRawResponse(self._client.users)
 
 
 class BemWithStreamedResponse:
@@ -2944,55 +2744,6 @@ class BemWithStreamedResponse:
 
         return KnowledgeGraphResourceWithStreamingResponse(self._client.knowledge_graph)
 
-    @cached_property
-    def review_queue(self) -> review_queue.ReviewQueueResourceWithStreamingResponse:
-        """
-        The reviewer-facing read surface for entity curation, available on the
-        dashboard (JWT) only.
-
-        - **`GET /v3/review-queue`** returns a cursor-paginated set of entities
-          awaiting curation, scoped to your account+environment (and optional
-          `bucket`). Each row is a full entity plus a small preview (up to 2) of
-          its first mentions, so a reviewer can triage without opening every
-          entity.
-
-        Filters AND together. `status` (repeatable) defaults to the pre-terminal
-        states `extracted` + `proposed` when omitted. `type` (repeatable `ety_…`
-        IDs) matches the entity's *effective* type — its assigned type id, or, for
-        entities with no assigned type, its bem-inferred type name. `assignedTo`
-        (`me` or a `usr_…` ID) restricts to entities whose effective type the user
-        reviews. `since` (RFC3339) filters by creation time. Pagination is
-        cursor-based on `entityID` ascending; default limit 50, maximum 200.
-        """
-        from .resources.review_queue import ReviewQueueResourceWithStreamingResponse
-
-        return ReviewQueueResourceWithStreamingResponse(self._client.review_queue)
-
-    @cached_property
-    def users(self) -> users.UsersResourceWithStreamingResponse:
-        """
-        Reviewer assignments link users to the entity types they are responsible
-        for reviewing, scoped to an account+environment. These are dashboard-only
-        endpoints: an assignment needs a user identity, which only the dashboard
-        (JWT) surface carries.
-
-        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
-          reviewer of the type. The assignment is idempotent: re-assigning an
-          existing reviewer returns the existing assignment. Requires the `admin`
-          role.
-        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
-          to review the type, with each user's email and role. Requires the
-          `operator` role.
-        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
-          assignment. Requires the `admin` role.
-        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
-          the entity types a user reviews. A user may read their own assignments;
-          reading another user's assignments requires the `admin` role.
-        """
-        from .resources.users import UsersResourceWithStreamingResponse
-
-        return UsersResourceWithStreamingResponse(self._client.users)
-
 
 class AsyncBemWithStreamedResponse:
     _client: AsyncBem
@@ -3452,55 +3203,6 @@ class AsyncBemWithStreamedResponse:
         from .resources.knowledge_graph import AsyncKnowledgeGraphResourceWithStreamingResponse
 
         return AsyncKnowledgeGraphResourceWithStreamingResponse(self._client.knowledge_graph)
-
-    @cached_property
-    def review_queue(self) -> review_queue.AsyncReviewQueueResourceWithStreamingResponse:
-        """
-        The reviewer-facing read surface for entity curation, available on the
-        dashboard (JWT) only.
-
-        - **`GET /v3/review-queue`** returns a cursor-paginated set of entities
-          awaiting curation, scoped to your account+environment (and optional
-          `bucket`). Each row is a full entity plus a small preview (up to 2) of
-          its first mentions, so a reviewer can triage without opening every
-          entity.
-
-        Filters AND together. `status` (repeatable) defaults to the pre-terminal
-        states `extracted` + `proposed` when omitted. `type` (repeatable `ety_…`
-        IDs) matches the entity's *effective* type — its assigned type id, or, for
-        entities with no assigned type, its bem-inferred type name. `assignedTo`
-        (`me` or a `usr_…` ID) restricts to entities whose effective type the user
-        reviews. `since` (RFC3339) filters by creation time. Pagination is
-        cursor-based on `entityID` ascending; default limit 50, maximum 200.
-        """
-        from .resources.review_queue import AsyncReviewQueueResourceWithStreamingResponse
-
-        return AsyncReviewQueueResourceWithStreamingResponse(self._client.review_queue)
-
-    @cached_property
-    def users(self) -> users.AsyncUsersResourceWithStreamingResponse:
-        """
-        Reviewer assignments link users to the entity types they are responsible
-        for reviewing, scoped to an account+environment. These are dashboard-only
-        endpoints: an assignment needs a user identity, which only the dashboard
-        (JWT) surface carries.
-
-        - **`POST /v3/entity-types/{typeID}/reviewers`** assigns a user as a
-          reviewer of the type. The assignment is idempotent: re-assigning an
-          existing reviewer returns the existing assignment. Requires the `admin`
-          role.
-        - **`GET /v3/entity-types/{typeID}/reviewers`** lists the users assigned
-          to review the type, with each user's email and role. Requires the
-          `operator` role.
-        - **`DELETE /v3/entity-types/{typeID}/reviewers/{userID}`** removes an
-          assignment. Requires the `admin` role.
-        - **`GET /v3/users/{userID}/reviewer-assignments`** is the reverse lookup:
-          the entity types a user reviews. A user may read their own assignments;
-          reading another user's assignments requires the `admin` role.
-        """
-        from .resources.users import AsyncUsersResourceWithStreamingResponse
-
-        return AsyncUsersResourceWithStreamingResponse(self._client.users)
 
 
 Client = Bem
