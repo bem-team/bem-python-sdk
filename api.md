@@ -433,7 +433,7 @@ Methods:
 Types:
 
 ```python
-from bem.types import EntityType, EntityTypeListResponse
+from bem.types import EntityType
 ```
 
 Methods:
@@ -441,7 +441,6 @@ Methods:
 - <code title="post /v3/entity-types">client.entity_types.<a href="./src/bem/resources/entity_types.py">create</a>(\*\*<a href="src/bem/types/entity_type_create_params.py">params</a>) -> <a href="./src/bem/types/entity_type.py">EntityType</a></code>
 - <code title="get /v3/entity-types/{typeID}">client.entity_types.<a href="./src/bem/resources/entity_types.py">retrieve</a>(type_id) -> <a href="./src/bem/types/entity_type.py">EntityType</a></code>
 - <code title="patch /v3/entity-types/{typeID}">client.entity_types.<a href="./src/bem/resources/entity_types.py">update</a>(type_id, \*\*<a href="src/bem/types/entity_type_update_params.py">params</a>) -> <a href="./src/bem/types/entity_type.py">EntityType</a></code>
-- <code title="get /v3/entity-types">client.entity_types.<a href="./src/bem/resources/entity_types.py">list</a>(\*\*<a href="src/bem/types/entity_type_list_params.py">params</a>) -> <a href="./src/bem/types/entity_type_list_response.py">EntityTypeListResponse</a></code>
 - <code title="delete /v3/entity-types/{typeID}">client.entity_types.<a href="./src/bem/resources/entity_types.py">delete</a>(type_id) -> None</code>
 
 # KnowledgeGraph

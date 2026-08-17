@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import httpx
 
-from ..types import entity_type_list_params, entity_type_create_params, entity_type_update_params
+from ..types import entity_type_create_params, entity_type_update_params
 from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
 from .._utils import path_template, maybe_transform, async_maybe_transform
 from .._compat import cached_property
@@ -17,7 +17,6 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.entity_type import EntityType
-from ..types.entity_type_list_response import EntityTypeListResponse
 
 __all__ = ["EntityTypesResource", "AsyncEntityTypesResource"]
 
@@ -199,64 +198,6 @@ class EntityTypesResource(SyncAPIResource):
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=EntityType,
-        )
-
-    def list(
-        self,
-        *,
-        ending_before: str | Omit = omit,
-        limit: int | Omit = omit,
-        name: str | Omit = omit,
-        parent_type_id: str | Omit = omit,
-        starting_after: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> EntityTypeListResponse:
-        """
-        List Entity Types
-
-        Args:
-          ending_before: Cursor: return types whose `typeID` sorts before this value.
-
-          limit: Maximum number of entity types to return (default 50, max 200).
-
-          name: Case-insensitive substring match on the entity type name.
-
-          parent_type_id: Filter to the direct children of this parent type (`ety_...`).
-
-          starting_after: Cursor: return types whose `typeID` sorts after this value.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get(
-            "/v3/entity-types",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "ending_before": ending_before,
-                        "limit": limit,
-                        "name": name,
-                        "parent_type_id": parent_type_id,
-                        "starting_after": starting_after,
-                    },
-                    entity_type_list_params.EntityTypeListParams,
-                ),
-            ),
-            cast_to=EntityTypeListResponse,
         )
 
     def delete(
@@ -473,64 +414,6 @@ class AsyncEntityTypesResource(AsyncAPIResource):
             cast_to=EntityType,
         )
 
-    async def list(
-        self,
-        *,
-        ending_before: str | Omit = omit,
-        limit: int | Omit = omit,
-        name: str | Omit = omit,
-        parent_type_id: str | Omit = omit,
-        starting_after: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> EntityTypeListResponse:
-        """
-        List Entity Types
-
-        Args:
-          ending_before: Cursor: return types whose `typeID` sorts before this value.
-
-          limit: Maximum number of entity types to return (default 50, max 200).
-
-          name: Case-insensitive substring match on the entity type name.
-
-          parent_type_id: Filter to the direct children of this parent type (`ety_...`).
-
-          starting_after: Cursor: return types whose `typeID` sorts after this value.
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._get(
-            "/v3/entity-types",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "ending_before": ending_before,
-                        "limit": limit,
-                        "name": name,
-                        "parent_type_id": parent_type_id,
-                        "starting_after": starting_after,
-                    },
-                    entity_type_list_params.EntityTypeListParams,
-                ),
-            ),
-            cast_to=EntityTypeListResponse,
-        )
-
     async def delete(
         self,
         type_id: str,
@@ -579,9 +462,6 @@ class EntityTypesResourceWithRawResponse:
         self.update = to_raw_response_wrapper(
             entity_types.update,
         )
-        self.list = to_raw_response_wrapper(
-            entity_types.list,
-        )
         self.delete = to_raw_response_wrapper(
             entity_types.delete,
         )
@@ -599,9 +479,6 @@ class AsyncEntityTypesResourceWithRawResponse:
         )
         self.update = async_to_raw_response_wrapper(
             entity_types.update,
-        )
-        self.list = async_to_raw_response_wrapper(
-            entity_types.list,
         )
         self.delete = async_to_raw_response_wrapper(
             entity_types.delete,
@@ -621,9 +498,6 @@ class EntityTypesResourceWithStreamingResponse:
         self.update = to_streamed_response_wrapper(
             entity_types.update,
         )
-        self.list = to_streamed_response_wrapper(
-            entity_types.list,
-        )
         self.delete = to_streamed_response_wrapper(
             entity_types.delete,
         )
@@ -641,9 +515,6 @@ class AsyncEntityTypesResourceWithStreamingResponse:
         )
         self.update = async_to_streamed_response_wrapper(
             entity_types.update,
-        )
-        self.list = async_to_streamed_response_wrapper(
-            entity_types.list,
         )
         self.delete = async_to_streamed_response_wrapper(
             entity_types.delete,
