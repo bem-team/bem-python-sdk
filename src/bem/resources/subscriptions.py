@@ -293,7 +293,6 @@ class SubscriptionsResource(SyncAPIResource):
         ending_before: str | Omit = omit,
         function_names: SequenceNotStr[str] | Omit = omit,
         limit: int | Omit = omit,
-        sort_order: Literal["asc", "desc"] | Omit = omit,
         starting_after: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -317,10 +316,6 @@ class SubscriptionsResource(SyncAPIResource):
 
           limit: This specifies a limit on the number of objects to return, ranging between 1
               and 100.
-
-          sort_order: Specifies sorting behavior. The two options are `asc` and `desc` to sort
-              ascending and descending respectively, with default sort being ascending. Paging
-              works in both directions.
 
           starting_after: A cursor to use in pagination. `startingAfter` is a task ID that defines your
               place in the list. For example, if you make a list request and receive 50
@@ -348,7 +343,6 @@ class SubscriptionsResource(SyncAPIResource):
                         "ending_before": ending_before,
                         "function_names": function_names,
                         "limit": limit,
-                        "sort_order": sort_order,
                         "starting_after": starting_after,
                     },
                     subscription_list_params.SubscriptionListParams,
@@ -661,7 +655,6 @@ class AsyncSubscriptionsResource(AsyncAPIResource):
         ending_before: str | Omit = omit,
         function_names: SequenceNotStr[str] | Omit = omit,
         limit: int | Omit = omit,
-        sort_order: Literal["asc", "desc"] | Omit = omit,
         starting_after: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -685,10 +678,6 @@ class AsyncSubscriptionsResource(AsyncAPIResource):
 
           limit: This specifies a limit on the number of objects to return, ranging between 1
               and 100.
-
-          sort_order: Specifies sorting behavior. The two options are `asc` and `desc` to sort
-              ascending and descending respectively, with default sort being ascending. Paging
-              works in both directions.
 
           starting_after: A cursor to use in pagination. `startingAfter` is a task ID that defines your
               place in the list. For example, if you make a list request and receive 50
@@ -716,7 +705,6 @@ class AsyncSubscriptionsResource(AsyncAPIResource):
                         "ending_before": ending_before,
                         "function_names": function_names,
                         "limit": limit,
-                        "sort_order": sort_order,
                         "starting_after": starting_after,
                     },
                     subscription_list_params.SubscriptionListParams,

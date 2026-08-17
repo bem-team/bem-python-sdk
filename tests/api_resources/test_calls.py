@@ -71,7 +71,10 @@ class TestCalls:
     def test_method_list_with_all_params(self, client: Bem) -> None:
         call = client.calls.list(
             call_ids=["string"],
+            call_types=["workflow"],
             ending_before="endingBefore",
+            function_ids=["string"],
+            function_names=["string"],
             limit=1,
             reference_ids=["string"],
             reference_id_substring="referenceIDSubstring",
@@ -206,7 +209,10 @@ class TestAsyncCalls:
     async def test_method_list_with_all_params(self, async_client: AsyncBem) -> None:
         call = await async_client.calls.list(
             call_ids=["string"],
+            call_types=["workflow"],
             ending_before="endingBefore",
+            function_ids=["string"],
+            function_names=["string"],
             limit=1,
             reference_ids=["string"],
             reference_id_substring="referenceIDSubstring",

@@ -14,7 +14,7 @@ from ...types import (
     workflow_create_params,
     workflow_update_params,
 )
-from ..._types import Body, Omit, Query, Headers, NoneType, NotGiven, SequenceNotStr, omit, not_given
+from ..._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from ..._utils import path_template, maybe_transform, async_maybe_transform
 from .versions import (
     VersionsResource,
@@ -41,6 +41,7 @@ from ...types.workflow_edge_param import WorkflowEdgeParam
 from ...types.workflow_node_param import WorkflowNodeParam
 from ...types.workflow_copy_response import WorkflowCopyResponse
 from ...types.workflow_connector_param import WorkflowConnectorParam
+from ...types.workflow_delete_response import WorkflowDeleteResponse
 from ...types.workflow_update_response import WorkflowUpdateResponse
 from ...types.workflow_retrieve_response import WorkflowRetrieveResponse
 
@@ -336,7 +337,9 @@ class WorkflowsResource(SyncAPIResource):
         display_name: str | Omit = omit,
         ending_before: str | Omit = omit,
         function_ids: SequenceNotStr[str] | Omit = omit,
+        function_id_version_nums: SequenceNotStr[str] | Omit = omit,
         function_names: SequenceNotStr[str] | Omit = omit,
+        function_name_version_nums: SequenceNotStr[str] | Omit = omit,
         limit: int | Omit = omit,
         sort_order: Literal["asc", "desc"] | Omit = omit,
         starting_after: str | Omit = omit,
@@ -364,6 +367,8 @@ class WorkflowsResource(SyncAPIResource):
         - `functionIDs` / `functionNames`: returns only workflows that reference the
           named functions in any node. Useful for "which workflows depend on this
           function?" lookups before changing or deleting a function.
+        - `functionIDVersionNums` / `functionNameVersionNums`: the same lookup narrowed
+          to nodes pinned to a specific function version.
 
         ## Pagination
 
@@ -371,6 +376,14 @@ class WorkflowsResource(SyncAPIResource):
         limit 50, maximum 100.
 
         Args:
+          function_id_version_nums: Return only workflows with a node pinned to a specific function version. Each
+              entry is `<functionID>.<versionNum>` — for example
+              `fn_2c9AXIj48cUYJtCuv1gsQtHGDzK.4`.
+
+          function_name_version_nums: Return only workflows with a node pinned to a specific function version, keyed
+              by function name. Each entry is `<functionName>.<versionNum>` — for example
+              `invoice-extract.4`.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -392,7 +405,9 @@ class WorkflowsResource(SyncAPIResource):
                         "display_name": display_name,
                         "ending_before": ending_before,
                         "function_ids": function_ids,
+                        "function_id_version_nums": function_id_version_nums,
                         "function_names": function_names,
+                        "function_name_version_nums": function_name_version_nums,
                         "limit": limit,
                         "sort_order": sort_order,
                         "starting_after": starting_after,
@@ -416,7 +431,7 @@ class WorkflowsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
+    ) -> WorkflowDeleteResponse:
         """**Delete a workflow and every one of its versions.**
 
         Permanent.
@@ -427,6 +442,11 @@ class WorkflowsResource(SyncAPIResource):
 
         Functions referenced by the deleted workflow are not removed — they remain
         available to other workflows or for direct reference.
+
+        Any connectors attached to the workflow are torn down first. Teardown is
+        best-effort: per-connector failures are reported in `connectorErrors` but do not
+        block the deletion, so check that array rather than relying on the status code
+        alone.
 
         Args:
           extra_headers: Send extra headers
@@ -439,13 +459,12 @@ class WorkflowsResource(SyncAPIResource):
         """
         if not workflow_name:
             raise ValueError(f"Expected a non-empty value for `workflow_name` but received {workflow_name!r}")
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return self._delete(
             path_template("/v3/workflows/{workflow_name}", workflow_name=workflow_name),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=NoneType,
+            cast_to=WorkflowDeleteResponse,
         )
 
     def call(
@@ -959,7 +978,9 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         display_name: str | Omit = omit,
         ending_before: str | Omit = omit,
         function_ids: SequenceNotStr[str] | Omit = omit,
+        function_id_version_nums: SequenceNotStr[str] | Omit = omit,
         function_names: SequenceNotStr[str] | Omit = omit,
+        function_name_version_nums: SequenceNotStr[str] | Omit = omit,
         limit: int | Omit = omit,
         sort_order: Literal["asc", "desc"] | Omit = omit,
         starting_after: str | Omit = omit,
@@ -987,6 +1008,8 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         - `functionIDs` / `functionNames`: returns only workflows that reference the
           named functions in any node. Useful for "which workflows depend on this
           function?" lookups before changing or deleting a function.
+        - `functionIDVersionNums` / `functionNameVersionNums`: the same lookup narrowed
+          to nodes pinned to a specific function version.
 
         ## Pagination
 
@@ -994,6 +1017,14 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         limit 50, maximum 100.
 
         Args:
+          function_id_version_nums: Return only workflows with a node pinned to a specific function version. Each
+              entry is `<functionID>.<versionNum>` — for example
+              `fn_2c9AXIj48cUYJtCuv1gsQtHGDzK.4`.
+
+          function_name_version_nums: Return only workflows with a node pinned to a specific function version, keyed
+              by function name. Each entry is `<functionName>.<versionNum>` — for example
+              `invoice-extract.4`.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -1015,7 +1046,9 @@ class AsyncWorkflowsResource(AsyncAPIResource):
                         "display_name": display_name,
                         "ending_before": ending_before,
                         "function_ids": function_ids,
+                        "function_id_version_nums": function_id_version_nums,
                         "function_names": function_names,
+                        "function_name_version_nums": function_name_version_nums,
                         "limit": limit,
                         "sort_order": sort_order,
                         "starting_after": starting_after,
@@ -1039,7 +1072,7 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> None:
+    ) -> WorkflowDeleteResponse:
         """**Delete a workflow and every one of its versions.**
 
         Permanent.
@@ -1050,6 +1083,11 @@ class AsyncWorkflowsResource(AsyncAPIResource):
 
         Functions referenced by the deleted workflow are not removed — they remain
         available to other workflows or for direct reference.
+
+        Any connectors attached to the workflow are torn down first. Teardown is
+        best-effort: per-connector failures are reported in `connectorErrors` but do not
+        block the deletion, so check that array rather than relying on the status code
+        alone.
 
         Args:
           extra_headers: Send extra headers
@@ -1062,13 +1100,12 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         """
         if not workflow_name:
             raise ValueError(f"Expected a non-empty value for `workflow_name` but received {workflow_name!r}")
-        extra_headers = {"Accept": "*/*", **(extra_headers or {})}
         return await self._delete(
             path_template("/v3/workflows/{workflow_name}", workflow_name=workflow_name),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=NoneType,
+            cast_to=WorkflowDeleteResponse,
         )
 
     async def call(

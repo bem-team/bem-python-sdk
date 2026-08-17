@@ -20,6 +20,7 @@ from ...types import (
     function_list_params,
     function_create_params,
     function_update_params,
+    function_retrieve_params,
     function_get_metrics_params,
     function_compare_metrics_params,
     function_estimate_review_requirements_params,
@@ -891,6 +892,7 @@ class FunctionsResource(SyncAPIResource):
         self,
         function_name: str,
         *,
+        include_extra_settings: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -906,6 +908,9 @@ class FunctionsResource(SyncAPIResource):
         `GET /v3/functions/{functionName}/versions/{versionNum}`.
 
         Args:
+          include_extra_settings: Populate the function's `extraConfig` block. Omitted or `false` by default, in
+              which case `extraConfig` is absent from the response.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -919,7 +924,13 @@ class FunctionsResource(SyncAPIResource):
         return self._get(
             path_template("/v3/functions/{function_name}", function_name=function_name),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {"include_extra_settings": include_extra_settings}, function_retrieve_params.FunctionRetrieveParams
+                ),
             ),
             cast_to=FunctionResponse,
         )
@@ -1646,13 +1657,16 @@ class FunctionsResource(SyncAPIResource):
         ending_before: str | Omit = omit,
         function_ids: SequenceNotStr[str] | Omit = omit,
         function_names: SequenceNotStr[str] | Omit = omit,
+        include_extra_settings: bool | Omit = omit,
         limit: int | Omit = omit,
         sort_order: Literal["asc", "desc"] | Omit = omit,
         starting_after: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         types: List[FunctionType] | Omit = omit,
         workflow_ids: SequenceNotStr[str] | Omit = omit,
+        workflow_id_version_nums: SequenceNotStr[str] | Omit = omit,
         workflow_names: SequenceNotStr[str] | Omit = omit,
+        workflow_name_version_nums: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1677,6 +1691,8 @@ class FunctionsResource(SyncAPIResource):
         - `workflowIDs` / `workflowNames`: returns only functions referenced by the
           named workflows. Useful for "what functions does this workflow depend on?"
           lookups.
+        - `workflowIDVersionNums` / `workflowNameVersionNums`: the same lookup pinned to
+          a specific workflow version.
 
         ## Pagination
 
@@ -1684,6 +1700,16 @@ class FunctionsResource(SyncAPIResource):
         limit 50, maximum 100.
 
         Args:
+          include_extra_settings: Populate each function's `extraConfig` block. Omitted or `false` by default, in
+              which case `extraConfig` is absent from the response.
+
+          workflow_id_version_nums: Return only functions referenced by a specific workflow version. Each entry is
+              `<workflowID>.<versionNum>` — for example `wf_2c9AXIj48cUYJtCuv1gsQtHGDzK.3`.
+
+          workflow_name_version_nums: Return only functions referenced by a specific workflow version, keyed by
+              workflow name. Each entry is `<workflowName>.<versionNum>` — for example
+              `invoice-pipeline.3`.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -1706,13 +1732,16 @@ class FunctionsResource(SyncAPIResource):
                         "ending_before": ending_before,
                         "function_ids": function_ids,
                         "function_names": function_names,
+                        "include_extra_settings": include_extra_settings,
                         "limit": limit,
                         "sort_order": sort_order,
                         "starting_after": starting_after,
                         "tags": tags,
                         "types": types,
                         "workflow_ids": workflow_ids,
+                        "workflow_id_version_nums": workflow_id_version_nums,
                         "workflow_names": workflow_names,
+                        "workflow_name_version_nums": workflow_name_version_nums,
                     },
                     function_list_params.FunctionListParams,
                 ),
@@ -1942,13 +1971,19 @@ class FunctionsResource(SyncAPIResource):
     def get_metrics(
         self,
         *,
+        display_name: str | Omit = omit,
         ending_before: str | Omit = omit,
         function_ids: SequenceNotStr[str] | Omit = omit,
         function_names: SequenceNotStr[str] | Omit = omit,
         limit: int | Omit = omit,
         sort_order: Literal["asc", "desc"] | Omit = omit,
         starting_after: str | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
         types: List[FunctionType] | Omit = omit,
+        workflow_ids: SequenceNotStr[str] | Omit = omit,
+        workflow_id_version_nums: SequenceNotStr[str] | Omit = omit,
+        workflow_names: SequenceNotStr[str] | Omit = omit,
+        workflow_name_version_nums: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -1979,12 +2014,26 @@ class FunctionsResource(SyncAPIResource):
         has been labeled — submit corrections via `POST /v3/events/{eventID}/feedback`.
 
         Args:
+          display_name: Case-insensitive substring match on the function display name.
+
           ending_before: Cursor — a `functionID` defining your place in the list.
 
           sort_order: Sort direction over the result set (default `asc`). Pagination works
               symmetrically in both directions via `startingAfter` / `endingBefore`.
 
           starting_after: Cursor — a `functionID` defining your place in the list.
+
+          tags: Returns metrics for functions tagged with any of the supplied tags.
+
+          workflow_ids: Returns metrics only for functions referenced by the named workflows.
+
+          workflow_id_version_nums: Narrow the workflow filter to a specific workflow version. Each entry is
+              `<workflowID>.<versionNum>`.
+
+          workflow_names: Returns metrics only for functions referenced by the named workflows.
+
+          workflow_name_version_nums: Narrow the workflow filter to a specific workflow version, keyed by workflow
+              name. Each entry is `<workflowName>.<versionNum>`.
 
           extra_headers: Send extra headers
 
@@ -2003,13 +2052,19 @@ class FunctionsResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "display_name": display_name,
                         "ending_before": ending_before,
                         "function_ids": function_ids,
                         "function_names": function_names,
                         "limit": limit,
                         "sort_order": sort_order,
                         "starting_after": starting_after,
+                        "tags": tags,
                         "types": types,
+                        "workflow_ids": workflow_ids,
+                        "workflow_id_version_nums": workflow_id_version_nums,
+                        "workflow_names": workflow_names,
+                        "workflow_name_version_nums": workflow_name_version_nums,
                     },
                     function_get_metrics_params.FunctionGetMetricsParams,
                 ),
@@ -2841,6 +2896,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         self,
         function_name: str,
         *,
+        include_extra_settings: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -2856,6 +2912,9 @@ class AsyncFunctionsResource(AsyncAPIResource):
         `GET /v3/functions/{functionName}/versions/{versionNum}`.
 
         Args:
+          include_extra_settings: Populate the function's `extraConfig` block. Omitted or `false` by default, in
+              which case `extraConfig` is absent from the response.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -2869,7 +2928,13 @@ class AsyncFunctionsResource(AsyncAPIResource):
         return await self._get(
             path_template("/v3/functions/{function_name}", function_name=function_name),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {"include_extra_settings": include_extra_settings}, function_retrieve_params.FunctionRetrieveParams
+                ),
             ),
             cast_to=FunctionResponse,
         )
@@ -3596,13 +3661,16 @@ class AsyncFunctionsResource(AsyncAPIResource):
         ending_before: str | Omit = omit,
         function_ids: SequenceNotStr[str] | Omit = omit,
         function_names: SequenceNotStr[str] | Omit = omit,
+        include_extra_settings: bool | Omit = omit,
         limit: int | Omit = omit,
         sort_order: Literal["asc", "desc"] | Omit = omit,
         starting_after: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         types: List[FunctionType] | Omit = omit,
         workflow_ids: SequenceNotStr[str] | Omit = omit,
+        workflow_id_version_nums: SequenceNotStr[str] | Omit = omit,
         workflow_names: SequenceNotStr[str] | Omit = omit,
+        workflow_name_version_nums: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -3627,6 +3695,8 @@ class AsyncFunctionsResource(AsyncAPIResource):
         - `workflowIDs` / `workflowNames`: returns only functions referenced by the
           named workflows. Useful for "what functions does this workflow depend on?"
           lookups.
+        - `workflowIDVersionNums` / `workflowNameVersionNums`: the same lookup pinned to
+          a specific workflow version.
 
         ## Pagination
 
@@ -3634,6 +3704,16 @@ class AsyncFunctionsResource(AsyncAPIResource):
         limit 50, maximum 100.
 
         Args:
+          include_extra_settings: Populate each function's `extraConfig` block. Omitted or `false` by default, in
+              which case `extraConfig` is absent from the response.
+
+          workflow_id_version_nums: Return only functions referenced by a specific workflow version. Each entry is
+              `<workflowID>.<versionNum>` — for example `wf_2c9AXIj48cUYJtCuv1gsQtHGDzK.3`.
+
+          workflow_name_version_nums: Return only functions referenced by a specific workflow version, keyed by
+              workflow name. Each entry is `<workflowName>.<versionNum>` — for example
+              `invoice-pipeline.3`.
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -3656,13 +3736,16 @@ class AsyncFunctionsResource(AsyncAPIResource):
                         "ending_before": ending_before,
                         "function_ids": function_ids,
                         "function_names": function_names,
+                        "include_extra_settings": include_extra_settings,
                         "limit": limit,
                         "sort_order": sort_order,
                         "starting_after": starting_after,
                         "tags": tags,
                         "types": types,
                         "workflow_ids": workflow_ids,
+                        "workflow_id_version_nums": workflow_id_version_nums,
                         "workflow_names": workflow_names,
+                        "workflow_name_version_nums": workflow_name_version_nums,
                     },
                     function_list_params.FunctionListParams,
                 ),
@@ -3892,13 +3975,19 @@ class AsyncFunctionsResource(AsyncAPIResource):
     async def get_metrics(
         self,
         *,
+        display_name: str | Omit = omit,
         ending_before: str | Omit = omit,
         function_ids: SequenceNotStr[str] | Omit = omit,
         function_names: SequenceNotStr[str] | Omit = omit,
         limit: int | Omit = omit,
         sort_order: Literal["asc", "desc"] | Omit = omit,
         starting_after: str | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
         types: List[FunctionType] | Omit = omit,
+        workflow_ids: SequenceNotStr[str] | Omit = omit,
+        workflow_id_version_nums: SequenceNotStr[str] | Omit = omit,
+        workflow_names: SequenceNotStr[str] | Omit = omit,
+        workflow_name_version_nums: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -3929,12 +4018,26 @@ class AsyncFunctionsResource(AsyncAPIResource):
         has been labeled — submit corrections via `POST /v3/events/{eventID}/feedback`.
 
         Args:
+          display_name: Case-insensitive substring match on the function display name.
+
           ending_before: Cursor — a `functionID` defining your place in the list.
 
           sort_order: Sort direction over the result set (default `asc`). Pagination works
               symmetrically in both directions via `startingAfter` / `endingBefore`.
 
           starting_after: Cursor — a `functionID` defining your place in the list.
+
+          tags: Returns metrics for functions tagged with any of the supplied tags.
+
+          workflow_ids: Returns metrics only for functions referenced by the named workflows.
+
+          workflow_id_version_nums: Narrow the workflow filter to a specific workflow version. Each entry is
+              `<workflowID>.<versionNum>`.
+
+          workflow_names: Returns metrics only for functions referenced by the named workflows.
+
+          workflow_name_version_nums: Narrow the workflow filter to a specific workflow version, keyed by workflow
+              name. Each entry is `<workflowName>.<versionNum>`.
 
           extra_headers: Send extra headers
 
@@ -3953,13 +4056,19 @@ class AsyncFunctionsResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform(
                     {
+                        "display_name": display_name,
                         "ending_before": ending_before,
                         "function_ids": function_ids,
                         "function_names": function_names,
                         "limit": limit,
                         "sort_order": sort_order,
                         "starting_after": starting_after,
+                        "tags": tags,
                         "types": types,
+                        "workflow_ids": workflow_ids,
+                        "workflow_id_version_nums": workflow_id_version_nums,
+                        "workflow_names": workflow_names,
+                        "workflow_name_version_nums": workflow_name_version_nums,
                     },
                     function_get_metrics_params.FunctionGetMetricsParams,
                 ),

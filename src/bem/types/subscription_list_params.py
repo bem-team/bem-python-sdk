@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing_extensions import Literal, Annotated, TypedDict
+from typing_extensions import Annotated, TypedDict
 
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
@@ -28,14 +28,6 @@ class SubscriptionListParams(TypedDict, total=False):
     """
     This specifies a limit on the number of objects to return, ranging between 1
     and 100.
-    """
-
-    sort_order: Annotated[Literal["asc", "desc"], PropertyInfo(alias="sortOrder")]
-    """Specifies sorting behavior.
-
-    The two options are `asc` and `desc` to sort ascending and descending
-    respectively, with default sort being ascending. Paging works in both
-    directions.
     """
 
     starting_after: Annotated[str, PropertyInfo(alias="startingAfter")]

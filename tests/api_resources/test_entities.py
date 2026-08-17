@@ -36,6 +36,7 @@ class TestEntities:
     def test_method_update_with_all_params(self, client: Bem) -> None:
         entity = client.entities.update(
             id="id",
+            bucket="bucket",
             add_synonyms=["string"],
             assigned_type_id="assignedTypeID",
             canonical="canonical",
@@ -152,6 +153,16 @@ class TestEntities:
         entity = client.entities.bulk_validate(
             entity_ids=["ent_2abc", "ent_2def"],
             status="approved",
+        )
+        assert_matches_type(EntityBulkValidateResponse, entity, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    def test_method_bulk_validate_with_all_params(self, client: Bem) -> None:
+        entity = client.entities.bulk_validate(
+            entity_ids=["ent_2abc", "ent_2def"],
+            status="approved",
+            bucket="bucket",
         )
         assert_matches_type(EntityBulkValidateResponse, entity, path=["response"])
 
@@ -299,6 +310,7 @@ class TestAsyncEntities:
     async def test_method_update_with_all_params(self, async_client: AsyncBem) -> None:
         entity = await async_client.entities.update(
             id="id",
+            bucket="bucket",
             add_synonyms=["string"],
             assigned_type_id="assignedTypeID",
             canonical="canonical",
@@ -415,6 +427,16 @@ class TestAsyncEntities:
         entity = await async_client.entities.bulk_validate(
             entity_ids=["ent_2abc", "ent_2def"],
             status="approved",
+        )
+        assert_matches_type(EntityBulkValidateResponse, entity, path=["response"])
+
+    @pytest.mark.skip(reason="Mock server tests are disabled")
+    @parametrize
+    async def test_method_bulk_validate_with_all_params(self, async_client: AsyncBem) -> None:
+        entity = await async_client.entities.bulk_validate(
+            entity_ids=["ent_2abc", "ent_2def"],
+            status="approved",
+            bucket="bucket",
         )
         assert_matches_type(EntityBulkValidateResponse, entity, path=["response"])
 
