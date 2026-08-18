@@ -15,9 +15,9 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from .._base_client import make_request_options
+from ..pagination import SyncBucketsPage, AsyncBucketsPage
+from .._base_client import AsyncPaginator, make_request_options
 from ..types.bucket_v3 import BucketV3
-from ..types.bucket_list_response import BucketListResponse
 
 __all__ = ["BucketsResource", "AsyncBucketsResource"]
 
@@ -198,7 +198,7 @@ class BucketsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BucketListResponse:
+    ) -> SyncBucketsPage[BucketV3]:
         """
         List Buckets
 
@@ -219,8 +219,9 @@ class BucketsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/v3/buckets",
+            page=SyncBucketsPage[BucketV3],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -236,7 +237,7 @@ class BucketsResource(SyncAPIResource):
                     bucket_list_params.BucketListParams,
                 ),
             ),
-            cast_to=BucketListResponse,
+            model=BucketV3,
         )
 
     def delete(
@@ -448,7 +449,7 @@ class AsyncBucketsResource(AsyncAPIResource):
             cast_to=BucketV3,
         )
 
-    async def list(
+    def list(
         self,
         *,
         ending_before: str | Omit = omit,
@@ -461,7 +462,7 @@ class AsyncBucketsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> BucketListResponse:
+    ) -> AsyncPaginator[BucketV3, AsyncBucketsPage[BucketV3]]:
         """
         List Buckets
 
@@ -482,14 +483,15 @@ class AsyncBucketsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/v3/buckets",
+            page=AsyncBucketsPage[BucketV3],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "ending_before": ending_before,
                         "limit": limit,
@@ -499,7 +501,7 @@ class AsyncBucketsResource(AsyncAPIResource):
                     bucket_list_params.BucketListParams,
                 ),
             ),
-            cast_to=BucketListResponse,
+            model=BucketV3,
         )
 
     async def delete(

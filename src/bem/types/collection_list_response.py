@@ -1,16 +1,16 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import Optional
 from datetime import datetime
 
 from pydantic import Field as FieldInfo
 
 from .._models import BaseModel
 
-__all__ = ["CollectionListResponse", "Collection"]
+__all__ = ["CollectionListResponse"]
 
 
-class Collection(BaseModel):
+class CollectionListResponse(BaseModel):
     """Collection metadata without items"""
 
     collection_id: str = FieldInfo(alias="collectionID")
@@ -30,22 +30,3 @@ class Collection(BaseModel):
 
     updated_at: Optional[datetime] = FieldInfo(alias="updatedAt", default=None)
     """When the collection was last updated"""
-
-
-class CollectionListResponse(BaseModel):
-    """Response for listing collections"""
-
-    collections: List[Collection]
-    """List of collections"""
-
-    limit: int
-    """Number of collections per page"""
-
-    page: int
-    """Current page number"""
-
-    total_count: int = FieldInfo(alias="totalCount")
-    """Total number of collections"""
-
-    total_pages: int = FieldInfo(alias="totalPages")
-    """Total number of pages"""

@@ -28,7 +28,8 @@ from ..._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ..._base_client import make_request_options
+from ...pagination import SyncCollectionsPage, AsyncCollectionsPage
+from ..._base_client import AsyncPaginator, make_request_options
 from ...types.collection import Collection
 from ...types.collection_list_response import CollectionListResponse
 from ...types.collection_count_tokens_response import CollectionCountTokensResponse
@@ -184,7 +185,7 @@ class CollectionsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CollectionListResponse:
+    ) -> SyncCollectionsPage[CollectionListResponse]:
         """
         List Collections
 
@@ -208,8 +209,9 @@ class CollectionsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/v3/collections",
+            page=SyncCollectionsPage[CollectionListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -225,7 +227,7 @@ class CollectionsResource(SyncAPIResource):
                     collection_list_params.CollectionListParams,
                 ),
             ),
-            cast_to=CollectionListResponse,
+            model=CollectionListResponse,
         )
 
     def delete(
@@ -443,7 +445,7 @@ class AsyncCollectionsResource(AsyncAPIResource):
             cast_to=Collection,
         )
 
-    async def list(
+    def list(
         self,
         *,
         collection_name_search: str | Omit = omit,
@@ -456,7 +458,7 @@ class AsyncCollectionsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> CollectionListResponse:
+    ) -> AsyncPaginator[CollectionListResponse, AsyncCollectionsPage[CollectionListResponse]]:
         """
         List Collections
 
@@ -480,14 +482,15 @@ class AsyncCollectionsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/v3/collections",
+            page=AsyncCollectionsPage[CollectionListResponse],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "collection_name_search": collection_name_search,
                         "limit": limit,
@@ -497,7 +500,7 @@ class AsyncCollectionsResource(AsyncAPIResource):
                     collection_list_params.CollectionListParams,
                 ),
             ),
-            cast_to=CollectionListResponse,
+            model=CollectionListResponse,
         )
 
     async def delete(

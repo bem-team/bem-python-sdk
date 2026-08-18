@@ -15,7 +15,7 @@ __all__ = ["ExtractWebhookEvent", "CorrectedContent", "CorrectedContentOutput", 
 
 
 class CorrectedContentOutput(BaseModel):
-    output: Optional[List[Optional[AnyType]]] = None
+    output: List[Optional[AnyType]]
 
 
 CorrectedContent: TypeAlias = Union[CorrectedContentOutput, List[object], str, float, bool, object, None]

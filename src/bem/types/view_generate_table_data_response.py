@@ -15,7 +15,7 @@ class RowColumn(BaseModel):
     column_name: str = FieldInfo(alias="columnName")
     """Name of the column"""
 
-    value: Union[str, float, bool, List[object], object, object]
+    value: Union[str, float, bool, List[object], object]
     """Value of the column (can be any JSON type)"""
 
 

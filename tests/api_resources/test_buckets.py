@@ -8,11 +8,9 @@ from typing import Any, cast
 import pytest
 
 from bem import Bem, AsyncBem
-from bem.types import (
-    BucketV3,
-    BucketListResponse,
-)
+from bem.types import BucketV3
 from tests.utils import assert_matches_type
+from bem.pagination import SyncBucketsPage, AsyncBucketsPage
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -161,7 +159,7 @@ class TestBuckets:
     @parametrize
     def test_method_list(self, client: Bem) -> None:
         bucket = client.buckets.list()
-        assert_matches_type(BucketListResponse, bucket, path=["response"])
+        assert_matches_type(SyncBucketsPage[BucketV3], bucket, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -172,7 +170,7 @@ class TestBuckets:
             name_substring="nameSubstring",
             starting_after="startingAfter",
         )
-        assert_matches_type(BucketListResponse, bucket, path=["response"])
+        assert_matches_type(SyncBucketsPage[BucketV3], bucket, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -182,7 +180,7 @@ class TestBuckets:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         bucket = response.parse()
-        assert_matches_type(BucketListResponse, bucket, path=["response"])
+        assert_matches_type(SyncBucketsPage[BucketV3], bucket, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -192,7 +190,7 @@ class TestBuckets:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             bucket = response.parse()
-            assert_matches_type(BucketListResponse, bucket, path=["response"])
+            assert_matches_type(SyncBucketsPage[BucketV3], bucket, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -394,7 +392,7 @@ class TestAsyncBuckets:
     @parametrize
     async def test_method_list(self, async_client: AsyncBem) -> None:
         bucket = await async_client.buckets.list()
-        assert_matches_type(BucketListResponse, bucket, path=["response"])
+        assert_matches_type(AsyncBucketsPage[BucketV3], bucket, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -405,7 +403,7 @@ class TestAsyncBuckets:
             name_substring="nameSubstring",
             starting_after="startingAfter",
         )
-        assert_matches_type(BucketListResponse, bucket, path=["response"])
+        assert_matches_type(AsyncBucketsPage[BucketV3], bucket, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -415,7 +413,7 @@ class TestAsyncBuckets:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         bucket = await response.parse()
-        assert_matches_type(BucketListResponse, bucket, path=["response"])
+        assert_matches_type(AsyncBucketsPage[BucketV3], bucket, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -425,7 +423,7 @@ class TestAsyncBuckets:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             bucket = await response.parse()
-            assert_matches_type(BucketListResponse, bucket, path=["response"])
+            assert_matches_type(AsyncBucketsPage[BucketV3], bucket, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 

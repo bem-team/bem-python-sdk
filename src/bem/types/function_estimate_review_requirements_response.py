@@ -1,6 +1,6 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from pydantic import Field as FieldInfo
 
@@ -13,11 +13,6 @@ __all__ = [
     "Estimate",
     "EstimateConfidenceDistribution",
     "EstimateThresholdMatrix",
-    "EstimateThresholdMatrixAccuracyAboveThreshold",
-    "EstimateThresholdMatrixFalseDiscoveryRate",
-    "EstimateThresholdMatrixFalsePositiveRate",
-    "EstimateThresholdMatrixPrecision",
-    "EstimateThresholdMatrixRecall",
 ]
 
 
@@ -29,96 +24,6 @@ class EstimateConfidenceDistribution(BaseModel):
     low: Optional[int] = None
 
     medium: Optional[int] = None
-
-
-class EstimateThresholdMatrixAccuracyAboveThreshold(BaseModel):
-    """
-    Accuracy confidence intervals for samples above threshold, by confidence level.
-    Keys are confidence levels as strings ("90", "95", "99").
-    Values contain statistical confidence intervals.
-    """
-
-    api_95: Optional[RateConfidenceInterval] = FieldInfo(alias="95", default=None)
-    """
-    Confidence interval for a rate/proportion using Wald (normal approximation)
-    method by default.
-
-    Wald confidence intervals use the normal approximation to the binomial
-    distribution. For extreme rates or small sample sizes, Wilson confidence
-    intervals may be more appropriate.
-    """
-
-
-class EstimateThresholdMatrixFalseDiscoveryRate(BaseModel):
-    """
-    False Discovery Rate confidence intervals by confidence level.
-    Keys are confidence levels as strings ("90", "95", "99").
-    Values contain statistical confidence intervals.
-    """
-
-    api_95: Optional[RateConfidenceInterval] = FieldInfo(alias="95", default=None)
-    """
-    Confidence interval for a rate/proportion using Wald (normal approximation)
-    method by default.
-
-    Wald confidence intervals use the normal approximation to the binomial
-    distribution. For extreme rates or small sample sizes, Wilson confidence
-    intervals may be more appropriate.
-    """
-
-
-class EstimateThresholdMatrixFalsePositiveRate(BaseModel):
-    """
-    False Positive Rate confidence intervals by confidence level.
-    Keys are confidence levels as strings ("90", "95", "99").
-    Values contain statistical confidence intervals.
-    """
-
-    api_95: Optional[RateConfidenceInterval] = FieldInfo(alias="95", default=None)
-    """
-    Confidence interval for a rate/proportion using Wald (normal approximation)
-    method by default.
-
-    Wald confidence intervals use the normal approximation to the binomial
-    distribution. For extreme rates or small sample sizes, Wilson confidence
-    intervals may be more appropriate.
-    """
-
-
-class EstimateThresholdMatrixPrecision(BaseModel):
-    """
-    Precision confidence intervals by confidence level.
-    Keys are confidence levels as strings ("90", "95", "99").
-    Values contain statistical confidence intervals.
-    """
-
-    api_95: Optional[RateConfidenceInterval] = FieldInfo(alias="95", default=None)
-    """
-    Confidence interval for a rate/proportion using Wald (normal approximation)
-    method by default.
-
-    Wald confidence intervals use the normal approximation to the binomial
-    distribution. For extreme rates or small sample sizes, Wilson confidence
-    intervals may be more appropriate.
-    """
-
-
-class EstimateThresholdMatrixRecall(BaseModel):
-    """
-    Recall confidence intervals by confidence level.
-    Keys are confidence levels as strings ("90", "95", "99").
-    Values contain statistical confidence intervals.
-    """
-
-    api_95: Optional[RateConfidenceInterval] = FieldInfo(alias="95", default=None)
-    """
-    Confidence interval for a rate/proportion using Wald (normal approximation)
-    method by default.
-
-    Wald confidence intervals use the normal approximation to the binomial
-    distribution. For extreme rates or small sample sizes, Wilson confidence
-    intervals may be more appropriate.
-    """
 
 
 class EstimateThresholdMatrix(BaseModel):
@@ -139,7 +44,7 @@ class EstimateThresholdMatrix(BaseModel):
     tp: int
     """True Positives"""
 
-    accuracy_above_threshold: Optional[EstimateThresholdMatrixAccuracyAboveThreshold] = FieldInfo(
+    accuracy_above_threshold: Optional[Dict[str, RateConfidenceInterval]] = FieldInfo(
         alias="accuracyAboveThreshold", default=None
     )
     """
@@ -148,7 +53,7 @@ class EstimateThresholdMatrix(BaseModel):
     statistical confidence intervals.
     """
 
-    false_discovery_rate: Optional[EstimateThresholdMatrixFalseDiscoveryRate] = FieldInfo(
+    false_discovery_rate: Optional[Dict[str, RateConfidenceInterval]] = FieldInfo(
         alias="falseDiscoveryRate", default=None
     )
     """
@@ -157,7 +62,7 @@ class EstimateThresholdMatrix(BaseModel):
     confidence intervals.
     """
 
-    false_positive_rate: Optional[EstimateThresholdMatrixFalsePositiveRate] = FieldInfo(
+    false_positive_rate: Optional[Dict[str, RateConfidenceInterval]] = FieldInfo(
         alias="falsePositiveRate", default=None
     )
     """
@@ -166,13 +71,13 @@ class EstimateThresholdMatrix(BaseModel):
     confidence intervals.
     """
 
-    precision: Optional[EstimateThresholdMatrixPrecision] = None
+    precision: Optional[Dict[str, RateConfidenceInterval]] = None
     """
     Precision confidence intervals by confidence level. Keys are confidence levels
     as strings ("90", "95", "99"). Values contain statistical confidence intervals.
     """
 
-    recall: Optional[EstimateThresholdMatrixRecall] = None
+    recall: Optional[Dict[str, RateConfidenceInterval]] = None
     """
     Recall confidence intervals by confidence level. Keys are confidence levels as
     strings ("90", "95", "99"). Values contain statistical confidence intervals.

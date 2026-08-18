@@ -72,7 +72,7 @@ __all__ = [
 
 
 class TransformEventCorrectedContentOutput(BaseModel):
-    output: Optional[List[Optional[AnyType]]] = None
+    output: List[Optional[AnyType]]
 
 
 TransformEventCorrectedContent: TypeAlias = Union[
@@ -258,7 +258,7 @@ class TransformEvent(BaseModel):
 
 
 class ExtractEventCorrectedContentOutput(BaseModel):
-    output: Optional[List[Optional[AnyType]]] = None
+    output: List[Optional[AnyType]]
 
 
 ExtractEventCorrectedContent: TypeAlias = Union[
@@ -405,7 +405,7 @@ class ExtractEvent(BaseModel):
 
 
 class ParseEventCorrectedContentOutput(BaseModel):
-    output: Optional[List[Optional[AnyType]]] = None
+    output: List[Optional[AnyType]]
 
 
 ParseEventCorrectedContent: TypeAlias = Union[

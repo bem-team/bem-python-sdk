@@ -200,7 +200,7 @@ from bem.types import (
 Methods:
 
 - <code title="post /v3/collections">client.collections.<a href="./src/bem/resources/collections/collections.py">create</a>(\*\*<a href="src/bem/types/collection_create_params.py">params</a>) -> <a href="./src/bem/types/collection.py">Collection</a></code>
-- <code title="get /v3/collections">client.collections.<a href="./src/bem/resources/collections/collections.py">list</a>(\*\*<a href="src/bem/types/collection_list_params.py">params</a>) -> <a href="./src/bem/types/collection_list_response.py">CollectionListResponse</a></code>
+- <code title="get /v3/collections">client.collections.<a href="./src/bem/resources/collections/collections.py">list</a>(\*\*<a href="src/bem/types/collection_list_params.py">params</a>) -> <a href="./src/bem/types/collection_list_response.py">SyncCollectionsPage[CollectionListResponse]</a></code>
 - <code title="delete /v3/collections">client.collections.<a href="./src/bem/resources/collections/collections.py">delete</a>(\*\*<a href="src/bem/types/collection_delete_params.py">params</a>) -> None</code>
 - <code title="post /v3/collections/token-count">client.collections.<a href="./src/bem/resources/collections/collections.py">count_tokens</a>(\*\*<a href="src/bem/types/collection_count_tokens_params.py">params</a>) -> <a href="./src/bem/types/collection_count_tokens_response.py">CollectionCountTokensResponse</a></code>
 
@@ -359,7 +359,6 @@ from bem.types import (
     ViewColumn,
     ViewCreate,
     ViewFilter,
-    ViewListResponse,
     ViewGenerateAggregationDataResponse,
     ViewGenerateTableDataResponse,
 )
@@ -370,7 +369,7 @@ Methods:
 - <code title="post /v3/views">client.views.<a href="./src/bem/resources/views.py">create</a>(\*\*<a href="src/bem/types/view_create_params.py">params</a>) -> <a href="./src/bem/types/view.py">View</a></code>
 - <code title="get /v3/views/{view_id}">client.views.<a href="./src/bem/resources/views.py">retrieve</a>(view_id) -> <a href="./src/bem/types/view.py">View</a></code>
 - <code title="put /v3/views/{view_id}">client.views.<a href="./src/bem/resources/views.py">update</a>(view_id, \*\*<a href="src/bem/types/view_update_params.py">params</a>) -> <a href="./src/bem/types/view.py">View</a></code>
-- <code title="get /v3/views">client.views.<a href="./src/bem/resources/views.py">list</a>(\*\*<a href="src/bem/types/view_list_params.py">params</a>) -> <a href="./src/bem/types/view_list_response.py">ViewListResponse</a></code>
+- <code title="get /v3/views">client.views.<a href="./src/bem/resources/views.py">list</a>(\*\*<a href="src/bem/types/view_list_params.py">params</a>) -> <a href="./src/bem/types/view.py">SyncViewsPage[View]</a></code>
 - <code title="delete /v3/views/{view_id}">client.views.<a href="./src/bem/resources/views.py">delete</a>(view_id) -> None</code>
 - <code title="post /v3/views/aggregation-data">client.views.<a href="./src/bem/resources/views.py">generate_aggregation_data</a>(\*\*<a href="src/bem/types/view_generate_aggregation_data_params.py">params</a>) -> <a href="./src/bem/types/view_generate_aggregation_data_response.py">ViewGenerateAggregationDataResponse</a></code>
 - <code title="post /v3/views/table-data">client.views.<a href="./src/bem/resources/views.py">generate_table_data</a>(\*\*<a href="src/bem/types/view_generate_table_data_params.py">params</a>) -> <a href="./src/bem/types/view_generate_table_data_response.py">ViewGenerateTableDataResponse</a></code>
@@ -380,7 +379,7 @@ Methods:
 Types:
 
 ```python
-from bem.types import BucketV3, BucketListResponse
+from bem.types import BucketV3
 ```
 
 Methods:
@@ -388,7 +387,7 @@ Methods:
 - <code title="post /v3/buckets">client.buckets.<a href="./src/bem/resources/buckets.py">create</a>(\*\*<a href="src/bem/types/bucket_create_params.py">params</a>) -> <a href="./src/bem/types/bucket_v3.py">BucketV3</a></code>
 - <code title="get /v3/buckets/{bucketID}">client.buckets.<a href="./src/bem/resources/buckets.py">retrieve</a>(bucket_id) -> <a href="./src/bem/types/bucket_v3.py">BucketV3</a></code>
 - <code title="patch /v3/buckets/{bucketID}">client.buckets.<a href="./src/bem/resources/buckets.py">update</a>(bucket_id, \*\*<a href="src/bem/types/bucket_update_params.py">params</a>) -> <a href="./src/bem/types/bucket_v3.py">BucketV3</a></code>
-- <code title="get /v3/buckets">client.buckets.<a href="./src/bem/resources/buckets.py">list</a>(\*\*<a href="src/bem/types/bucket_list_params.py">params</a>) -> <a href="./src/bem/types/bucket_list_response.py">BucketListResponse</a></code>
+- <code title="get /v3/buckets">client.buckets.<a href="./src/bem/resources/buckets.py">list</a>(\*\*<a href="src/bem/types/bucket_list_params.py">params</a>) -> <a href="./src/bem/types/bucket_v3.py">SyncBucketsPage[BucketV3]</a></code>
 - <code title="delete /v3/buckets/{bucketID}">client.buckets.<a href="./src/bem/resources/buckets.py">delete</a>(bucket_id, \*\*<a href="src/bem/types/bucket_delete_params.py">params</a>) -> None</code>
 
 # Entities

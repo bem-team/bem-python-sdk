@@ -24,12 +24,12 @@ from .._response import (
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
+from ..pagination import SyncViewsPage, AsyncViewsPage
 from ..types.view import View
-from .._base_client import make_request_options
+from .._base_client import AsyncPaginator, make_request_options
 from ..types.time_window_param import TimeWindowParam
 from ..types.view_column_param import ViewColumnParam
 from ..types.view_filter_param import ViewFilterParam
-from ..types.view_list_response import ViewListResponse
 from ..types.view_aggregation_param import ViewAggregationParam
 from ..types.function_identifier_param import FunctionIdentifierParam
 from ..types.view_generate_table_data_response import ViewGenerateTableDataResponse
@@ -286,7 +286,7 @@ class ViewsResource(SyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ViewListResponse:
+    ) -> SyncViewsPage[View]:
         """
         **List views in the current environment, optionally filtered by the functions
         they read from.**
@@ -322,8 +322,9 @@ class ViewsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
+        return self._get_api_list(
             "/v3/views",
+            page=SyncViewsPage[View],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
@@ -343,7 +344,7 @@ class ViewsResource(SyncAPIResource):
                     view_list_params.ViewListParams,
                 ),
             ),
-            cast_to=ViewListResponse,
+            model=View,
         )
 
     def delete(
@@ -770,7 +771,7 @@ class AsyncViewsResource(AsyncAPIResource):
             cast_to=View,
         )
 
-    async def list(
+    def list(
         self,
         *,
         ending_before: str | Omit = omit,
@@ -787,7 +788,7 @@ class AsyncViewsResource(AsyncAPIResource):
         extra_query: Query | None = None,
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ViewListResponse:
+    ) -> AsyncPaginator[View, AsyncViewsPage[View]]:
         """
         **List views in the current environment, optionally filtered by the functions
         they read from.**
@@ -823,14 +824,15 @@ class AsyncViewsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return self._get_api_list(
             "/v3/views",
+            page=AsyncViewsPage[View],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
+                query=maybe_transform(
                     {
                         "ending_before": ending_before,
                         "function_ids": function_ids,
@@ -844,7 +846,7 @@ class AsyncViewsResource(AsyncAPIResource):
                     view_list_params.ViewListParams,
                 ),
             ),
-            cast_to=ViewListResponse,
+            model=View,
         )
 
     async def delete(

@@ -10,12 +10,12 @@ import pytest
 from bem import Bem, AsyncBem
 from bem.types import (
     View,
-    ViewListResponse,
     ViewGenerateTableDataResponse,
     ViewGenerateAggregationDataResponse,
 )
 from bem._utils import parse_datetime
 from tests.utils import assert_matches_type
+from bem.pagination import SyncViewsPage, AsyncViewsPage
 
 base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 
@@ -368,7 +368,7 @@ class TestViews:
     @parametrize
     def test_method_list(self, client: Bem) -> None:
         view = client.views.list()
-        assert_matches_type(ViewListResponse, view, path=["response"])
+        assert_matches_type(SyncViewsPage[View], view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -383,7 +383,7 @@ class TestViews:
             view_ids=["string"],
             view_name_substring="viewNameSubstring",
         )
-        assert_matches_type(ViewListResponse, view, path=["response"])
+        assert_matches_type(SyncViewsPage[View], view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -393,7 +393,7 @@ class TestViews:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         view = response.parse()
-        assert_matches_type(ViewListResponse, view, path=["response"])
+        assert_matches_type(SyncViewsPage[View], view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -403,7 +403,7 @@ class TestViews:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             view = response.parse()
-            assert_matches_type(ViewListResponse, view, path=["response"])
+            assert_matches_type(SyncViewsPage[View], view, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
@@ -1100,7 +1100,7 @@ class TestAsyncViews:
     @parametrize
     async def test_method_list(self, async_client: AsyncBem) -> None:
         view = await async_client.views.list()
-        assert_matches_type(ViewListResponse, view, path=["response"])
+        assert_matches_type(AsyncViewsPage[View], view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -1115,7 +1115,7 @@ class TestAsyncViews:
             view_ids=["string"],
             view_name_substring="viewNameSubstring",
         )
-        assert_matches_type(ViewListResponse, view, path=["response"])
+        assert_matches_type(AsyncViewsPage[View], view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -1125,7 +1125,7 @@ class TestAsyncViews:
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
         view = await response.parse()
-        assert_matches_type(ViewListResponse, view, path=["response"])
+        assert_matches_type(AsyncViewsPage[View], view, path=["response"])
 
     @pytest.mark.skip(reason="Mock server tests are disabled")
     @parametrize
@@ -1135,7 +1135,7 @@ class TestAsyncViews:
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
             view = await response.parse()
-            assert_matches_type(ViewListResponse, view, path=["response"])
+            assert_matches_type(AsyncViewsPage[View], view, path=["response"])
 
         assert cast(Any, response.is_closed) is True
 
