@@ -11,10 +11,7 @@ __all__ = ["WorkflowConnectorParam", "Paragon"]
 
 
 class Paragon(TypedDict, total=False):
-    """Request-side config block for a Paragon connector.
-
-    Fields absent on update are unchanged.
-    """
+    """Paragon configuration. Required on create for `type: "paragon"`."""
 
     configuration: object
     """Opaque per-integration configuration. Required on create."""
@@ -30,13 +27,10 @@ class WorkflowConnectorParam(TypedDict, total=False):
     """Human-friendly connector name."""
 
     type: Required[WorkflowConnectorType]
-    """Discriminator for a workflow connector. V3 supports `paragon` only."""
+    """Connector type. Must match stored type on update."""
 
     connector_id: Annotated[str, PropertyInfo(alias="connectorID")]
     """Present → update. Absent → create."""
 
     paragon: Paragon
-    """Request-side config block for a Paragon connector.
-
-    Fields absent on update are unchanged.
-    """
+    """Paragon configuration. Required on create for `type: "paragon"`."""

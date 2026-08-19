@@ -563,11 +563,16 @@ class WorkflowsResource(SyncAPIResource):
         `jfif` (and `jpg`) are normalized to `jpeg`.
 
         Args:
-          input: Input file(s) for a call. Provide exactly one of `singleFile` or `batchFiles`.
+          input: Input file(s) for the workflow. Use nested flags to specify a single file or
+              batch:
 
-              In the CLI, use the nested flags `--input.single-file` or `--input.batch-files`
-              with `@path/to/file` for automatic file embedding:
-              `--input.single-file '{"inputContent": "@invoice.pdf", "inputType": "pdf"}' --wait`
+              Single file:
+              `--input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}'` Batch
+              files:
+              `--input.batch-files '{"inputs": [{"inputContent": "@a.pdf", "inputType": "pdf"}]}'`
+
+              The `@path/to/file` syntax reads and base64-encodes the file automatically.
+              Provide exactly one of `singleFile` or `batchFiles`.
 
           wait: Block until the call completes (up to 30 seconds) and return the finished call
               object. Default: `false`. This is a boolean flag — use `--wait` or
@@ -1204,11 +1209,16 @@ class AsyncWorkflowsResource(AsyncAPIResource):
         `jfif` (and `jpg`) are normalized to `jpeg`.
 
         Args:
-          input: Input file(s) for a call. Provide exactly one of `singleFile` or `batchFiles`.
+          input: Input file(s) for the workflow. Use nested flags to specify a single file or
+              batch:
 
-              In the CLI, use the nested flags `--input.single-file` or `--input.batch-files`
-              with `@path/to/file` for automatic file embedding:
-              `--input.single-file '{"inputContent": "@invoice.pdf", "inputType": "pdf"}' --wait`
+              Single file:
+              `--input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}'` Batch
+              files:
+              `--input.batch-files '{"inputs": [{"inputContent": "@a.pdf", "inputType": "pdf"}]}'`
+
+              The `@path/to/file` syntax reads and base64-encodes the file automatically.
+              Provide exactly one of `singleFile` or `batchFiles`.
 
           wait: Block until the call completes (up to 30 seconds) and return the finished call
               object. Default: `false`. This is a boolean flag — use `--wait` or

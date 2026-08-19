@@ -23,7 +23,9 @@ class AnalysisDocumentType(BaseModel):
 
 
 class Analysis(BaseModel):
-    """Analysis result returned by the infer-schema endpoint."""
+    """
+    Full analysis result including description, schema, and document classification.
+    """
 
     content_nature: str = FieldInfo(alias="contentNature")
     """
@@ -60,7 +62,9 @@ class InferSchemaCreateResponse(BaseModel):
     """Response from the infer-schema endpoint."""
 
     analysis: Analysis
-    """Analysis result returned by the infer-schema endpoint."""
+    """
+    Full analysis result including description, schema, and document classification.
+    """
 
     filename: str
     """Original filename of the uploaded file."""

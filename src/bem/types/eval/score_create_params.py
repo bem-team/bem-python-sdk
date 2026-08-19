@@ -48,9 +48,4 @@ class Pair(TypedDict, total=False):
     """
 
     input: Required[FileInputParam]
-    """A single file input with base64-encoded content.
-
-    When using the Bem CLI, use `@path/to/file` in the `inputContent` field to
-    automatically read and base64-encode the file:
-    `--input.single-file '{"inputContent": "@file.pdf", "inputType": "pdf"}' --wait`
-    """
+    """The file input to feed into the function."""

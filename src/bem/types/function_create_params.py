@@ -119,7 +119,7 @@ class CreateSendFunction(TypedDict, total=False):
     type: Required[Literal["send"]]
 
     destination_type: Annotated[SendDestinationType, PropertyInfo(alias="destinationType")]
-    """Destination type for a Send function."""
+    """Where the payload is delivered."""
 
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
     """Display name of function.
@@ -330,12 +330,10 @@ class CreateRenderFunction(TypedDict, total=False):
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     render_config: Required[Annotated[RenderConfigInputParam, PropertyInfo(alias="renderConfig")]]
-    """Request-side render configuration.
+    """Render configuration.
 
-    Carries the template document as base64-encoded `.docx` bytes: the server
-    validates them, stores the template, and derives the placeholder/style-id
-    contract at create/update time, so clients never submit `placeholders` or
-    `styleIds`. The response shape (`RenderConfig`) returns the derived contract.
+    Required at create time — a Render function without a template has nothing to
+    bind data to. Update bodies may omit this for partial edits.
     """
 
     type: Required[Literal["render"]]

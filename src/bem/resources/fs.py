@@ -171,31 +171,11 @@ class FsResource(SyncAPIResource):
         last page. Same idiom as `/v3/calls` and `/v3/outputs`.
 
         Args:
-          op: Operations exposed by `POST /v3/fs`.
+          op: The operation to run. Required.
 
-              The verbs and their flag names mirror Unix tools so an LLM agent's existing
-              vocabulary maps directly:
-
-              - `ls` — list parsed documents
-              - `cat` — read one parsed doc (optionally sliced by range / projected by select)
-              - `grep` — substring or regex search across parse outputs
-              - `head` — first N sections of one doc
-              - `stat` — metadata only (page count, section count, parsed at, ...)
-              - `find` — list canonical entities (cross-doc memory)
-              - `open` — entity + mentions
-              - `xref` — entity → sections across docs that mention it
-
-              Doc-level ops (ls, cat, grep, head, stat) work on every parsed document,
-              regardless of how the parse function was configured.
-
-              Memory-level ops (find, open, xref) operate on the global entities table which
-              is only populated when the parse function had `linkAcrossDocuments: true`. On
-              environments with no memory-linked docs they return empty data with a hint
-              pointing at the toggle.
-
-          context: Request-scoping concerns that are orthogonal to the op itself. Carried on a
-              `context` object so future scoping hints (e.g. as-of timestamps, read
-              consistency) can slot in without reshaping the op-specific fields.
+          context: Request-scoping context (currently just the bucket scope). Optional; when
+              omitted the request resolves against the account+environment default bucket. See
+              `FSContext`.
 
           count_only: When true, return only the hit count without snippet payload. Cheaper than
               fetching matches when the agent only wants a yes/no.
@@ -203,7 +183,7 @@ class FsResource(SyncAPIResource):
           cursor: Pagination cursor. Pass the last item's ID from a previous response
               (`nextCursor`) to fetch the next page.
 
-          filter: Filter options for `op=ls` and `op=find`.
+          filter: Narrows results for `op=ls` and `op=find`.
 
           ignore_case: When true (default), substring/regex matching is case-insensitive.
 
@@ -219,7 +199,7 @@ class FsResource(SyncAPIResource):
 
           pattern: Substring or regex pattern for `op=grep`.
 
-          range: Slice the parse output along page or section dimensions. Used with `op=cat`.
+          range: Slices the parse output for `op=cat`.
 
           regex: When true, `pattern` is interpreted as a Go regex. Default false.
 
@@ -415,31 +395,11 @@ class AsyncFsResource(AsyncAPIResource):
         last page. Same idiom as `/v3/calls` and `/v3/outputs`.
 
         Args:
-          op: Operations exposed by `POST /v3/fs`.
+          op: The operation to run. Required.
 
-              The verbs and their flag names mirror Unix tools so an LLM agent's existing
-              vocabulary maps directly:
-
-              - `ls` — list parsed documents
-              - `cat` — read one parsed doc (optionally sliced by range / projected by select)
-              - `grep` — substring or regex search across parse outputs
-              - `head` — first N sections of one doc
-              - `stat` — metadata only (page count, section count, parsed at, ...)
-              - `find` — list canonical entities (cross-doc memory)
-              - `open` — entity + mentions
-              - `xref` — entity → sections across docs that mention it
-
-              Doc-level ops (ls, cat, grep, head, stat) work on every parsed document,
-              regardless of how the parse function was configured.
-
-              Memory-level ops (find, open, xref) operate on the global entities table which
-              is only populated when the parse function had `linkAcrossDocuments: true`. On
-              environments with no memory-linked docs they return empty data with a hint
-              pointing at the toggle.
-
-          context: Request-scoping concerns that are orthogonal to the op itself. Carried on a
-              `context` object so future scoping hints (e.g. as-of timestamps, read
-              consistency) can slot in without reshaping the op-specific fields.
+          context: Request-scoping context (currently just the bucket scope). Optional; when
+              omitted the request resolves against the account+environment default bucket. See
+              `FSContext`.
 
           count_only: When true, return only the hit count without snippet payload. Cheaper than
               fetching matches when the agent only wants a yes/no.
@@ -447,7 +407,7 @@ class AsyncFsResource(AsyncAPIResource):
           cursor: Pagination cursor. Pass the last item's ID from a previous response
               (`nextCursor`) to fetch the next page.
 
-          filter: Filter options for `op=ls` and `op=find`.
+          filter: Narrows results for `op=ls` and `op=find`.
 
           ignore_case: When true (default), substring/regex matching is case-insensitive.
 
@@ -463,7 +423,7 @@ class AsyncFsResource(AsyncAPIResource):
 
           pattern: Substring or regex pattern for `op=grep`.
 
-          range: Slice the parse output along page or section dimensions. Used with `op=cat`.
+          range: Slices the parse output for `op=cat`.
 
           regex: When true, `pattern` is interpreted as a Go regex. Default false.
 

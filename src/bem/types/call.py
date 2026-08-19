@@ -117,7 +117,7 @@ class Call(BaseModel):
     """Name of the function. Only set for function calls."""
 
     function_type: Optional[FunctionType] = FieldInfo(alias="functionType", default=None)
-    """The type of the function."""
+    """Type of the function. Only set for function calls."""
 
     function_version_num: Optional[int] = FieldInfo(alias="functionVersionNum", default=None)
     """Version number of the function. Only set for function calls."""

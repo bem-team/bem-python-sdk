@@ -15,7 +15,7 @@ class ConnectorCreateParams(TypedDict, total=False):
     """Human-friendly name for this connector."""
 
     type: Required[ConnectorType]
-    """Connector type."""
+    """The connector type."""
 
     box_client_id: Annotated[str, PropertyInfo(alias="boxClientID")]
     """Box client ID (from your Box application)."""

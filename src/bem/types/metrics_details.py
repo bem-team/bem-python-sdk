@@ -24,7 +24,7 @@ class MetricsDetails(BaseModel):
     """Detailed performance metrics and analysis"""
 
     aggregate_metrics: Optional[Metrics] = FieldInfo(alias="aggregateMetrics", default=None)
-    """Comprehensive performance metrics"""
+    """Aggregate confusion matrix metrics across all fields"""
 
     field_metrics: Optional[List[FieldMetric]] = FieldInfo(alias="fieldMetrics", default=None)
     """Enhanced field metrics with comprehensive analytics"""

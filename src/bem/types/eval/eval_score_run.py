@@ -76,7 +76,7 @@ class Progress(BaseModel):
 
 
 class Aggregate(BaseModel):
-    """Aggregate accuracy metrics."""
+    """Populated once `status` is `completed` or `error`."""
 
     extras: int
 
@@ -121,4 +121,4 @@ class EvalScoreRun(BaseModel):
     """Status values for an eval-score run."""
 
     aggregate: Optional[Aggregate] = None
-    """Aggregate accuracy metrics."""
+    """Populated once `status` is `completed` or `error`."""

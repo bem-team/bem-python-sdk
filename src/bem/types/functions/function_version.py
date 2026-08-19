@@ -253,7 +253,7 @@ class ClassifyFunctionVersion(BaseModel):
 
 class SendFunctionVersion(BaseModel):
     destination_type: SendDestinationType = FieldInfo(alias="destinationType")
-    """Destination type for a Send function."""
+    """Where the payload is delivered."""
 
     function_id: str = FieldInfo(alias="functionID")
     """Unique identifier of function."""

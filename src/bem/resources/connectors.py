@@ -81,7 +81,7 @@ class ConnectorsResource(SyncAPIResource):
         Args:
           name: Human-friendly name for this connector.
 
-          type: Connector type.
+          type: The connector type.
 
           box_client_id: Box client ID (from your Box application).
 
@@ -278,7 +278,7 @@ class AsyncConnectorsResource(AsyncAPIResource):
         Args:
           name: Human-friendly name for this connector.
 
-          type: Connector type.
+          type: The connector type.
 
           box_client_id: Box client ID (from your Box application).
 
