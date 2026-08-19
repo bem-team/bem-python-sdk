@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.36.0](https://github.com/bem-team/bem-python-sdk/compare/v0.35.0...v0.36.0) (2026-08-19)
+
+
+### Features
+
+* initial stlc build ([2f99a07](https://github.com/bem-team/bem-python-sdk/commit/2f99a07ab98eb340d97fe759e858c3d3eca95bf7))
+
 ## 0.35.0 (2026-08-17)
 
 Full Changelog: [v0.34.0...v0.35.0](https://github.com/bem-team/bem-python-sdk/compare/v0.34.0...v0.35.0)
