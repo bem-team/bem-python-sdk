@@ -15,7 +15,7 @@ __all__ = ["Workflow", "Connector", "ConnectorParagon"]
 
 
 class ConnectorParagon(BaseModel):
-    """Paragon-integration configuration on a workflow connector."""
+    """Paragon configuration. Present iff `type == "paragon"`."""
 
     configuration: object
     """Opaque per-integration configuration (e.g. `{"folderId": "..."}`)."""
@@ -37,10 +37,10 @@ class Connector(BaseModel):
     """Human-friendly connector name."""
 
     type: WorkflowConnectorType
-    """Discriminator for a workflow connector. V3 supports `paragon` only."""
+    """Connector type."""
 
     paragon: Optional[ConnectorParagon] = None
-    """Paragon-integration configuration on a workflow connector."""
+    """Paragon configuration. Present iff `type == "paragon"`."""
 
 
 class Workflow(BaseModel):

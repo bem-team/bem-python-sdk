@@ -132,7 +132,7 @@ class SendFunction(TypedDict, total=False):
     type: Required[Literal["send"]]
 
     destination_type: Annotated[SendDestinationType, PropertyInfo(alias="destinationType")]
-    """Destination type for a Send function."""
+    """Where the payload is delivered."""
 
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
     """Display name of function.

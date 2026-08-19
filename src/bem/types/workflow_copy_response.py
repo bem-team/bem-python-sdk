@@ -44,4 +44,4 @@ class WorkflowCopyResponse(BaseModel):
     """Error message if the workflow copy failed."""
 
     workflow: Optional[Workflow] = None
-    """V3 read representation of a workflow version."""
+    """The newly created workflow."""

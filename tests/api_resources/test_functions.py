@@ -617,7 +617,7 @@ class TestFunctions:
             type="extract",
             display_name="displayName",
             enable_bounding_boxes=True,
-            function_name="functionName",
+            body_function_name="functionName",
             output_schema={},
             output_schema_name="outputSchemaName",
             pre_count=True,
@@ -691,7 +691,7 @@ class TestFunctions:
             ],
             description="description",
             display_name="displayName",
-            function_name="functionName",
+            body_function_name="functionName",
             native_visual_input=True,
             tags=["string"],
         )
@@ -751,7 +751,7 @@ class TestFunctions:
             type="send",
             destination_type="webhook",
             display_name="displayName",
-            function_name="functionName",
+            body_function_name="functionName",
             google_drive_folder_id="googleDriveFolderId",
             s3_bucket="s3Bucket",
             s3_prefix="s3Prefix",
@@ -814,7 +814,7 @@ class TestFunctions:
             path_function_name="functionName",
             type="split",
             display_name="displayName",
-            function_name="functionName",
+            body_function_name="functionName",
             print_page_split_config={
                 "next_function_id": "nextFunctionID",
                 "next_function_name": "nextFunctionName",
@@ -888,7 +888,7 @@ class TestFunctions:
             type="join",
             description="description",
             display_name="displayName",
-            function_name="functionName",
+            body_function_name="functionName",
             join_type="standard",
             output_schema={},
             output_schema_name="outputSchemaName",
@@ -949,7 +949,7 @@ class TestFunctions:
             path_function_name="functionName",
             type="payload_shaping",
             display_name="displayName",
-            function_name="functionName",
+            body_function_name="functionName",
             shaping_schema="shapingSchema",
             tags=["string"],
         )
@@ -1097,7 +1097,7 @@ class TestFunctions:
             type="parse",
             display_name="displayName",
             extra_config={"enable_bounding_boxes": True},
-            function_name="functionName",
+            body_function_name="functionName",
             parse_config={
                 "default_bucket": "defaultBucket",
                 "extract_entities": True,
@@ -1161,7 +1161,7 @@ class TestFunctions:
             path_function_name="functionName",
             type="render",
             display_name="displayName",
-            function_name="functionName",
+            body_function_name="functionName",
             render_config={
                 "template": {
                     "base64": "base64",
@@ -2043,7 +2043,7 @@ class TestAsyncFunctions:
             type="extract",
             display_name="displayName",
             enable_bounding_boxes=True,
-            function_name="functionName",
+            body_function_name="functionName",
             output_schema={},
             output_schema_name="outputSchemaName",
             pre_count=True,
@@ -2117,7 +2117,7 @@ class TestAsyncFunctions:
             ],
             description="description",
             display_name="displayName",
-            function_name="functionName",
+            body_function_name="functionName",
             native_visual_input=True,
             tags=["string"],
         )
@@ -2177,7 +2177,7 @@ class TestAsyncFunctions:
             type="send",
             destination_type="webhook",
             display_name="displayName",
-            function_name="functionName",
+            body_function_name="functionName",
             google_drive_folder_id="googleDriveFolderId",
             s3_bucket="s3Bucket",
             s3_prefix="s3Prefix",
@@ -2240,7 +2240,7 @@ class TestAsyncFunctions:
             path_function_name="functionName",
             type="split",
             display_name="displayName",
-            function_name="functionName",
+            body_function_name="functionName",
             print_page_split_config={
                 "next_function_id": "nextFunctionID",
                 "next_function_name": "nextFunctionName",
@@ -2314,7 +2314,7 @@ class TestAsyncFunctions:
             type="join",
             description="description",
             display_name="displayName",
-            function_name="functionName",
+            body_function_name="functionName",
             join_type="standard",
             output_schema={},
             output_schema_name="outputSchemaName",
@@ -2375,7 +2375,7 @@ class TestAsyncFunctions:
             path_function_name="functionName",
             type="payload_shaping",
             display_name="displayName",
-            function_name="functionName",
+            body_function_name="functionName",
             shaping_schema="shapingSchema",
             tags=["string"],
         )
@@ -2523,7 +2523,7 @@ class TestAsyncFunctions:
             type="parse",
             display_name="displayName",
             extra_config={"enable_bounding_boxes": True},
-            function_name="functionName",
+            body_function_name="functionName",
             parse_config={
                 "default_bucket": "defaultBucket",
                 "extract_entities": True,
@@ -2587,7 +2587,7 @@ class TestAsyncFunctions:
             path_function_name="functionName",
             type="render",
             display_name="displayName",
-            function_name="functionName",
+            body_function_name="functionName",
             render_config={
                 "template": {
                     "base64": "base64",

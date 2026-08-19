@@ -368,7 +368,7 @@ class FunctionsResource(SyncAPIResource):
         Args:
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
-          destination_type: Destination type for a Send function.
+          destination_type: Where the payload is delivered.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
@@ -782,11 +782,9 @@ class FunctionsResource(SyncAPIResource):
         Args:
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
-          render_config: Request-side render configuration. Carries the template document as
-              base64-encoded `.docx` bytes: the server validates them, stores the template,
-              and derives the placeholder/style-id contract at create/update time, so clients
-              never submit `placeholders` or `styleIds`. The response shape (`RenderConfig`)
-              returns the derived contract.
+          render_config: Render configuration. Required at create time — a Render function without a
+              template has nothing to bind data to. Update bodies may omit this for partial
+              edits.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
@@ -943,7 +941,7 @@ class FunctionsResource(SyncAPIResource):
         type: Literal["extract"],
         display_name: str | Omit = omit,
         enable_bounding_boxes: bool | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
         pre_count: bool | Omit = omit,
@@ -988,7 +986,7 @@ class FunctionsResource(SyncAPIResource):
               field was extracted. Enabling this automatically configures the function to use
               the bounding box model. Disabling resets to the default.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
@@ -1022,7 +1020,7 @@ class FunctionsResource(SyncAPIResource):
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         native_visual_input: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1064,7 +1062,7 @@ class FunctionsResource(SyncAPIResource):
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           native_visual_input: When true, image and PDF inputs are sent directly to the model for routing
               instead of being OCR'd to text first. Defaults to true for new classify
@@ -1090,7 +1088,7 @@ class FunctionsResource(SyncAPIResource):
         type: Literal["send"],
         destination_type: SendDestinationType | Omit = omit,
         display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
         s3_prefix: str | Omit = omit,
@@ -1128,11 +1126,11 @@ class FunctionsResource(SyncAPIResource):
           update — versions themselves are immutable.
 
         Args:
-          destination_type: Destination type for a Send function.
+          destination_type: Where the payload is delivered.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           google_drive_folder_id: Google Drive folder ID. Required when destinationType is google_drive. Managed
               via Paragon OAuth.
@@ -1166,7 +1164,7 @@ class FunctionsResource(SyncAPIResource):
         *,
         type: Literal["split"],
         display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         print_page_split_config: function_update_params.UpsertSplitFunctionPrintPageSplitConfig | Omit = omit,
         semantic_page_split_config: function_update_params.UpsertSplitFunctionSemanticPageSplitConfig | Omit = omit,
         split_type: Literal["print_page", "semantic_page"] | Omit = omit,
@@ -1204,7 +1202,7 @@ class FunctionsResource(SyncAPIResource):
         Args:
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -1226,7 +1224,7 @@ class FunctionsResource(SyncAPIResource):
         type: Literal["join"],
         description: str | Omit = omit,
         display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         join_type: Literal["standard"] | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
@@ -1266,7 +1264,7 @@ class FunctionsResource(SyncAPIResource):
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           join_type: The type of join to perform.
 
@@ -1293,7 +1291,7 @@ class FunctionsResource(SyncAPIResource):
         *,
         type: Literal["payload_shaping"],
         display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         shaping_schema: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1329,7 +1327,7 @@ class FunctionsResource(SyncAPIResource):
         Args:
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           shaping_schema: JMESPath expression that defines how to transform and customize the input
               payload structure. Payload shaping allows you to extract, reshape, and
@@ -1438,7 +1436,7 @@ class FunctionsResource(SyncAPIResource):
         type: Literal["parse"],
         display_name: str | Omit = omit,
         extra_config: ParseExtraFunctionConfigParam | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1478,7 +1476,7 @@ class FunctionsResource(SyncAPIResource):
               Extract / Join — separated from `parseConfig` so the per-call Parse output shape
               stays distinct from operator-level execution flags.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           parse_config: Per-version configuration for a Parse function.
 
@@ -1505,7 +1503,7 @@ class FunctionsResource(SyncAPIResource):
         *,
         type: Literal["render"],
         display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         render_config: RenderConfigInputParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -1541,7 +1539,7 @@ class FunctionsResource(SyncAPIResource):
         Args:
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           render_config: Request-side render configuration. Carries the template document as
               base64-encoded `.docx` bytes: the server validates them, stores the template,
@@ -1577,7 +1575,7 @@ class FunctionsResource(SyncAPIResource):
         | Literal["render"],
         display_name: str | Omit = omit,
         enable_bounding_boxes: bool | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
         pre_count: bool | Omit = omit,
@@ -1617,7 +1615,7 @@ class FunctionsResource(SyncAPIResource):
                     "type": type,
                     "display_name": display_name,
                     "enable_bounding_boxes": enable_bounding_boxes,
-                    "function_name": function_name,
+                    "body_function_name": body_function_name,
                     "output_schema": output_schema,
                     "output_schema_name": output_schema_name,
                     "pre_count": pre_count,
@@ -2372,7 +2370,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         Args:
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
-          destination_type: Destination type for a Send function.
+          destination_type: Where the payload is delivered.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
@@ -2786,11 +2784,9 @@ class AsyncFunctionsResource(AsyncAPIResource):
         Args:
           function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
-          render_config: Request-side render configuration. Carries the template document as
-              base64-encoded `.docx` bytes: the server validates them, stores the template,
-              and derives the placeholder/style-id contract at create/update time, so clients
-              never submit `placeholders` or `styleIds`. The response shape (`RenderConfig`)
-              returns the derived contract.
+          render_config: Render configuration. Required at create time — a Render function without a
+              template has nothing to bind data to. Update bodies may omit this for partial
+              edits.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
@@ -2947,7 +2943,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         type: Literal["extract"],
         display_name: str | Omit = omit,
         enable_bounding_boxes: bool | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
         pre_count: bool | Omit = omit,
@@ -2992,7 +2988,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
               field was extracted. Enabling this automatically configures the function to use
               the bounding box model. Disabling resets to the default.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           output_schema: Desired output structure defined in standard JSON Schema convention.
 
@@ -3026,7 +3022,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         classifications: Iterable[ClassificationListItemParam] | Omit = omit,
         description: str | Omit = omit,
         display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         native_visual_input: bool | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -3068,7 +3064,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           native_visual_input: When true, image and PDF inputs are sent directly to the model for routing
               instead of being OCR'd to text first. Defaults to true for new classify
@@ -3094,7 +3090,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         type: Literal["send"],
         destination_type: SendDestinationType | Omit = omit,
         display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         google_drive_folder_id: str | Omit = omit,
         s3_bucket: str | Omit = omit,
         s3_prefix: str | Omit = omit,
@@ -3132,11 +3128,11 @@ class AsyncFunctionsResource(AsyncAPIResource):
           update — versions themselves are immutable.
 
         Args:
-          destination_type: Destination type for a Send function.
+          destination_type: Where the payload is delivered.
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           google_drive_folder_id: Google Drive folder ID. Required when destinationType is google_drive. Managed
               via Paragon OAuth.
@@ -3170,7 +3166,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         type: Literal["split"],
         display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         print_page_split_config: function_update_params.UpsertSplitFunctionPrintPageSplitConfig | Omit = omit,
         semantic_page_split_config: function_update_params.UpsertSplitFunctionSemanticPageSplitConfig | Omit = omit,
         split_type: Literal["print_page", "semantic_page"] | Omit = omit,
@@ -3208,7 +3204,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         Args:
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           tags: Array of tags to categorize and organize functions.
 
@@ -3230,7 +3226,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         type: Literal["join"],
         description: str | Omit = omit,
         display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         join_type: Literal["standard"] | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
@@ -3270,7 +3266,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
 
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           join_type: The type of join to perform.
 
@@ -3297,7 +3293,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         type: Literal["payload_shaping"],
         display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         shaping_schema: str | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -3333,7 +3329,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         Args:
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           shaping_schema: JMESPath expression that defines how to transform and customize the input
               payload structure. Payload shaping allows you to extract, reshape, and
@@ -3442,7 +3438,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         type: Literal["parse"],
         display_name: str | Omit = omit,
         extra_config: ParseExtraFunctionConfigParam | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         parse_config: ParseConfigParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -3482,7 +3478,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
               Extract / Join — separated from `parseConfig` so the per-call Parse output shape
               stays distinct from operator-level execution flags.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           parse_config: Per-version configuration for a Parse function.
 
@@ -3509,7 +3505,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         *,
         type: Literal["render"],
         display_name: str | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         render_config: RenderConfigInputParam | Omit = omit,
         tags: SequenceNotStr[str] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -3545,7 +3541,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         Args:
           display_name: Display name of function. Human-readable name to help you identify the function.
 
-          function_name: Name of function. Must be UNIQUE on a per-environment basis.
+          body_function_name: Name of function. Must be UNIQUE on a per-environment basis.
 
           render_config: Request-side render configuration. Carries the template document as
               base64-encoded `.docx` bytes: the server validates them, stores the template,
@@ -3581,7 +3577,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
         | Literal["render"],
         display_name: str | Omit = omit,
         enable_bounding_boxes: bool | Omit = omit,
-        function_name: str | Omit = omit,
+        body_function_name: str | Omit = omit,
         output_schema: object | Omit = omit,
         output_schema_name: str | Omit = omit,
         pre_count: bool | Omit = omit,
@@ -3621,7 +3617,7 @@ class AsyncFunctionsResource(AsyncAPIResource):
                     "type": type,
                     "display_name": display_name,
                     "enable_bounding_boxes": enable_bounding_boxes,
-                    "function_name": function_name,
+                    "body_function_name": body_function_name,
                     "output_schema": output_schema,
                     "output_schema_name": output_schema_name,
                     "pre_count": pre_count,

@@ -50,7 +50,7 @@ class UpsertExtractFunction(TypedDict, total=False):
     resets to the default.
     """
 
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     output_schema: Annotated[object, PropertyInfo(alias="outputSchema")]
@@ -98,7 +98,7 @@ class UpsertClassifyFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     native_visual_input: Annotated[bool, PropertyInfo(alias="nativeVisualInput")]
@@ -116,7 +116,7 @@ class UpsertSendFunction(TypedDict, total=False):
     type: Required[Literal["send"]]
 
     destination_type: Annotated[SendDestinationType, PropertyInfo(alias="destinationType")]
-    """Destination type for a Send function."""
+    """Where the payload is delivered."""
 
     display_name: Annotated[str, PropertyInfo(alias="displayName")]
     """Display name of function.
@@ -124,7 +124,7 @@ class UpsertSendFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     google_drive_folder_id: Annotated[str, PropertyInfo(alias="googleDriveFolderId")]
@@ -162,7 +162,7 @@ class UpsertSplitFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     print_page_split_config: Annotated[
@@ -201,7 +201,7 @@ class UpsertJoinFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     join_type: Annotated[Literal["standard"], PropertyInfo(alias="joinType")]
@@ -226,7 +226,7 @@ class UpsertPayloadShapingFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     shaping_schema: Annotated[str, PropertyInfo(alias="shapingSchema")]
@@ -298,7 +298,7 @@ class UpsertParseFunction(TypedDict, total=False):
     operator-level execution flags.
     """
 
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     parse_config: Annotated[ParseConfigParam, PropertyInfo(alias="parseConfig")]
@@ -322,7 +322,7 @@ class UpsertRenderFunction(TypedDict, total=False):
     Human-readable name to help you identify the function.
     """
 
-    function_name: Annotated[str, PropertyInfo(alias="functionName")]
+    body_function_name: Annotated[str, PropertyInfo(alias="functionName")]
     """Name of function. Must be UNIQUE on a per-environment basis."""
 
     render_config: Annotated[RenderConfigInputParam, PropertyInfo(alias="renderConfig")]

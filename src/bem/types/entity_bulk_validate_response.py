@@ -27,7 +27,7 @@ class Result(BaseModel):
 
 
 class Summary(BaseModel):
-    """Per-outcome tally across a bulk-validate batch."""
+    """Aggregate counts."""
 
     rejected_row: int = FieldInfo(alias="rejectedRow")
     """Rows whose transition was illegal."""
@@ -46,4 +46,4 @@ class EntityBulkValidateResponse(BaseModel):
     """Per-row outcomes, in request order."""
 
     summary: Summary
-    """Per-outcome tally across a bulk-validate batch."""
+    """Aggregate counts."""

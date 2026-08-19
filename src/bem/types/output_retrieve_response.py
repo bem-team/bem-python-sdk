@@ -8,10 +8,4 @@ __all__ = ["OutputRetrieveResponse"]
 
 class OutputRetrieveResponse(BaseModel):
     output: Event
-    """V3 read-side event union.
-
-    Superset of the shared `Event` union: it contains every shared variant verbatim
-    (backward compatible) and adds the V3-only `extract`, `parse`, `classify`,
-    `analyze`, `payload_shaping`, and `evaluation` variants. This is also the union
-    delivered as the body of outbound webhook payloads.
-    """
+    """The output event. Polymorphic by `eventType`."""

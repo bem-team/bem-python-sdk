@@ -44,7 +44,7 @@ class Connector(BaseModel):
     """Paragon sync ID."""
 
     type: ConnectorType
-    """Connector type."""
+    """The connector type."""
 
     workflow_id: str = FieldInfo(alias="workflowID")
     """Workflow API ID that will be triggered by this connector."""

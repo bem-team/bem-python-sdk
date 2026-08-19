@@ -24,11 +24,7 @@ class Inbound(BaseModel):
     """Free-form relation label (e.g. `author_of`, `affiliated_with`)."""
 
     source_entity: RelatedEntity = FieldInfo(alias="sourceEntity")
-    """
-    A compact view of an entity sitting on the far end of a relation edge — the
-    stable public id, the canonical name, and the effective type. The full entity is
-    fetched separately via the entity detail / File System endpoints.
-    """
+    """The entity at the tail of the edge."""
 
 
 class Outbound(BaseModel):
@@ -44,11 +40,7 @@ class Outbound(BaseModel):
     """Free-form relation label (e.g. `author_of`, `affiliated_with`)."""
 
     target_entity: RelatedEntity = FieldInfo(alias="targetEntity")
-    """
-    A compact view of an entity sitting on the far end of a relation edge — the
-    stable public id, the canonical name, and the effective type. The full entity is
-    fetched separately via the entity detail / File System endpoints.
-    """
+    """The entity at the head of the edge."""
 
 
 class EntityRetrieveRelationsResponse(BaseModel):

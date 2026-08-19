@@ -22,28 +22,7 @@ class FNavigateResponse(BaseModel):
     """Op-specific payload. See per-op shapes below."""
 
     op: FsOp
-    """Operations exposed by `POST /v3/fs`.
-
-    The verbs and their flag names mirror Unix tools so an LLM agent's existing
-    vocabulary maps directly:
-
-    - `ls` — list parsed documents
-    - `cat` — read one parsed doc (optionally sliced by range / projected by select)
-    - `grep` — substring or regex search across parse outputs
-    - `head` — first N sections of one doc
-    - `stat` — metadata only (page count, section count, parsed at, ...)
-    - `find` — list canonical entities (cross-doc memory)
-    - `open` — entity + mentions
-    - `xref` — entity → sections across docs that mention it
-
-    Doc-level ops (ls, cat, grep, head, stat) work on every parsed document,
-    regardless of how the parse function was configured.
-
-    Memory-level ops (find, open, xref) operate on the global entities table which
-    is only populated when the parse function had `linkAcrossDocuments: true`. On
-    environments with no memory-linked docs they return empty data with a hint
-    pointing at the toggle.
-    """
+    """The op echoed back."""
 
     count: Optional[int] = None
     """

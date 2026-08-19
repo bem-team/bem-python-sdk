@@ -9,7 +9,7 @@ __all__ = ["EntityBulkCreateResponse", "Summary"]
 
 
 class Summary(BaseModel):
-    """Per-outcome tally across a batch."""
+    """Aggregate counts."""
 
     created: int
     """Number of rows that created a new entity."""
@@ -28,4 +28,4 @@ class EntityBulkCreateResponse(BaseModel):
     """Per-row outcomes, in request order."""
 
     summary: Summary
-    """Per-outcome tally across a batch."""
+    """Aggregate counts."""

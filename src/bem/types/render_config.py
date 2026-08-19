@@ -12,16 +12,8 @@ __all__ = ["RenderConfig", "Template", "TemplatePlaceholders"]
 
 class TemplatePlaceholders(BaseModel):
     """
-    The placeholder contract a Render template declares, grouped by how each
-    placeholder is filled. Derived from the template at create/update time by
-    scanning its `docxtpl` tags; not user-supplied.
-
-    - `stringKeys`: bare string placeholders (`{{ key }}`) filled with a single
-    value.
-    - `blockKeys`: wrapped-primitive placeholders (`{{p key }}`) — bind one core
-    primitive (paragraph, table, image, or list). The placeholder's own
-    paragraph dissolves and is replaced by the rendered subdocument's blocks,
-    rather than substituting text inline.
+    The placeholder contract derived from the template at create/update time.
+    Absent on configs created before create/update-time validation existed.
     """
 
     block_keys: List[str] = FieldInfo(alias="blockKeys")
@@ -58,16 +50,8 @@ class Template(BaseModel):
 
     placeholders: Optional[TemplatePlaceholders] = None
     """
-    The placeholder contract a Render template declares, grouped by how each
-    placeholder is filled. Derived from the template at create/update time by
-    scanning its `docxtpl` tags; not user-supplied.
-
-    - `stringKeys`: bare string placeholders (`{{ key }}`) filled with a single
-      value.
-    - `blockKeys`: wrapped-primitive placeholders (`{{p key }}`) — bind one core
-      primitive (paragraph, table, image, or list). The placeholder's own paragraph
-      dissolves and is replaced by the rendered subdocument's blocks, rather than
-      substituting text inline.
+    The placeholder contract derived from the template at create/update time. Absent
+    on configs created before create/update-time validation existed.
     """
 
     style_ids: Optional[List[str]] = FieldInfo(alias="styleIds", default=None)
